@@ -38,22 +38,22 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        .team-logo { height: 20px; width: 20px; object-fit: contain; margin-right: 8px; display: inline-block; vertical-align: middle; }
-        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 20px; margin-bottom: 16px; }
+        .team-logo { height: 18px; width: 18px; object-fit: contain; margin-right: 6px; display: inline-block; vertical-align: middle; }
+        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 16px; margin-bottom: 16px; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        table th { color: #71717a; font-size: 10px; text-transform: uppercase; padding-bottom: 12px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
-        table th:first-child { text-align: left; width: 40%; color: #00E676; font-size: 14px; font-weight: 900; }
-        table td { padding: 12px 4px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); text-align: center; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+        table th { color: #71717a; font-size: 9px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
+        table th:first-child { text-align: left; width: 45%; color: #00E676; font-size: 13px; font-weight: 900; }
+        table td { padding: 10px 2px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); text-align: center; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         table tr:last-child td { border-bottom: none; }
         table td:first-child { text-align: left; font-weight: 700; text-transform: uppercase; }
         
         .green-bar { position: relative; }
-        .green-bar::before { content: ''; position: absolute; left: -20px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
+        .green-bar::before { content: ''; position: absolute; left: -16px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
         .red-bar { position: relative; }
-        .red-bar::before { content: ''; position: absolute; left: -20px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EF4444; }
+        .red-bar::before { content: ''; position: absolute; left: -16px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EF4444; }
         .lime-bar { position: relative; }
-        .lime-bar::before { content: ''; position: absolute; left: -20px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
+        .lime-bar::before { content: ''; position: absolute; left: -16px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
 
         .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 14px 20px; margin-top: 8px; transition: all 0.2s; }
         .match-row.clickable-match { cursor: pointer; }
@@ -83,7 +83,7 @@
 
         <div class="max-w-5xl mx-auto px-4 pt-6">
             <div id="mode-container" class="hidden flex flex-col gap-4">
-                <!-- Меню с Горизонтальным Скроллом и индикатором Листайте -->
+                <!-- Меню с Горизонтальным Скроллом и индикатором Листайте[cite: 1] -->
                 <div class="relative w-full border-b border-zinc-900 mb-2">
                     <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 lg:hidden pointer-events-none z-10">
                         <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
@@ -177,7 +177,7 @@
 
             <!-- СЕКЦИИ РЕЖИМА АРХИВА -->
             <div id="view-archive" class="hidden flex flex-col gap-4">
-                <!-- Вкладки архива перенесены под селекторы, на всю ширину на мобилках -->
+                <!-- Вкладки архива перенесены под селекторы, на всю ширину на мобилках[cite: 1] -->
                 <div id="archive-tabs-nav" class="grid grid-cols-3 gap-2 bg-zinc-900/40 p-1.5 border border-zinc-800/60 rounded-2xl w-full max-w-lg mx-auto">
                     <button class="tab-btn-top active !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-groups" onclick="switchArchiveTab('groups', this)">Группы</button>
                     <button class="tab-btn-top !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-playoffs" onclick="switchArchiveTab('playoffs', this)">Плей-офф</button>
@@ -192,7 +192,7 @@
                 <div id="archive-results" class="hidden flex flex-col gap-4 hidden"></div>
             </div>
 
-            <!-- Информационный баннер Суперкубка помещён после вкладок плей-офф и результатов[cite: 1] -->
+            <!-- Информационный баннер Суперкубка[cite: 1] -->
             <div id="supercup-banner" class="hidden mt-6 p-5 rounded-3xl bg-yellow-500/5 border border-yellow-500/20 text-center relative overflow-hidden">
                 <p class="text-xs text-yellow-500 font-bold uppercase tracking-wider">🏆 В этом турнире играют все чемпионы «Олотау йыйыны» прошлых лет.</p>
             </div>
@@ -363,7 +363,7 @@
                 setupSwipeNavigation();
             } catch (err) {
                 clearInterval(animId);
-                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных с Google Sheets.</div>`;
+                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации облака.</div>`;
             }
         }
 
@@ -409,7 +409,7 @@
                     result.push({
                         year: p[0], tournament: p[1].toUpperCase(), stage: finalStage,
                         t1: p[3].toUpperCase(), t2: p[4].toUpperCase(),
-                        s1: parseInt(p[5]||0), s2: parseInt(p[6]||0),
+                        s1: p[5] !== "" ? parseInt(p[5]) : 0, s2: p[6] !== "" ? parseInt(p[6]) : 0,
                         p1: p[7] !== "" ? parseInt(p[7]) : null, p2: p[8] !== "" ? parseInt(p[8]) : null,
                         status: 'past'
                     });
@@ -431,11 +431,11 @@
 
             if (logoClickCount === 5) {
                 logoClickCount = 0;
-                const pass = prompt('Панель администратора. Введите ключ доступа:');
+                const pass = prompt('Панель администратора:');
                 if(pass === '1996') {
                     document.getElementById('admin-modal').classList.remove('hidden');
                     onAdminMatchChange();
-                } else if(pass !== null) { alert('Неверный пароль.'); }
+                }
             }
         }
 
@@ -444,7 +444,6 @@
             if(title.toUpperCase().includes('СУПЕРКУБОК')) {
                 banner.classList.remove('hidden');
             } else {
-                banner.hide-scrollbar;
                 banner.classList.add('hidden');
             }
         }
@@ -459,48 +458,22 @@
             const ctrlsArch = document.getElementById('archive-controls');
 
             if(mode === '2026') {
-                btn2026.className = "flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer";
-                btnArch.className = "flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer";
+                btn2026.classList.add('text-neon'); btn2026.classList.remove('text-gray-500');
+                btnArch.classList.add('text-gray-500'); btnArch.classList.remove('text-neon');
                 view2026.classList.remove('hidden'); viewArch.classList.add('hidden');
                 tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden');
                 document.getElementById('supercup-banner').classList.add('hidden');
                 render2026Core();
             } else {
-                btnArch.className = "flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer";
-                btn2026.className = "flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer";
+                btnArch.classList.add('text-neon'); btnArch.classList.remove('text-gray-500');
+                btn2026.classList.add('text-gray-500'); btn2026.classList.remove('text-neon');
                 viewArch.classList.remove('hidden'); view2026.classList.add('hidden');
                 tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden');
                 updateArchiveYears(); 
             }
         }
 
-        function switch2026Tab(tabName, btn) {
-            active2026Tab = tabName;
-            document.querySelectorAll('#nav-2026-tabs button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const subTabs = ['tables', 'schedule', 'standings', 'playoffs', 'scorers', 'assistants'];
-            subTabs.forEach(t => document.getElementById(`sub-2026-${t}`).classList.add('hidden'));
-            document.getElementById(`sub-2026-${tabName}`).classList.remove('hidden');
-            render2026Core();
-        }
-
-        function switchArchiveTab(tabName, btn) {
-            activeArchiveTab = tabName;
-            document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderArchiveCore();
-        }
-
         function setupFiltersAndSelectors() {
-            const teams = [...new Set(db.matches2026.flatMap(m => [m.t1, m.t2]))].sort();
-            document.getElementById('filter-teams').innerHTML = '<option value="all">Все команды</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
-            document.getElementById('filter-stages').innerHTML = '<option value="all">Все стадии</option><option value="Групповой этап">Групповой этап</option><option value="Плей-офф">Плей-офф</option>';
-
-            ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => {
-                document.getElementById(id).addEventListener('change', render2026Schedule);
-            });
-
             const tArch = [...new Set(db.archive.map(m => m.tournament))];
             document.getElementById('archive-tournament').innerHTML = tArch.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
             if(tArch.length > 0) archiveTournament = tArch[0];
@@ -516,6 +489,14 @@
                 renderArchiveCore(); 
             });
 
+            const teams = [...new Set(db.matches2026.flatMap(m => [m.t1, m.t2]))].sort();
+            document.getElementById('filter-teams').innerHTML = '<option value="all">Все команды</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
+            document.getElementById('filter-stages').innerHTML = '<option value="all">Все стадии</option><option value="Групповой этап">Групповой этап</option><option value="Плей-офф">Плей-офф</option>';
+
+            ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => {
+                document.getElementById(id).addEventListener('change', render2026Schedule);
+            });
+
             updateAdminMatchSelect();
         }
 
@@ -523,6 +504,7 @@
             document.getElementById('admin-match-select').innerHTML = db.matches2026.map(m => `<option value="${m.id}">[${m.stage}] ${m.t1} VS ${m.t2}</option>`).join('');
         }
 
+        // КРИТИЧЕСКИЙ ФИКС СИНХРОНИЗАЦИИ ГОДОВ И СЕЛЕКТОРОВ
         function updateArchiveYears() {
             const matchesForTournament = db.archive.filter(m => m.tournament.toUpperCase() === archiveTournament.toUpperCase());
             const dynamicYears = [...new Set(matchesForTournament.map(m => m.year))].sort((a,b)=>b-a);
@@ -556,8 +538,8 @@
             let score1 = m ? m.s1 : '-'; let score2 = m ? m.s2 : '-';
             
             if (m && m.p1 !== null && m.p2 !== null) {
-                score1 += `<span class="text-[10px] text-white/60 font-normal ml-1">${m.p1}</span>`;
-                score2 += `<span class="text-[10px] text-white/60 font-normal ml-1">${m.p2}</span>`;
+                score1 += `<span class="text-[10px] text-white/50 font-normal ml-1">${m.p1}</span>`;
+                score2 += `<span class="text-[10px] text-white/50 font-normal ml-1">${m.p2}</span>`;
             }
 
             let medal1 = '', medal2 = '';
@@ -570,17 +552,13 @@
                 }
             }
 
-            // Логотипы теперь берутся в чистом верхнем регистре напрямую
-            const logo1 = m ? `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png` : '';
-            const logo2 = m ? `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png` : '';
-
             return `
                 <div class="match-row !cursor-default">
                     <div class="flex justify-between py-1 border-b border-zinc-900 text-xs font-bold ${isPast ? 'text-white' : 'text-zinc-500'} uppercase items-center">
-                        <div class="truncate pr-2 flex items-center">${m ? `<img src="${logo1}" class="team-logo" onerror="this.style.visibility='hidden'">` : ''}${defaultT1} ${medal1}</div><div class="text-neon font-black">${score1}</div>
+                        <div class="truncate pr-2 flex items-center">${m ? `<img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">` : ''}${defaultT1} ${medal1}</div><div class="text-neon font-black">${score1}</div>
                     </div>
                     <div class="flex justify-between py-1 text-xs font-bold ${isPast ? 'text-white' : 'text-zinc-500'} uppercase items-center">
-                        <div class="truncate pr-2 flex items-center">${m ? `<img src="${logo2}" class="team-logo" onerror="this.style.visibility='hidden'">` : ''}${defaultT2} ${medal2}</div><div class="text-neon font-black">${score2}</div>
+                        <div class="truncate pr-2 flex items-center">${m ? `<img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">` : ''}${defaultT2} ${medal2}</div><div class="text-neon font-black">${score2}</div>
                     </div>
                 </div>`;
         }
@@ -665,23 +643,10 @@
                 return true;
             });
 
-            if(filtered.length === 0) {
-                container.innerHTML = `<div class="text-zinc-500 text-center py-8 text-xs italic">Матчей не найдено</div>`;
-                return;
-            }
-
             filtered.forEach(m => {
                 const isPast = m.status === 'past';
                 let fieldDisplay = `ПОЛЕ #${m.field.toString().replace('ПОЛЕ #', '').trim()}`;
-                
-                let s1Val = isPast ? m.s1 : '';
-                let s2Val = isPast ? m.s2 : '';
-                if (isPast && m.p1 !== null && m.p2 !== null) {
-                    s1Val += `<span class="text-[9px] text-white/40 ml-0.5">${m.p1}</span>`;
-                    s2Val += `<span class="text-[9px] text-white/40 ml-0.5">${m.p2}</span>`;
-                }
-
-                // В расписании выводим НАЗВАНИЕ ГРУППЫ вместо слова МУЖЧИНЫ
+                let scores = getScoreDisplay(m);
                 let labelHeader = m.stage.includes('ГРУПП') ? `ГРУППА ${m.group}` : m.stage;
 
                 container.innerHTML += `
@@ -691,8 +656,8 @@
                             <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">${fieldDisplay}</div>
                         </div>
                         <div class="flex-grow flex flex-col gap-2 pl-3 text-left">
-                            <div class="flex items-center text-xs font-bold text-white uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t1} <span class="ml-auto text-zinc-400 font-black pr-4">${s1Val}</span></div>
-                            <div class="flex items-center text-xs font-bold text-white uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t2} <span class="ml-auto text-zinc-400 font-black pr-4">${s2Val}</span></div>
+                            <div class="flex items-center text-xs font-bold text-white uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t1} <span class="ml-auto text-zinc-400 font-black pr-4">${isPast ? scores.s1 : ''}</span></div>
+                            <div class="flex items-center text-xs font-bold text-white uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t2} <span class="ml-auto text-zinc-400 font-black pr-4">${isPast ? scores.s2 : ''}</span></div>
                         </div>
                         <div class="text-right border-l border-zinc-800/80 pl-4 min-w-[75px] shrink-0">
                             ${isPast ? `<span class="text-zinc-500 text-[11px]">✓ Сыгран<br><span class="text-[9px] block text-right">${m.date}</span></span>` : `<span class="text-white font-black text-sm">${m.time}<br><span class="text-[9px] block text-zinc-500 text-right font-normal">${m.date}</span></span>`}
@@ -734,7 +699,6 @@
             const container = document.getElementById('playoff-matches-2026');
             container.innerHTML = '';
 
-            // Стадии идут строго слева направо по возрастанию
             const stages = ['1/16', '1/8', '1/4', '1/2', 'ФИНАЛ'];
             nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 text-center ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
 
@@ -755,7 +719,6 @@
                     container.innerHTML += renderPlayoffCard(m, dT1, dT2);
                 });
             }
-            toggleSupercupBanner(currentGlobalMode === '2026' ? '2026' : archiveTournament);
         }
 
         function setPlayoffStage2026(stage) { currentPlayoffStage2026 = stage; render2026Playoffs(); }
@@ -773,11 +736,6 @@
             });
 
             const sorted = Object.values(counters).sort((a,b) => b.count - a.count);
-            if(sorted.length === 0) {
-                listContainer.innerHTML = `<div class="p-4 text-zinc-600 text-xs italic text-center">Статистика пуста</div>`;
-                return;
-            }
-
             sorted.forEach((p, idx) => {
                 listContainer.innerHTML += `
                     <div class="grid grid-cols-12 text-xs items-center p-3 font-bold text-center">
@@ -789,6 +747,7 @@
             });
         }
 
+        // КРИТИЧЕСКИЙ ФИКС СТАДИЙ И ОТСЕИВАНИЯ BYE В АРХИВЕ
         function renderArchiveCore() {
             const mArch = db.archive.filter(m => m.year === archiveYear && m.tournament.toUpperCase() === archiveTournament.toUpperCase());
             const gContainer = document.getElementById('archive-groups');
@@ -799,7 +758,7 @@
 
             if(activeArchiveTab === 'groups') {
                 gContainer.classList.remove('hidden'); gContainer.innerHTML = '';
-                const groupM = mArch.filter(m => m.stage.includes('ГРУПП') || m.stage.includes('ГРУППА'));
+                const groupM = mArch.filter(m => m.stage.includes('ГРУПП'));
                 const groups = [...new Set(groupM.map(m => m.stage))].sort();
 
                 if(groups.length === 0) {
@@ -819,46 +778,31 @@
                         } else {
                             bar = db.archive.some(m => m.year === archiveYear && m.tournament.toUpperCase() === archiveTournament.toUpperCase() && !m.stage.includes('ГРУПП') && (m.t1 === t.name || m.t2 === t.name)) ? 'green-bar' : 'red-bar';
                         }
-                        html += `<tr><td class="${bar}"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                        html += `<tr><td class="text-left font-bold uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
                     });
                     
                     gContainer.innerHTML += html + `</tbody></table></div>`;
                 });
-
-                let byeLegend = archiveYear === '2023' ? `
-                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-yellow-500 rounded-sm"></div><span>Выход в Плей-офф</span></div>
-                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-green-500 rounded-sm"></div><span>Выход в Плей-ин</span></div>`
-                    : `<div class="flex items-center gap-2"><div class="w-3 h-3 bg-green-500 rounded-sm"></div><span>Выход в Плей-офф</span></div>`;
-
-                gContainer.innerHTML += `
-                    <div class="mt-4 bg-zinc-900/50 p-4 border border-zinc-800 rounded-2xl text-[11px] text-zinc-400 space-y-3">
-                        <div class="flex gap-4 border-b border-zinc-800 pb-2 flex-wrap">${byeLegend} <div class="flex items-center gap-2"><div class="w-3 h-3 bg-red-500 rounded-sm"></div><span>Зона вылета</span></div></div>
-                        <div class="font-bold text-white uppercase text-[9px] tracking-widest">Положение при равенстве очков:</div>
-                        <ol class="list-decimal pl-4 space-y-1"><li>Личные встречи</li><li>Разница забитых и пропущенных мячей</li><li>Количество забитых голов</li></ol>
-                    </div>`;
             }
 
             if(activeArchiveTab === 'playoffs') {
                 pContainer.classList.remove('hidden');
-                const playM = mArch.filter(m => !m.stage.includes('ГРУПП') && !m.stage.includes('ГРУППА'));
+                const playM = mArch.filter(m => !m.stage.includes('ГРУПП') && m.t1 !== m.t2 && (m.s1 > 0 || m.s2 > 0 || m.p1 !== null)); 
                 
-                // Сортировка стадий архива строго слева направо по возрастанию
                 const order = ['1/32', '1/16', '1/8', '1/4', '1/2', 'МАТЧ ЗА 3-Е МЕСТО', 'ФИНАЛ'];
-                const stages = [...new Set(playM.map(m => m.stage.replace(' ФИНАЛА','')) || [])].sort((a, b) => {
-                    return order.indexOf(a) - order.indexOf(b);
-                });
+                const stages = [...new Set(playM.map(m => m.stage.replace(' ФИНАЛА','')) || [])].sort((a, b) => order.indexOf(a) - order.indexOf(b));
 
                 if(stages.length === 0) {
                     document.getElementById('archive-playoff-nav').innerHTML = '';
-                    document.getElementById('archive-playoff-matches').innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Плей-офф не найден</div>`;
+                    document.getElementById('archive-playoff-matches').innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Плей-офф отсутствует</div>`;
                     return;
                 }
 
                 if(!currentPlayoffStageArchive || !stages.includes(currentPlayoffStageArchive)) currentPlayoffStageArchive = stages[0];
                 
-                // Вкладки стадий в мобилках растягиваются на всю ширину
+                // Растянутые адаптивные кнопки стадий в мобильной версии на всю ширину
                 document.getElementById('archive-playoff-nav').innerHTML = stages.map(s => `
-                    <button class="playoff-stage-btn ${currentPlayoffStageArchive === s ? 'active' : ''}" onclick="setPlayoffStageArchive('${s}')">${s}</button>
+                    <button class="playoff-stage-btn flex-1 text-center text-[10px] !py-2.5" onclick="setPlayoffStageArchive('${s}')">${s}</button>
                 `).join('');
 
                 let matchesHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">';
@@ -870,21 +814,15 @@
 
             if(activeArchiveTab === 'results') {
                 rContainer.classList.remove('hidden'); rContainer.innerHTML = '';
-                if(mArch.length === 0) { rContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи отсутствуют</div>`; return; }
-
                 const stages = [...new Set(mArch.map(m => m.stage))];
                 stages.forEach(stg => {
                     let html = `<div class="mb-4"><h4 class="text-xs font-black text-neon uppercase tracking-wider mb-2">${stg}</h4><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">`;
                     mArch.filter(m => m.stage === stg).forEach(m => {
-                        let score1 = m.s1; let score2 = m.s2;
-                        if (m.p1 !== null && m.p2 !== null) {
-                            score1 += `<span class="text-[10px] text-white/50 font-normal ml-0.5">${m.p1}</span>`;
-                            score2 += `<span class="text-[10px] text-white/50 font-normal ml-0.5">${m.p2}</span>`;
-                        }
+                        let scores = getScoreDisplay(m);
                         html += `
                             <div class="bg-zinc-card/40 border border-zinc-900 p-3 rounded-xl flex justify-between text-xs font-bold uppercase items-center">
                                 <div class="space-y-1.5"><div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t1}</div><div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t2}</div></div>
-                                <div class="text-right text-neon font-black space-y-1.5"><div>${score1}</div><div>${score2}</div></div>
+                                <div class="text-right text-neon font-black space-y-1.5"><div>${scores.s1}</div><div>${scores.s2}</div></div>
                             </div>`;
                     });
                     rContainer.innerHTML += html + `</div></div>`;
@@ -911,12 +849,14 @@
                     else { stats[m.t1].d++; stats[m.t2].d++; stats[m.t1].pts += 1; stats[m.t2].pts += 1; }
                 }
             });
-            return Object.values(stats).sort((a,b) => {
-                if(b.pts !== a.pts) return b.pts - a.pts;
-                let diffA = a.gf - a.ga, diffB = b.gf - b.ga;
-                if(diffB !== diffA) return diffB - diffA;
-                return b.gf - a.gf;
-            });
+            return Object.values(stats).sort((a,b) => b.pts !== a.pts ? b.pts - a.pts : (b.gf-b.ga) !== (a.gf-a.ga) ? (b.gf-b.ga)-(a.gf-a.ga) : b.gf-a.gf);
+        }
+
+        function switchArchiveTab(tabName, btn) {
+            activeArchiveTab = tabName;
+            document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderArchiveCore();
         }
 
         function setupSwipeNavigation() {
@@ -976,7 +916,7 @@
 
         async function saveAdminData() {
             const mId = document.getElementById('admin-match-select').value;
-            const matchIndex = db.matches2026.findIndex(x => x.id == mId);
+            const matchIndex = db.matches2026.findIndex(x => x.id == matchIndex);
             if(matchIndex === -1) return;
 
             db.matches2026[matchIndex].s1 = parseInt(document.getElementById('adm-s1').value || 0);
@@ -1008,8 +948,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ matches: db.matches2026, goals: db.goals2026 })
                 });
-                alert('Данные обновлены и синхронизированы!');
-            } catch(e) { alert('Локальное сохранение выполнено.'); }
+                alert('Данные сохранены!');
+            } catch(e) {}
 
             closeAdmin(); render2026Core();
         }
