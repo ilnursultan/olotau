@@ -54,8 +54,9 @@
         .red-bar { position: relative; }
         .red-bar::before { content: ''; position: absolute; left: -20px; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EF4444; }
 
-        .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 14px 20px; margin-top: 8px; transition: all 0.2s; cursor: pointer; }
-        .match-row:hover { border-color: #3f3f46; }
+        .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 14px 20px; margin-top: 8px; transition: all 0.2s; }
+        .match-row.has-events { cursor: pointer; }
+        .match-row.has-events:hover { border-color: #00E676/50; }
         
         .tab-btn-top { padding: 10px 16px; border-radius: 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.05); color: #a1a1aa; white-space: nowrap; transition: all 0.2s; }
         .tab-btn-top.active { background: #00E676; color: #000; font-weight: 900; box-shadow: 0 0 15px rgba(0, 230, 118, 0.25); border-color: #00E676; }
@@ -67,13 +68,13 @@
 </head>
 <body>
     
-    <div id="olotau-app" class="pb-28">
+    <div id="olotau-app" class="pb-32">
         <nav class="w-full p-4 flex items-center justify-between border-b border-zinc-800/50 bg-black/70 backdrop-blur-lg sticky top-0 z-50">
             <a href="/" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 <span class="text-[10px] font-black uppercase tracking-widest">На главную</span>
             </a>
-            <div id="app-logo" class="text-neon font-black italic text-xl tracking-tighter cursor-pointer select-none">ОЛОТАУ</div>
+            <div id="app-logo" class="text-neon font-black italic text-xl tracking-tighter select-none">ОЛОТАУ</div>
         </nav>
 
         <div class="max-w-5xl mx-auto px-4 pt-6">
@@ -116,9 +117,9 @@
                 </div>
 
                 <div id="sub-2026-standings" class="hidden flex flex-col gap-4">
-                    <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 p-5 rounded-3xl text-xs font-bold text-center tracking-wide relative overflow-hidden">
-                        <div class="absolute -right-4 -bottom-6 text-7xl font-black text-yellow-500/5 select-none pointer-events-none">⚠️</div>
-                        <span class="relative z-10">⚠️ Игры группового этапа продолжаются. <span id="remaining-count">Осталось матчей: 0</span></span>
+                    <div class="bg-yellow-500 border border-yellow-600 text-black p-5 rounded-3xl text-xs font-black text-center tracking-wide relative overflow-hidden shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+                        <div class="absolute -right-2 -bottom-4 text-7xl font-black text-black/10 select-none pointer-events-none">⚠️</div>
+                        <span class="relative z-10">⚠️ ИГРЫ ГРУППОВОГО ЭТАПА ПРОДОЛЖАЮТСЯ. <span id="remaining-count">ОСТАЛОСЬ МАТЧЕЙ: 0</span></span>
                     </div>
                     <div class="group-card !bg-black/40">
                         <table id="overall-table">
@@ -165,16 +166,19 @@
 
         </div>
 
-        <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.8)]">
-            <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Сезон 2026</span>
-            </button>
-            <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4m-4 0H8m12 3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Архив</span>
-            </button>
-        </nav>
+        <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-[90] flex flex-col items-center gap-2">
+            <nav class="w-full bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
+                <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <span class="text-[8px] font-bold uppercase tracking-wider">Сезон 2026</span>
+                </button>
+                <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4m-4 0H8m12 3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-[8px] font-bold uppercase tracking-wider">Архив</span>
+                </button>
+            </nav>
+            <button onclick="openAdminViaPrompt()" class="w-6 h-6 flex items-center justify-center text-zinc-800 text-[10px] font-bold opacity-30 active:opacity-100 transition-opacity outline-none select-none">.</button>
+        </div>
     </div>
 
     <div id="admin-modal" class="fixed inset-0 bg-black/95 z-[9999] hidden flex flex-col p-4 overflow-y-auto">
@@ -248,7 +252,6 @@
         let archiveYear = '';
         let archiveTournament = '';
 
-        // Список пар для построения сетки в лайве
         const PLAYOFF_LIVE_STRUCTURE = [
             { id: "p1", p: "1 - 32" }, { id: "p2", p: "13 - 20" }, { id: "p3", p: "5 - 28" }, { id: "p4", p: "9 - 24" },
             { id: "p5", p: "3 - 30" }, { id: "p6", p: "15 - 18" }, { id: "p7", p: "7 - 26" }, { id: "p8", p: "11 - 22" },
@@ -258,12 +261,12 @@
 
         async function init() {
             try {
-                // Моки по умолчанию
+                // Моки по умолчанию для сезона 2026
                 db.matches2026 = [
-                    { id: "1", stage: "Групповой этап", group: "A", t1: "НИЖНИЕ КИГИ", t2: "АТАВДЫ", s1: 2, s2: 1, p1: null, p2: null, time: "14:00", date: "10 июля", field: "Поле №1", status: "past" },
-                    { id: "2", stage: "Групповой этап", group: "B", t1: "ЮЛУК", t2: "КИЛЬМЯК", s1: 0, s2: 3, p1: null, p2: null, time: "15:00", date: "10 июля", field: "Поле №2", status: "past" },
-                    { id: "3", stage: "Групповой этап", group: "C", t1: "БАЙГАЗИНА", t2: "УРАЗОВО", s1: 0, s2: 0, p1: null, p2: null, time: "09:00", date: "10 июля", field: "Поле №3", status: "future" },
-                    { id: "4", stage: "Групповой этап", group: "D", t1: "ПАВЛОДАР", t2: "АСКАРОВО", s1: 0, s2: 0, p1: null, p2: null, time: "09:25", date: "10 июля", field: "Поле №1", status: "future" }
+                    { id: "1", stage: "ГРУППА A", group: "A", t1: "НИЖНИЕ КИГИ", t2: "АТАВДЫ", s1: 2, s2: 1, p1: null, p2: null, time: "14:00", date: "10 июля", field: "Поле №1", status: "past" },
+                    { id: "2", stage: "ГРУППА B", group: "B", t1: "ЮЛУК", t2: "КИЛЬМЯК", s1: 0, s2: 3, p1: null, p2: null, time: "15:00", date: "10 июля", field: "Поле №2", status: "past" },
+                    { id: "3", stage: "ГРУППА C", group: "C", t1: "БАЙГАЗИНА", t2: "УРАЗОВО", s1: 0, s2: 0, p1: null, p2: null, time: "09:00", date: "10 июля", field: "Поле №3", status: "future" },
+                    { id: "4", stage: "ГРУППА D", group: "D", t1: "ПАВЛОДАР", t2: "АСКАРОВО", s1: 0, s2: 0, p1: null, p2: null, time: "09:25", date: "10 июля", field: "Поле №1", status: "future" }
                 ];
                 db.goals2026 = [
                     { match_id: "1", team: "НИЖНИЕ КИГИ", player: "Муфтахов Рустам", assistant: "Фазлыев Флюр", minute: 12, s1: 1, s2: 0 },
@@ -279,7 +282,7 @@
                     { team: "КИЛЬМЯК", name: "Мухаметов Булат Галипович" }, { team: "КИЛЬМЯК", name: "Хамзин Венер Тагирович" }
                 ];
 
-                // Загрузка Архива из Google Таблиц
+                // Загрузка Архива напрямую из Google Таблицы
                 const resArchive = await fetch(ARCHIVE_CSV_URL);
                 if(resArchive.ok) {
                     db.archive = parseArchiveCSV(await resArchive.text());
@@ -291,7 +294,7 @@
                 setupFiltersAndSelectors();
                 setGlobalMode('2026');
             } catch (err) {
-                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка инициализации модулей данных.</div>`;
+                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных.</div>`;
             }
         }
 
@@ -303,7 +306,7 @@
                 const p = lines[i].split(sep).map(x => x.trim());
                 if(p.length >= 7) {
                     result.push({
-                        year: p[0], tournament: p[1], stage: p[2],
+                        year: p[0], tournament: p[1], stage: p[2].toUpperCase(),
                         t1: p[3].toUpperCase(), t2: p[4].toUpperCase(),
                         s1: parseInt(p[5]||0), s2: parseInt(p[6]||0),
                         p1: p[7]?parseInt(p[7]):null, p2: p[8]?parseInt(p[8]):null
@@ -426,7 +429,7 @@
             const container = document.getElementById('sub-2026-tables');
             container.innerHTML = '';
             
-            const groupMatches = db.matches2026.filter(m => m.stage.toLowerCase().includes('группа') || m.stage.toLowerCase().includes('групповой'));
+            const groupMatches = db.matches2026.filter(m => m.stage.toLowerCase().includes('групп'));
             const groups = [...new Set(groupMatches.map(m => m.group))].sort();
 
             groups.forEach(gName => {
@@ -443,13 +446,20 @@
 
                 html += `<div class="mt-4 border-t border-zinc-800/60 pt-2 space-y-2">`;
                 mInGroup.forEach(m => {
+                    const hasEvents = db.goals2026.some(e => e.match_id === m.id);
                     let scoreText = m.status === 'past' ? `${m.s1} : ${m.s2}` : `${m.time}`;
+                    
+                    // Добавляем индикатор стрелочки только если есть зарегистрированные голы
+                    let scoreBadge = hasEvents 
+                        ? `<div class="flex items-center gap-1 bg-zinc-900 px-2 py-1 rounded font-black text-neon text-[11px]">${scoreText} <span class="text-[9px] text-zinc-500">▼</span></div>`
+                        : `<div class="bg-zinc-900/50 px-2 py-1 rounded font-black text-zinc-400 text-[11px]">${scoreText}</div>`;
+
                     html += `
-                        <div class="match-row" onclick="toggleDetails('det-2026-${m.id}')">
+                        <div class="match-row ${hasEvents ? 'has-events' : ''}" ${hasEvents ? `onclick="toggleDetails('det-2026-${m.id}')"` : ''}>
                             <div class="flex justify-between items-center text-xs">
-                                <div class="font-bold flex items-center w-5/12"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.display='none'">${m.t1}</div>
-                                <div class="w-2/12 text-center bg-zinc-900 px-2 py-1 rounded font-black text-neon text-[11px]">${scoreText}</div>
-                                <div class="font-bold flex items-center justify-end w-5/12 text-right">${m.t2}<img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-3 mr-0" onerror="this.style.display='none'"></div>
+                                <div class="font-bold flex items-center w-5/12 uppercase"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.display='none'">${m.t1}</div>
+                                <div class="w-2/12 flex justify-center">${scoreBadge}</div>
+                                <div class="font-bold flex items-center justify-end w-5/12 text-right uppercase">${m.t2}<img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-3 mr-0" onerror="this.style.display='none'"></div>
                             </div>
                             <div id="det-2026-${m.id}" class="hidden mt-3 pt-2 border-t border-zinc-900 text-[11px] text-zinc-400 space-y-1">
                                 ${renderEventsInline(m.id)}
@@ -463,7 +473,7 @@
 
         function renderEventsInline(matchId) {
             const events = db.goals2026.filter(e => e.match_id === matchId);
-            if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Авторы голов не зарегистрированы</div>`;
+            if(events.length === 0) return '';
             return events.map(e => {
                 const p = formatPlayerName(e.player);
                 const a = e.assistant ? ` (${formatPlayerName(e.assistant)})` : '';
@@ -524,7 +534,7 @@
 
         function render2026OverallStandings() {
             const futMatches = db.matches2026.filter(m => m.status === 'future').length;
-            document.getElementById('remaining-count').innerText = `Осталось матчей: ${futMatches}`;
+            document.getElementById('remaining-count').innerText = `${futMatches}`;
 
             const tbody = document.querySelector('#overall-table tbody');
             tbody.innerHTML = '';
@@ -564,7 +574,6 @@
             const pMatches = db.matches2026.filter(m => !m.stage.toLowerCase().includes('групп'));
 
             PLAYOFF_LIVE_STRUCTURE.forEach(pair => {
-                // Ищем матч, который соответствует паре плей-офф
                 const m = pMatches.find(x => x.id === pair.id) || { t1: `МЕСТО ${pair.p.split(' - ')[0]}`, t2: `МЕСТО ${pair.p.split(' - ')[1]}`, s1: '-', s2: '-' };
                 
                 container.innerHTML += `
@@ -652,31 +661,16 @@
             }
         }
 
-        // Логика Админки
-        let clickTimer;
-        document.getElementById('app-logo').addEventListener('mousedown', () => {
-            clickTimer = setTimeout(() => {
-                const pass = prompt('Введите секретный ключ администратора проекта Олотау:');
-                if(pass === 'admin2026') {
-                    document.getElementById('admin-modal').classList.remove('hidden');
-                    onAdminMatchChange();
-                } else if(pass !== null) {
-                    alert('Доступ заблокирован.');
-                }
-            }, 3000);
-        });
-
-        document.getElementById('app-logo').addEventListener('mouseup', () => clearTimeout(clickTimer));
-
-        window.addEventListener('keydown', (e) => {
-            if(e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
-                const pass = prompt('Введите секретный ключ:');
-                if(pass === 'admin2026') {
-                    document.getElementById('admin-modal').classList.remove('hidden');
-                    onAdminMatchChange();
-                }
+        // Авторизация в Админку
+        function openAdminViaPrompt() {
+            const pass = prompt('Введите секретный ключ администратора проекта Олотау:');
+            if(pass === '1996') {
+                document.getElementById('admin-modal').classList.remove('hidden');
+                onAdminMatchChange();
+            } else if(pass !== null) {
+                alert('Неверный пароль.');
             }
-        });
+        }
 
         function closeAdmin() { document.getElementById('admin-modal').classList.add('hidden'); }
 
@@ -764,7 +758,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ matches: db.matches2026, goals: db.goals2026 })
                 });
-                alert('Данные успешно сохранены в Google Таблицу и синхронизированы!');
+                alert('Данные обновлены и синхронизированы!');
             } catch(e) {
                 alert('Локальное сохранение выполнено.');
             }
