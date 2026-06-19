@@ -69,6 +69,7 @@
 <body>
     
     <div id="olotau-app" class="pb-28">
+        <!-- Навигационный бар -->
         <nav class="w-full p-4 flex items-center justify-between border-b border-zinc-800/50 bg-black/70 backdrop-blur-lg sticky top-0 z-50">
             <a href="/" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
@@ -79,6 +80,7 @@
 
         <div class="max-w-5xl mx-auto px-4 pt-6">
             <div id="mode-container" class="hidden flex flex-col gap-4">
+                <!-- Меню с Горизонтальным Скроллом -->
                 <div class="relative w-full border-b border-zinc-900 mb-2">
                     <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 lg:hidden pointer-events-none">
                         <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
@@ -94,22 +96,18 @@
                     </div>
                 </div>
 
-                <div id="archive-controls" class="hidden flex flex-col gap-3 items-center mb-4">
-                    <div class="flex gap-4 justify-center">
-                        <select id="archive-tournament" class="custom-select w-44 text-center"></select>
-                        <select id="archive-year" class="custom-select w-44 text-center"></select>
-                    </div>
-                    <div id="archive-debug-box" class="w-full max-w-md bg-zinc-900/80 border border-zinc-800 p-3 rounded-xl text-[10px] font-mono text-zinc-400 space-y-1">
-                        <div class="text-neon font-bold uppercase text-[9px] tracking-wider mb-1">🔧 Статус загрузки облачного архива:</div>
-                        <div id="debug-status">Ожидание загрузки...</div>
-                    </div>
+                <div id="archive-controls" class="hidden flex justify-center gap-4 mb-4">
+                    <select id="archive-tournament" class="custom-select w-44 text-center"></select>
+                    <select id="archive-year" class="custom-select w-44 text-center"></select>
                 </div>
             </div>
 
+            <!-- Главный Лоадер -->
             <div id="loader" class="text-center mt-20">
                 <div class="text-neon font-bold text-lg animate-pulse mb-2">Загрузка данных с полей...</div>
             </div>
 
+            <!-- СЕКЦИИ РЕЖИМА 2026 -->
             <div id="view-2026" class="hidden flex flex-col gap-4">
                 <div id="sub-2026-tables" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
 
@@ -171,6 +169,7 @@
                 </div>
             </div>
 
+            <!-- СЕКЦИЯ РЕЖИМА АРХИВА -->
             <div id="view-archive" class="hidden flex flex-col gap-4">
                 <div id="archive-groups" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 <div id="archive-playoffs" class="hidden flex flex-col gap-4">
@@ -180,6 +179,7 @@
             </div>
         </div>
 
+        <!-- Нижний навбар -->
         <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
             <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -192,6 +192,7 @@
         </nav>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО АДМИН-ПАНЕЛИ -->
     <div id="admin-modal" class="fixed inset-0 bg-black/95 z-[9999] hidden flex flex-col p-4 overflow-y-auto">
         <div class="max-w-2xl mx-auto w-full">
             <div class="flex justify-between items-center border-b border-zinc-800 pb-4 mb-6">
@@ -248,10 +249,10 @@
         </div>
     </div>
 
+    <!-- СКРИПТ КОР-ЛОГИКИ -->
     <script>
         const GOOGLE_APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbziiBtTEuwCr_rle1VHUjclNJ1Z-x7IfdEyAFpVLF7jTB-8DdtoJcve0vB5uXN0OLqv/exec';
         
-        // Рабочие CSV-эндпоинты твоей таблицы
         const URLS_2026 = {
             archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
             matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
@@ -296,28 +297,18 @@
         };
 
         async function init() {
-            const debugEl = document.getElementById('debug-status');
             try {
-                // 1. Загрузка реальных матчей 2026
                 const rM = await fetch(URLS_2026.matches);
                 if(rM.ok) db.matches2026 = parseCoreCSV(await rM.text(), 'm');
 
-                // 2. Загрузка голов/ассистов 2026
                 const rG = await fetch(URLS_2026.goals);
                 if(rG.ok) db.goals2026 = parseCoreCSV(await rG.text(), 'g');
 
-                // 3. Загрузка игроков 2026
                 const rP = await fetch(URLS_2026.players);
                 if(rP.ok) db.players2026 = parseCoreCSV(await rP.text(), 'p');
 
-                // 4. Загрузка Архива
-                debugEl.innerHTML = "⏳ Подключение к облаку архива...";
                 const resArchive = await fetch(URLS_2026.archive);
-                if(!resArchive.ok) {
-                    debugEl.innerHTML = `❌ Ошибка подключения. Код сервера: ${resArchive.status}.`;
-                } else {
-                    db.archive = parseArchiveCSV(await resArchive.text());
-                }
+                if(resArchive.ok) db.archive = parseArchiveCSV(await resArchive.text());
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('mode-container').classList.remove('hidden');
@@ -326,8 +317,7 @@
                 setGlobalMode('2026');
                 setupSwipeNavigation();
             } catch (err) {
-                debugEl.innerHTML = `❌ Ошибка инициализации: ${err.message}`;
-                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка сети Google Таблиц.</div>`;
+                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных.</div>`;
             }
         }
 
@@ -349,15 +339,8 @@
         }
 
         function parseArchiveCSV(text) {
-            const debugEl = document.getElementById('debug-status');
             const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
             const result = [];
-            
-            if(lines.length <= 1) {
-                debugEl.innerHTML = "⚠ Таблица архива пустая.";
-                return [];
-            }
-
             for(let i = 1; i < lines.length; i++) {
                 const sep = lines[i].includes(';') ? ';' : ',';
                 const p = lines[i].split(sep).map(x => x.trim());
@@ -371,9 +354,6 @@
                     });
                 }
             }
-
-            const years = [...new Set(result.map(r => r.year))];
-            debugEl.innerHTML = `🟢 Архив успешно загружен! Найдено матчей: ${result.length}. Доступные сезоны: [${years.join(', ')}]`;
             return result;
         }
 
@@ -418,7 +398,7 @@
                 btn2026.classList.add('text-gray-500'); btn2026.classList.remove('text-neon');
                 viewArch.classList.remove('hidden'); view2026.classList.add('hidden');
                 tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden');
-                renderArchiveCore();
+                updateArchiveYears(); 
             }
         }
 
@@ -442,17 +422,34 @@
                 document.getElementById(id).addEventListener('change', render2026Schedule);
             });
 
+            // Настройка селектора турниров архива
             const tArch = [...new Set(db.archive.map(m => m.tournament))];
-            const yArch = [...new Set(db.archive.map(m => m.year))].sort((a,b)=>b-a);
-
             document.getElementById('archive-tournament').innerHTML = tArch.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
-            document.getElementById('archive-year').innerHTML = yArch.map(y => `<option value="${y}">${y} ГОД</option>`).join('');
+            archiveTournament = tArch[0] || '';
 
-            archiveTournament = tArch[0] || ''; archiveYear = yArch[0] || '';
+            document.getElementById('archive-tournament').addEventListener('change', (e) => { 
+                archiveTournament = e.target.value; 
+                updateArchiveYears(); 
+            });
 
-            document.getElementById('archive-tournament').addEventListener('change', (e) => { archiveTournament = e.target.value; renderArchiveCore(); });
-            document.getElementById('archive-year').addEventListener('change', (e) => { archiveYear = e.target.value; renderArchiveCore(); });
+            document.getElementById('archive-year').addEventListener('change', (e) => { 
+                archiveYear = e.target.value; 
+                renderArchiveCore(); 
+            });
+
             document.getElementById('admin-match-select').innerHTML = db.matches2026.map(m => `<option value="${m.id}">[${m.stage}] ${m.t1} VS ${m.t2}</option>`).join('');
+        }
+
+        // ЖЕСТКАЯ ДИНАМИЧЕСКАЯ ФИЛЬТРАЦИЯ СЕЛЕКТОРОВ ГОДОВ ПОД КАЖДЫЙ ТУРНИР
+        function updateArchiveYears() {
+            const matchesForTournament = db.archive.filter(m => m.tournament === archiveTournament);
+            const dynamicYears = [...new Set(matchesForTournament.map(m => m.year))].sort((a,b)=>b-a);
+
+            const sY = document.getElementById('archive-year');
+            sY.innerHTML = dynamicYears.map(y => `<option value="${y}">${y} ГОД</option>`).join('');
+
+            archiveYear = dynamicYears[0] || '';
+            renderArchiveCore();
         }
 
         function render2026Core() {
@@ -527,6 +524,11 @@
                         <div class="col-span-9 font-medium text-zinc-300 pl-1">⚽ ${p}${a}</div>
                     </div>`;
             }).join('');
+        }
+
+        function toggleDetails(id) {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('hidden');
         }
 
         function render2026Schedule() {
@@ -684,8 +686,8 @@
 
             gContainer.innerHTML = ''; pContainer.innerHTML = '';
 
-            const groupM = mArch.filter(m => m.stage.toLowerCase().includes('групп'));
-            const playM = mArch.filter(m => !m.stage.toLowerCase().includes('групп'));
+            const groupM = mArch.filter(m => m.stage.toLowerCase().includes('групп') || m.stage.toLowerCase().includes('группа'));
+            const playM = mArch.filter(m => !m.stage.toLowerCase().includes('групп') && !m.stage.toLowerCase().includes('группа'));
 
             if(groupM.length > 0) {
                 gContainer.classList.remove('hidden');
@@ -759,6 +761,14 @@
             
             const ind = document.getElementById('scroll-indicator-top');
             if(ind && slider.scrollWidth <= slider.clientWidth) { ind.style.display = 'none'; }
+        }
+
+        function openAdminViaPrompt() {
+            const pass = prompt('Панель администратора. Введите ключ доступа:');
+            if(pass === '1996') {
+                document.getElementById('admin-modal').classList.remove('hidden');
+                onAdminMatchChange();
+            } else if(pass !== null) { alert('Доступ заблокирован.'); }
         }
 
         function closeAdmin() { document.getElementById('admin-modal').classList.add('hidden'); }
