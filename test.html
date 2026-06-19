@@ -69,7 +69,6 @@
 <body>
     
     <div id="olotau-app" class="pb-28">
-        <!-- Навигационный бар -->
         <nav class="w-full p-4 flex items-center justify-between border-b border-zinc-800/50 bg-black/70 backdrop-blur-lg sticky top-0 z-50">
             <a href="/" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
@@ -80,8 +79,6 @@
 
         <div class="max-w-5xl mx-auto px-4 pt-6">
             <div id="mode-container" class="hidden flex flex-col gap-4">
-                
-                <!-- Адаптивное Верхнее Меню с Горизонтальным Скроллом и индикатором -->
                 <div class="relative w-full border-b border-zinc-900 mb-2">
                     <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 lg:hidden pointer-events-none z-10">
                         <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
@@ -103,16 +100,13 @@
                 </div>
             </div>
 
-            <!-- Главный Лоадер -->
             <div id="loader" class="text-center mt-20">
                 <div class="text-neon font-bold text-lg animate-pulse mb-2">Загрузка данных с полей...</div>
             </div>
 
-            <!-- СЕКЦИИ РЕЖИМА 2026 -->
             <div id="view-2026" class="hidden flex flex-col gap-4">
                 <div id="sub-2026-tables" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
 
-                <!-- Вкладка 2: Расписание с фиксированной сеткой селекторов на мобилках -->
                 <div id="sub-2026-schedule" class="hidden flex flex-col gap-4">
                     <div class="grid grid-cols-2 sm:flex gap-2 justify-between bg-zinc-900/40 p-2 border border-zinc-800/60 rounded-2xl">
                         <select id="filter-teams" class="custom-select col-span-1 sm:flex-1"></select>
@@ -171,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- СЕКЦИЯ РЕЖИМА АРХИВА -->
             <div id="view-archive" class="hidden flex flex-col gap-4">
                 <div id="archive-groups" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 <div id="archive-playoffs" class="hidden flex flex-col gap-4">
@@ -181,7 +174,6 @@
             </div>
         </div>
 
-        <!-- Нижний навбар -->
         <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
             <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -194,7 +186,6 @@
         </nav>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО АДМИН-ПАНЕЛИ -->
     <div id="admin-modal" class="fixed inset-0 bg-black/95 z-[9999] hidden flex flex-col p-4 overflow-y-auto">
         <div class="max-w-2xl mx-auto w-full">
             <div class="flex justify-between items-center border-b border-zinc-800 pb-4 mb-6">
@@ -251,7 +242,6 @@
         </div>
     </div>
 
-    <!-- СКРИПТ КОР-ЛОГИКИ -->
     <script>
         const GOOGLE_APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbziiBtTEuwCr_rle1VHUjclNJ1Z-x7IfdEyAFpVLF7jTB-8DdtoJcve0vB5uXN0OLqv/exec';
         
@@ -329,9 +319,28 @@
             for(let i = 1; i < lines.length; i++) {
                 const sep = lines[i].includes(';') ? ';' : ',';
                 const p = lines[i].split(sep).map(x => x.trim());
-                if(mode === 'm' && p.length >= 13) {
-                    res.push({ id: p[0], stage: p[1].toUpperCase(), group: p[2].toUpperCase(), t1: p[3].toUpperCase(), t2: p[4].toUpperCase(), s1: parseInt(p[5]||0), s2: parseInt(p[6]||0), p1: p[7]?parseInt(p[7]):null, p2: p[8]?parseInt(p[8]):null, time: p[9], date: p[10], field: p[11].toUpperCase(), status: p[12] });
-                } else if(mode === 'g' && p.length >= 7) {
+                if(mode === 'm' && p.length >= 7) {
+                    // Страховка от смещения названий колонок в структуре твоей Google Таблицы
+                    let cleanGroup = p[2] ? p[2].toUpperCase() : '';
+                    let cleanStage = p[1] ? p[1].toUpperCase() : '';
+                    let finalStage = cleanGroup.includes('ГРУППА') ? cleanGroup : cleanStage;
+
+                    res.push({ 
+                        id: p[0], 
+                        stage: finalStage, 
+                        group: cleanGroup.replace('ГРУППА ', ''), 
+                        t1: p[3].toUpperCase(), 
+                        t2: p[4].toUpperCase(), 
+                        s1: parseInt(p[5]||0), 
+                        s2: parseInt(p[6]||0), 
+                        p1: p[7]?parseInt(p[7]):null, 
+                        p2: p[8]?parseInt(p[8]):null, 
+                        time: p[9] || '00:00', 
+                        date: p[10] || '', 
+                        field: p[11] ? p[11].toUpperCase() : '1', 
+                        status: p[12] ? p[12].toLowerCase() : 'future' 
+                    });
+                } else if(mode === 'g' && p.length >= 5) {
                     res.push({ match_id: p[0], team: p[1].toUpperCase(), player: p[2], assistant: p[3], minute: parseInt(p[4]||0), s1: parseInt(p[5]||0), s2: parseInt(p[6]||0) });
                 } else if(mode === 'p' && p.length >= 2) {
                     res.push({ team: p[0].toUpperCase(), name: p[1] });
@@ -347,8 +356,12 @@
                 const sep = lines[i].includes(';') ? ';' : ',';
                 const p = lines[i].split(sep).map(x => x.trim());
                 if(p.length >= 7) {
+                    let cleanGroup = p[2] ? p[2].toUpperCase() : '';
+                    let cleanStage = p[1] ? p[1].toUpperCase() : '';
+                    let finalStage = cleanGroup.includes('ГРУППА') ? cleanGroup : cleanStage;
+
                     result.push({
-                        year: p[0], tournament: p[1].toUpperCase(), stage: p[2].toUpperCase(),
+                        year: p[0], tournament: p[1].toUpperCase(), stage: finalStage,
                         t1: p[3].toUpperCase(), t2: p[4].toUpperCase(),
                         s1: parseInt(p[5]||0), s2: parseInt(p[6]||0),
                         p1: p[7]?parseInt(p[7]):null, p2: p[8]?parseInt(p[8]):null,
@@ -376,7 +389,7 @@
                 if(pass === '1996') {
                     document.getElementById('admin-modal').classList.remove('hidden');
                     onAdminMatchChange();
-                } else if(pass !== null) { alert('Доступ заблокирован.'); }
+                } else if(pass !== null) { alert('Неверный пароль.'); }
             }
         }
 
@@ -438,6 +451,10 @@
                 renderArchiveCore(); 
             });
 
+            updateAdminMatchSelect();
+        }
+
+        function updateAdminMatchSelect() {
             document.getElementById('admin-match-select').innerHTML = db.matches2026.map(m => `<option value="${m.id}">[${m.stage}] ${m.t1} VS ${m.t2}</option>`).join('');
         }
 
@@ -472,13 +489,18 @@
             const groupMatches = db.matches2026.filter(m => m.stage.toLowerCase().includes('групп'));
             const groups = [...new Set(groupMatches.map(m => m.group))].sort();
 
+            if(groups.length === 0) {
+                container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Таблицы групп появятся после заполнения расписания в Google Таблице</div>`;
+                return;
+            }
+
             groups.forEach(gName => {
+                if(!gName) return;
                 const mInGroup = groupMatches.filter(m => m.group === gName);
                 const sortedTeams = calculateGroupStats(mInGroup);
 
                 let html = `<div class="group-card"><table><thead><tr><th>Группа ${gName}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
                 sortedTeams.forEach((t) => {
-                    // Динамическая метка прохода в плей-офф
                     let bar = checkTeamReachedPlayoffs2026(t.name) ? 'green-bar' : 'red-bar';
                     const logoUrl = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png`;
                     html += `<tr><td class="${bar}"><img src="${logoUrl}" class="team-logo" onerror="this.style.display='none'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
@@ -490,12 +512,10 @@
                     const isPast = m.status === 'past';
                     let scoreText = isPast ? `${m.s1} : ${m.s2}` : `- : -`;
                     
-                    let scoreBadge = isPast 
-                        ? `<div class="flex items-center gap-1 bg-zinc-900 px-2 py-1 rounded font-black text-neon text-[11px]"><span>${scoreText}</span> <span class="text-[9px] text-zinc-500">▼</span></div>`
-                        : `<div class="bg-zinc-900/50 px-2 py-1 rounded font-black text-zinc-400 text-[11px]">${scoreText}</div>`;
+                    let scoreBadge = `<div class="flex items-center gap-1 bg-zinc-900 px-2 py-1 rounded font-black text-neon text-[11px]"><span>${scoreText}</span> <span class="text-[9px] text-zinc-500">▼</span></div>`;
 
                     html += `
-                        <div class="match-row ${isPast ? 'has-events' : ''}" ${isPast ? `onclick="toggleDetails('det-2026-${m.id}')"` : ''}>
+                        <div class="match-row has-events" onclick="toggleDetails('det-2026-${m.id}')">
                             <div class="flex justify-between items-center text-xs">
                                 <div class="font-bold flex items-center w-5/12 uppercase"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.display='none'">${m.t1}</div>
                                 <div class="w-2/12 flex justify-center">${scoreBadge}</div>
@@ -512,7 +532,7 @@
         }
 
         function renderEventsInline(matchId) {
-            const events = db.goals2026.filter(e => e.match_id === matchId);
+            const events = db.goals2026.filter(e => e.match_id == matchId);
             if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Голы не зафиксированы</div>`;
             return events.map(e => {
                 const p = formatPlayerName(e.player);
@@ -524,6 +544,11 @@
                         <div class="col-span-9 font-medium text-zinc-300 pl-1">⚽ ${p}${a}</div>
                     </div>`;
             }).join('');
+        }
+
+        function toggleDetails(id) {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('hidden');
         }
 
         function render2026Schedule() {
@@ -552,20 +577,22 @@
 
             filtered.forEach(m => {
                 const isPast = m.status === 'past';
+                let scoreText = isPast ? `${m.s1} : ${m.s2}` : `- : -`;
                 let statusBadge = isPast ? `<span class="text-zinc-500 text-[11px]">✓ Сыгран<br><span class="text-[9px] block text-right">${m.date}</span></span>` : `<span class="text-white font-black text-sm">${m.time}<br><span class="text-[9px] block text-zinc-500 text-right font-normal">${m.date}</span></span>`;
                 let stageColor = isPast ? 'text-zinc-500' : 'text-neon';
                 
-                // Название поля вынесено влево[cite: 1]
+                let cleanField = m.field.replace('ПОЛЕ #', '').trim();
+                let fieldDisplay = `ПОЛЕ #${cleanField}`;
+
                 container.innerHTML += `
                     <div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center ${isPast ? 'opacity-60' : ''}">
                         <div class="space-y-1 w-24 shrink-0 border-r border-zinc-800/80 pr-2">
                             <div class="text-[10px] font-black ${stageColor}">${m.stage}</div>
-                            <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">${m.field ? m.field : 'ПОЛЕ #1'}</div>
+                            <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">${fieldDisplay}</div>
                         </div>
-                        <!-- Названия команд прижаты строго влево -->
                         <div class="flex-grow flex flex-col gap-2 pl-4 text-left">
-                            <div class="flex items-center text-xs font-bold text-white uppercase"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.display='none'">${m.t1}</div>
-                            <div class="flex items-center text-xs font-bold text-white uppercase"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.display='none'">${m.t2}</div>
+                            <div class="flex items-center text-xs font-bold text-white uppercase"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.display='none'">${m.t1} <span class="ml-auto text-zinc-600 font-bold pr-4">${isPast ? m.s1 : ''}</span></div>
+                            <div class="flex items-center text-xs font-bold text-white uppercase"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.display='none'">${m.t2} <span class="ml-auto text-zinc-600 font-bold pr-4">${isPast ? m.s2 : ''}</span></div>
                         </div>
                         <div class="text-right border-l border-zinc-800/80 pl-4 min-w-[75px] shrink-0">
                             ${statusBadge}
@@ -586,6 +613,7 @@
             
             let structuredMap = [];
             groups.forEach(g => {
+                if(!g) return;
                 const sorted = calculateGroupStats(groupMatches.filter(m => m.group === g));
                 sorted.forEach((teamStats, rankInGroup) => {
                     structuredMap.push({ ...teamStats, groupRank: rankInGroup + 1 });
@@ -623,7 +651,7 @@
             const pairs = PLAYOFF_LIVE_STRUCTURE[currentPlayoffStage2026];
 
             pairs.forEach(pair => {
-                const m = pMatches.find(x => x.id === pair.id);
+                const m = pMatches.find(x => x.id == pair.id);
                 
                 let team1Name = m ? m.t1 : (currentPlayoffStage2026 === '1/16' ? `МЕСТО ${pair.p.split(' - ')[0]}` : pair.t1);
                 let team2Name = m ? m.t2 : (currentPlayoffStage2026 === '1/16' ? `МЕСТО ${pair.p.split(' - ')[1]}` : pair.team2);
@@ -683,7 +711,6 @@
 
             gContainer.innerHTML = ''; pContainer.innerHTML = '';
 
-            // Исправленная группировка стадий — распознает абсолютно любые префиксы
             const groupM = mArch.filter(m => m.stage.includes('ГРУПП'));
             const playM = mArch.filter(m => !m.stage.includes('ГРУПП'));
 
@@ -737,7 +764,7 @@
                     stats[m.t2].gf += m.s2; stats[m.t2].ga += m.s1;
 
                     if (m.s1 > m.s2) { stats[m.t1].w++; stats[m.t1].pts += 3; stats[m.t2].l++; }
-                    else if (m.s1 < m.s2) { stats[m.t2].w++; stats[m.t1].pts += 3; stats[m.t1].l++; }
+                    else if (m.s1 < m.s2) { stats[m.t2].w++; stats[m.t2].pts += 3; stats[m.t1].l++; }
                     else { stats[m.t1].d++; stats[m.t2].d++; stats[m.t1].pts += 1; stats[m.t2].pts += 1; }
                 }
             });
@@ -765,7 +792,7 @@
 
         function onAdminMatchChange() {
             const mId = document.getElementById('admin-match-select').value;
-            const m = db.matches2026.find(x => x.id === mId);
+            const m = db.matches2026.find(x => x.id == mId);
             if(!m) return;
 
             document.getElementById('admin-editor').classList.remove('hidden');
@@ -778,7 +805,7 @@
 
             document.getElementById('adm-t1-events').innerHTML = ''; document.getElementById('adm-t2-events').innerHTML = '';
 
-            const currentEvents = db.goals2026.filter(e => e.match_id === mId);
+            const currentEvents = db.goals2026.filter(e => e.match_id == mId);
             currentEvents.forEach(e => {
                 const side = e.team === m.t1 ? 't1' : 't2';
                 addEventRow(side, e.player, e.assistant, e.minute);
@@ -806,7 +833,7 @@
 
         async function saveAdminData() {
             const mId = document.getElementById('admin-match-select').value;
-            const matchIndex = db.matches2026.findIndex(x => x.id === mId);
+            const matchIndex = db.matches2026.findIndex(x => x.id == mId);
             if(matchIndex === -1) return;
 
             db.matches2026[matchIndex].s1 = parseInt(document.getElementById('adm-s1').value || 0);
@@ -815,7 +842,7 @@
             db.matches2026[matchIndex].p2 = document.getElementById('adm-p2').value ? parseInt(document.getElementById('adm-p2').value) : null;
             db.matches2026[matchIndex].status = document.getElementById('adm-status').value;
 
-            db.goals2026 = db.goals2026.filter(e => e.match_id !== mId);
+            db.goals2026 = db.goals2026.filter(e => e.match_id != mId);
             let currentS1 = 0; let currentS2 = 0;
 
             ['t1', 't2'].forEach(side => {
