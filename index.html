@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="max-w-md space-y-3">
-                    <h3 class="text-xs text-gray-400 font-black uppercase tracking-widest pl-1">Заявка на футбольный турнир</h3>
+                    <h3 class="text-xs text-gray-400 font-black uppercase tracking-tight pl-1">Заявка на футбольный турнир</h3>
                     <div class="grid grid-cols-2 gap-3 border border-white/10 p-2 rounded-2xl bg-white/5 backdrop-blur-md">
                         <button onclick="openModal('https://forms.yandex.ru/u/69d264af95add5617f4674e7')" class="py-4 bg-neon text-black font-black text-[11px] sm:text-sm rounded-xl uppercase tracking-wider neon-shadow active:scale-95 transition-transform duration-200">
                             Мужчины
@@ -294,8 +294,6 @@
                                         <span>• II турнир по волейболу среди мужских команд</span>
                                         <span>• II турнир по перетягиванию каната среди мужских команд</span>
                                         <span>• футбол 1 на 1</span>
-                                        <span>• футбол для великанов</span>
-                                        <span>• бампербол</span>
                                         <span>• удары на точность</span>
                                         <span>• чеканка мяча</span>
                                         <span>• броски в кольцо</span>
@@ -336,8 +334,6 @@
                                         <span>• II турнир по перетягиванию каната среди женских команд</span>
                                         <span>• IV чемпионат по конным скачкам</span>
                                         <span>• футбол 1 на 1</span>
-                                        <span>• футбол для великанов</span>
-                                        <span>• бампербол</span>
                                         <span>• футбольный триатлон</span>
                                         <span>• башкирский биатлон</span>
                                         <span>• курэш</span>
@@ -373,7 +369,6 @@
             </div>
         </section>
 
-        <!-- Видео с полей -->
         <section id="videos" class="py-12 bg-dark w-full overflow-hidden rounded-[40px]">
             <div class="mx-auto max-w-5xl">
                 <div class="px-6 mb-6 flex justify-between items-end" data-aos="fade-right">
@@ -396,7 +391,7 @@
                         </div>
                         <div class="absolute bottom-6 left-6 right-6">
                             <h3 class="text-2xl font-black mb-1 leading-tight">Башкирский вайб 2024</h3>
-                            <p class="text-sm text-gray-300 line-clamp-2">Автор: Триколор</p>
+                            <p class="text-sm text-gray-300 line-clamp-2">Автор: ...</p>
                         </div>
                     </a>
 
@@ -478,7 +473,6 @@
             </div>
         </section>
 
-        <!-- Атмосфера Вайб -->
         <section id="vibe-photos" class="py-12 bg-black w-full overflow-hidden">
             <div class="mx-auto max-w-5xl">
                 <div class="px-6 mb-6 flex justify-between items-end" data-aos="fade-right">
@@ -538,17 +532,22 @@
             </div>
         </section>
 
-        <section id="organizers" class="pt-10 pb-4 bg-dark w-full overflow-hidden rounded-[40px]">
+        <section id="organizers" class="py-12 bg-dark w-full overflow-hidden rounded-[40px]">
             <div class="mx-auto max-w-5xl">
-                <div class="px-6 mb-6 flex justify-between items-end" data-aos="fade-up">
-                    <h2 class="text-4xl font-black uppercase tracking-tight">Организаторы<br><span class="text-gray-600">Команда</span></h2>
-                    <div class="flex items-center gap-2 text-gray-500 pb-2">
-                        <span class="text-[9px] uppercase tracking-widest font-bold">Листайте</span>
-                        <svg class="w-4 h-4 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                    </div>
+                <div class="px-6 mb-6" data-aos="fade-up">
+                    <h2 class="text-4xl font-black uppercase tracking-tight w-full">
+                        Организаторы<br>
+                        <span class="flex justify-between items-center w-full">
+                            <span class="text-gray-600">Команда</span>
+                            <span class="flex items-center gap-2 text-gray-500 font-normal normal-case tracking-normal shrink-0">
+                                <span class="text-[9px] uppercase tracking-widest font-bold">Листайте</span>
+                                <svg class="w-4 h-4 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </span>
+                        </span>
+                    </h2>
                 </div>
                 
-                <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 hide-scrollbar draggable px-6" id="slider-orgs">
+                <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 hide-scrollbar draggable px-6" id="slider-orgs">
                     <a href="https://vk.com/linargalin" target="_blank" class="snap-center shrink-0 w-32 flex flex-col items-center pointer-events-none md:pointer-events-auto">
                         <img src="https://raw.githubusercontent.com/ilnursultan/olotau/main/Linar.png" class="w-24 h-24 rounded-full object-cover border-2 border-zinc-800 mb-3 shadow-lg">
                         <h4 class="text-sm font-bold text-center leading-tight">Линар Галин</h4>
@@ -623,7 +622,6 @@
             </div>
         </section>
 
-        <!-- Мерч -->
         <section id="merch" class="py-12 bg-black px-6 w-full max-w-5xl mx-auto">
             <h2 class="text-4xl font-black uppercase tracking-tight mb-8" data-aos="fade-up">Официальный<br><span class="text-gray-600">Мерч</span></h2>
             
@@ -632,7 +630,7 @@
                     <div>
                         <img src="https://raw.githubusercontent.com/ilnursultan/olotau/main/Merch1.png" class="w-full aspect-square md:h-48 md:w-full object-cover rounded-xl mb-3">
                         <h4 class="font-bold text-base mb-1 leading-tight">Футболка «Олотау йыйыны»</h4>
-                        <p class="text-xs text-gray-500 leading-tight mb-2">Базовая плотная футболка. Отличное качество для активного отдыха.</p>
+                        <p class="text-xs text-gray-500 leading-tight mb-2">Базовая плотная футболка. Отличное качество для active-fit.</p>
                     </div>
                     <div class="mt-2">
                         <div class="text-neon font-black text-xl mb-2">1490 ₽</div>
@@ -741,7 +739,7 @@
             </a>
             <a href="#videos" class="flex flex-col items-center justify-center w-1/5 py-2 text-gray-500 hover:text-white transition-colors">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Video</span>
+                <span class="text-[8px] font-bold uppercase tracking-wider">Видео</span>
             </a>
             <a href="#merch" class="flex flex-col items-center justify-center w-1/5 py-2 text-gray-500 hover:text-white transition-colors">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
