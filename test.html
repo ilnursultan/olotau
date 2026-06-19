@@ -101,7 +101,7 @@
                     </div>
                     <div id="archive-debug-box" class="w-full max-w-md bg-zinc-900/80 border border-zinc-800 p-3 rounded-xl text-[10px] font-mono text-zinc-400 space-y-1">
                         <div class="text-neon font-bold uppercase text-[9px] tracking-wider mb-1">🔧 Статус загрузки облачного архива:</div>
-                        <div id="debug-status">Ожидание инициализации...</div>
+                        <div id="debug-status">Ожидание загрузки...</div>
                     </div>
                 </div>
             </div>
@@ -250,7 +250,14 @@
 
     <script>
         const GOOGLE_APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbziiBtTEuwCr_rle1VHUjclNJ1Z-x7IfdEyAFpVLF7jTB-8DdtoJcve0vB5uXN0OLqv/exec';
-        const ARCHIVE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1969248231&output=csv';
+        
+        // Рабочие CSV-эндпоинты твоей таблицы
+        const URLS_2026 = {
+            archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
+            matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
+            goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
+            players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv'
+        };
 
         let db = { matches2026: [], goals2026: [], players2026: [], archive: [] };
         let currentGlobalMode = '2026';
@@ -263,7 +270,6 @@
         let logoClickCount = 0;
         let logoClickTimeout;
 
-        // Пары live-генерации плей-офф с чистыми префиксами стадий без каши
         const PLAYOFF_LIVE_STRUCTURE = {
             '1/16': [
                 { id: "p1", p: "1 - 32" }, { id: "p2", p: "13 - 20" }, { id: "p3", p: "5 - 28" }, { id: "p4", p: "9 - 24" },
@@ -292,31 +298,25 @@
         async function init() {
             const debugEl = document.getElementById('debug-status');
             try {
-                // Демо-данные для сезона 2026
-                db.matches2026 = [
-                    { id: "1", stage: "ГРУППА A", group: "A", t1: "НИЖНИЕ КИГИ", t2: "АТАВДЫ", s1: 2, s2: 1, p1: null, p2: null, time: "14:00", date: "10 июля", field: "Поле №1", status: "past" },
-                    { id: "2", stage: "ГРУППА B", group: "B", t1: "ЮЛУК", t2: "КИЛЬМЯК", s1: 0, s2: 3, p1: null, p2: null, time: "15:00", date: "10 июля", field: "Поле №2", status: "past" },
-                    { id: "3", stage: "ГРУППА C", group: "C", t1: "БАЙГАЗИНА", t2: "УРАЗОВО", s1: 0, s2: 0, p1: null, p2: null, time: "09:00", date: "10 июля", field: "Поле №3", status: "future" },
-                    { id: "4", stage: "ГРУППА D", group: "D", t1: "ПАВЛОДАР", t2: "АСКАРОВО", s1: 0, s2: 0, p1: null, p2: null, time: "09:25", date: "10 июля", field: "Поле №1", status: "future" }
-                ];
-                db.goals2026 = [
-                    { match_id: "1", team: "НИЖНИЕ КИГИ", player: "Муфтахов Рустам", assistant: "Фазлыев Флюр", minute: 12, s1: 1, s2: 0 },
-                    { match_id: "1", team: "НИЖНИЕ КИГИ", player: "Муфтахов Рустам", assistant: "", minute: 24, s1: 2, s2: 0 },
-                    { match_id: "1", team: "АТАВДЫ", player: "Ишбулатов Талгат", assistant: "", minute: 19, s1: 2, s2: 1 }
-                ];
-                db.players2026 = [
-                    { team: "НИЖНИЕ КИГИ", name: "Муфтахов Рустам" }, { team: "НИЖНИЕ КИГИ", name: "Фазлыев Флюр" }, { team: "АТАВДЫ", name: "Ишбулатов Талгат" }
-                ];
+                // 1. Загрузка реальных матчей 2026
+                const rM = await fetch(URLS_2026.matches);
+                if(rM.ok) db.matches2026 = parseCoreCSV(await rM.text(), 'm');
 
-                debugEl.innerHTML = "⏳ Подключение к Google Таблице...";
-                const resArchive = await fetch(ARCHIVE_CSV_URL);
-                
+                // 2. Загрузка голов/ассистов 2026
+                const rG = await fetch(URLS_2026.goals);
+                if(rG.ok) db.goals2026 = parseCoreCSV(await rG.text(), 'g');
+
+                // 3. Загрузка игроков 2026
+                const rP = await fetch(URLS_2026.players);
+                if(rP.ok) db.players2026 = parseCoreCSV(await rP.text(), 'p');
+
+                // 4. Загрузка Архива
+                debugEl.innerHTML = "⏳ Подключение к облаку архива...";
+                const resArchive = await fetch(URLS_2026.archive);
                 if(!resArchive.ok) {
-                    debugEl.innerHTML = `❌ Ошибка подключения. Код ответа сервера: ${resArchive.status}. Проверь публикацию листа!`;
+                    debugEl.innerHTML = `❌ Ошибка подключения. Код сервера: ${resArchive.status}.`;
                 } else {
-                    const rawText = await resArchive.text();
-                    debugEl.innerHTML = `⏳ Файл получен (${rawText.length} байт). Парсинг структуры...`;
-                    db.archive = parseArchiveCSV(rawText);
+                    db.archive = parseArchiveCSV(await resArchive.text());
                 }
 
                 document.getElementById('loader').style.display = 'none';
@@ -326,9 +326,26 @@
                 setGlobalMode('2026');
                 setupSwipeNavigation();
             } catch (err) {
-                debugEl.innerHTML = `❌ Критическая ошибка скрипта: ${err.message}`;
-                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных.</div>`;
+                debugEl.innerHTML = `❌ Ошибка инициализации: ${err.message}`;
+                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка сети Google Таблиц.</div>`;
             }
+        }
+
+        function parseCoreCSV(text, mode) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            const res = [];
+            for(let i = 1; i < lines.length; i++) {
+                const sep = lines[i].includes(';') ? ';' : ',';
+                const p = lines[i].split(sep).map(x => x.trim());
+                if(mode === 'm' && p.length >= 13) {
+                    res.push({ id: p[0], stage: p[1].toUpperCase(), group: p[2].toUpperCase(), t1: p[3].toUpperCase(), t2: p[4].toUpperCase(), s1: parseInt(p[5]||0), s2: parseInt(p[6]||0), p1: p[7]?parseInt(p[7]):null, p2: p[8]?parseInt(p[8]):null, time: p[9], date: p[10], field: p[11], status: p[12] });
+                } else if(mode === 'g' && p.length >= 7) {
+                    res.push({ match_id: p[0], team: p[1].toUpperCase(), player: p[2], assistant: p[3], minute: parseInt(p[4]||0), s1: parseInt(p[5]||0), s2: parseInt(p[6]||0) });
+                } else if(mode === 'p' && p.length >= 2) {
+                    res.push({ team: p[0].toUpperCase(), name: p[1] });
+                }
+            }
+            return res;
         }
 
         function parseArchiveCSV(text) {
@@ -337,35 +354,26 @@
             const result = [];
             
             if(lines.length <= 1) {
-                debugEl.innerHTML = "⚠ Внимание: Получена пустая таблица или только строка заголовков!";
+                debugEl.innerHTML = "⚠ Таблица архива пустая.";
                 return [];
             }
 
-            let errorsFound = 0;
             for(let i = 1; i < lines.length; i++) {
                 const sep = lines[i].includes(';') ? ';' : ',';
                 const p = lines[i].split(sep).map(x => x.trim());
-                
-                if(p.length < 7) {
-                    errorsFound++;
-                    if(errorsFound <= 2) {
-                        debugEl.innerHTML += `<br>⚠ Строка ${i+1} содержит мало колонок (${p.length}). Проверь разделители!`;
-                    }
-                    continue;
+                if(p.length >= 7) {
+                    result.push({
+                        year: p[0], tournament: p[1], stage: p[2].toUpperCase(),
+                        t1: p[3].toUpperCase(), t2: p[4].toUpperCase(),
+                        s1: parseInt(p[5]||0), s2: parseInt(p[6]||0),
+                        p1: p[7]?parseInt(p[7]):null, p2: p[8]?parseInt(p[8]):null,
+                        status: 'past'
+                    });
                 }
-
-                result.push({
-                    year: p[0], tournament: p[1], stage: p[2].toUpperCase(),
-                    t1: p[3].toUpperCase(), t2: p[4].toUpperCase(),
-                    s1: parseInt(p[5]||0), s2: parseInt(p[6]||0),
-                    p1: p[7]?parseInt(p[7]):null, p2: p[8]?parseInt(p[8]):null
-                });
             }
 
             const years = [...new Set(result.map(r => r.year))];
-            const tournaments = [...new Set(result.map(r => r.tournament))];
-            debugEl.innerHTML = `🟢 Успешно загружено матчей: ${result.length}.<br>Сезоны: [${years.join(', ')}]. Турниры: [${tournaments.join(', ')}]`;
-            
+            debugEl.innerHTML = `🟢 Архив успешно загружен! Найдено матчей: ${result.length}. Доступные сезоны: [${years.join(', ')}]`;
             return result;
         }
 
@@ -386,9 +394,7 @@
                 if(pass === '1996') {
                     document.getElementById('admin-modal').classList.remove('hidden');
                     onAdminMatchChange();
-                } else if(pass !== null) {
-                    alert('Доступ отклонен.');
-                }
+                } else if(pass !== null) { alert('Доступ заблокирован.'); }
             }
         }
 
@@ -465,6 +471,11 @@
             const groupMatches = db.matches2026.filter(m => m.stage.toLowerCase().includes('групп'));
             const groups = [...new Set(groupMatches.map(m => m.group))].sort();
 
+            if(groups.length === 0) {
+                container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Таблицы групп появятся после заполнения расписания в Google Таблице</div>`;
+                return;
+            }
+
             groups.forEach(gName => {
                 const mInGroup = groupMatches.filter(m => m.group === gName);
                 const sortedTeams = calculateGroupStats(mInGroup);
@@ -516,11 +527,6 @@
                         <div class="col-span-9 font-medium text-zinc-300 pl-1">⚽ ${p}${a}</div>
                     </div>`;
             }).join('');
-        }
-
-        function toggleDetails(id) {
-            const el = document.getElementById(id);
-            if(el) el.classList.toggle('hidden');
         }
 
         function render2026Schedule() {
@@ -620,7 +626,6 @@
             pairs.forEach(pair => {
                 const m = pMatches.find(x => x.id === pair.id);
                 
-                // Чистое автоматическое форматирование сетки будущего по шаблону ПОБЕДИТЕЛЬ 1/16 #X
                 let team1Name = m ? m.t1 : (currentPlayoffStage2026 === '1/16' ? `МЕСТО ${pair.p.split(' - ')[0]}` : pair.t1);
                 let team2Name = m ? m.t2 : (currentPlayoffStage2026 === '1/16' ? `МЕСТО ${pair.p.split(' - ')[1]}` : pair.team2);
                 
@@ -656,7 +661,7 @@
 
             const sorted = Object.values(counters).sort((a,b) => b.count - a.count);
             if(sorted.length === 0) {
-                listContainer.innerHTML = `<div class="p-4 text-zinc-600 text-xs italic text-center">Нет зарегистрированных данных</div>`;
+                listContainer.innerHTML = `<div class="p-4 text-zinc-600 text-xs italic text-center">Статистика появится после внесения авторов голов в админке</div>`;
                 return;
             }
 
