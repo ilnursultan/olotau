@@ -6,7 +6,7 @@
     <title>Турнирный Центр | Олотау йыйыны</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -354,9 +354,9 @@
             let s = normalizeTeamName(name);
             if (!s) return '';
             let upper = s.toUpperCase();
-            if (upper.startsWith("НОВО")) { s = "Н-" + s.substring(4); } 
-            else if (upper.startsWith("БОЛЬШИЕ") || upper.startsWith("БОЛЬШАЯ") || upper.startsWith("БОЛЬШОЕ")) { let parts = s.split(/\s+/); s = "Б. " + parts.slice(1).join(" "); } 
-            else if (upper.startsWith("СТАРО")) { s = "С-" + s.substring(5); } 
+            if (upper.startsWith("НОВО")) { s = "Н-" + s.substring(4); }
+            else if (upper.startsWith("БОЛЬШИЕ") || upper.startsWith("БОЛЬШАЯ") || upper.startsWith("БОЛЬШОЕ")) { let parts = s.split(/\s+/); s = "Б. " + parts.slice(1).join(" "); }
+            else if (upper.startsWith("СТАРО")) { s = "С-" + s.substring(5); }
             else if (upper.startsWith("КРАСНАЯ")) { let parts = s.split(/\s+/); s = "КР. " + parts.slice(1).join(" "); }
             return s;
         }
@@ -371,8 +371,8 @@
         function startLoaderAnimation() {
             const word = "ОЛОТАУ "; const secondWord = "ЙЫЙЫНЫ"; const el = document.getElementById('text-anim-loader'); let idx = 0; if(!el) return; el.innerHTML = "";
             const interval = setInterval(() => {
-                if(idx < word.length) { el.innerHTML = `<span class="text-neon">${word.substring(0, idx + 1)}</span>`; idx++; } 
-                else if (idx < word.length + secondWord.length) { el.innerHTML = `<span class="text-neon">${word}</span><span class="text-white">${secondWord.substring(0, idx - word.length + 1)}</span>`; idx++; } 
+                if(idx < word.length) { el.innerHTML = `<span class="text-neon">${word.substring(0, idx + 1)}</span>`; idx++; }
+                else if (idx < word.length + secondWord.length) { el.innerHTML = `<span class="text-neon">${word}</span><span class="text-white">${secondWord.substring(0, idx - word.length + 1)}</span>`; idx++; }
                 else { el.innerHTML = ""; idx = 0; }
             }, 150);
             return interval;
@@ -437,12 +437,12 @@
                     dist += ' район';
                 }
                 
-                // Район и республика выделены жирным, километры — серым
-                let baseGeo = `<span class="font-extrabold text-zinc-300">${dist}${dist && item.subject ? ', ' : ''}${item.subject}</span>`.toUpperCase();
+                // РАЙОН СТАЛ ЖИРНЫМ И БЕЛЫМ, КИЛОМЕТРЫ — ТОНКИМИ И СЕРЫМИ
+                let baseGeo = `<span class="font-extrabold text-white">${dist}${dist && item.subject ? ', ' : ''}${item.subject}</span>`.toUpperCase();
                 
                 let distanceHtml = '';
                 if (item.distance && parseInt(item.distance) > 0 && !key.includes('КУТУЕВО')) {
-                    distanceHtml = `<div class="text-zinc-500 font-bold text-[10px] tracking-wider mt-0.5">ДО КУТУЕВО ${item.distance} КМ</div>`;
+                    distanceHtml = `<div class="text-zinc-500 font-light text-[10px] tracking-wider mt-0.5">ДО КУТУЕВО ${item.distance} КМ</div>`;
                 }
                 
                 return `<span>${baseGeo}</span>${distanceHtml}`;
@@ -470,7 +470,7 @@
             const lines = text.split(/\r?\n/).filter(l => l.trim() !== ''); const result = [];
             for(let i = 1; i < lines.length; i++) {
                 const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
-                if (!p[3] || !p[4]) continue; 
+                if (!p[3] || !p[4]) continue;
                 result.push({ year: p[0] || '2025', tournament: p[1] || 'Мужчины', stage: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(p[4]), s1: p[5] !== "" ? parseInt(p[5]) : 0, s2: p[6] !== "" ? parseInt(p[6]) : 0, p1: p[7] ? parseInt(p[7]) : null, p2: p[8] ? parseInt(p[8]) : null, status: 'past' });
             }
             return result;
@@ -486,8 +486,8 @@
                 
                 if (m.status === 'past' || (m.s1 !== null && m.s2 !== null && (m.s1 !== 0 || m.s2 !== 0))) {
                     stats[t1Norm].games++; stats[t2Norm].games++; stats[t1Norm].gf += m.s1; stats[t1Norm].ga += m.s2; stats[t2Norm].gf += m.s2; stats[t2Norm].ga += m.s1;
-                    if (m.s1 > m.s2) { stats[t1Norm].w++; stats[t1Norm].pts += 3; stats[t2Norm].l++; } 
-                    else if (m.s1 < m.s2) { stats[t2Norm].w++; stats[t2Norm].pts += 3; stats[t1Norm].l++; } 
+                    if (m.s1 > m.s2) { stats[t1Norm].w++; stats[t1Norm].pts += 3; stats[t2Norm].l++; }
+                    else if (m.s1 < m.s2) { stats[t2Norm].w++; stats[t2Norm].pts += 3; stats[t1Norm].l++; }
                     else { stats[t1Norm].d++; stats[t1Norm].pts += 1; stats[t2Norm].d++; stats[t2Norm].pts += 1; }
                 }
             });
@@ -529,7 +529,6 @@
         }
 
         function setupStatsSelectors() {
-            // По ТЗ убираем "Суперкубок" из выпадающего списка категорий
             document.getElementById('stats-gender').innerHTML = `<option value="Мужчины">МУЖЧИНЫ</option><option value="Женщины">ЖЕНЩИНЫ</option>`;
             document.getElementById('stats-gender').addEventListener('change', updateStatsTeamsList);
             document.getElementById('stats-team').addEventListener('change', renderTeamStatistics);
@@ -538,17 +537,17 @@
 
         function updateStatsTeamsList() {
             const gender = document.getElementById('stats-gender').value; let allTeams = new Set();
-            db.archive.forEach(m => { 
-                if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) { 
-                    if(m.t1 && m.t1 !== '-' && m.t1 !== '') allTeams.add(normalizeTeamName(m.t1)); 
-                    if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2)); 
-                } 
+            db.archive.forEach(m => {
+                if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) {
+                    if(m.t1 && m.t1 !== '-' && m.t1 !== '') allTeams.add(normalizeTeamName(m.t1));
+                    if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2));
+                }
             });
-            if (gender === 'Мужчины') { 
-                db.matches2026.forEach(m => { 
-                    if(m.t1 && m.t1 !== '-' && m.t1 !== '') allTeams.add(normalizeTeamName(m.t1)); 
-                    if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2)); 
-                }); 
+            if (gender === 'Мужчины') {
+                db.matches2026.forEach(m => {
+                    if(m.t1 && m.t1 !== '-' && m.t1 !== '') allTeams.add(normalizeTeamName(m.t1));
+                    if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2));
+                });
             }
             
             const sortedTeams = [...allTeams].sort(); const teamSelect = document.getElementById('stats-team');
@@ -577,7 +576,8 @@
             let participations = new Set(); let games = 0, w = 0, d = 0, l = 0, gf = 0, ga = 0;
             let historyMatches = []; let bestWeight = -1; let bestStageText = 'Групповой этап'; let bestYear = '--';
             
-            let championYears = [];
+            // Зал славы: Списки победных лет
+            let goldYears = [], silverYears = [], bronzeYears = [];
             let activeArchiveYears = new Set();
 
             const stageWeight = { 'Финал_Победа': 10, 'Финал_Поражение': 9, '3-е место_Победа': 8, '3-е место_Поражение': 7, '1/2': 6, '1/4': 5, '1/8': 4, '1/16': 3, '1/32': 2, 'Групповой этап': 1 };
@@ -612,12 +612,18 @@
 
                 if (currentStage.toLowerCase().includes('финал') && !currentStage.toLowerCase().includes('3-е')) {
                     if (isWin) { 
-                        weightKey = 'Финал_Победа'; displayText = '1 МЕСТО 🏆'; 
-                        if (yearStr !== '2026') championYears.push(yearStr);
+                        weightKey = 'Финал_Победа'; displayText = '1 МЕСТО 🏆';
+                        goldYears.push(yearStr);
                     } 
-                    else { weightKey = 'Финал_Поражение'; displayText = '2 МЕСТО 🥈'; }
+                    else { 
+                        weightKey = 'Финал_Поражение'; displayText = '2 МЕСТО 🥈';
+                        silverYears.push(yearStr);
+                    }
                 } else if (currentStage.toLowerCase().includes('3-е место')) {
-                    if (isWin) { weightKey = '3-е место_Победа'; displayText = '3 МЕСТО 🥉'; } 
+                    if (isWin) { 
+                        weightKey = '3-е место_Победа'; displayText = '3 МЕСТО 🥉';
+                        bronzeYears.push(yearStr);
+                    } 
                     else { weightKey = '3-е место_Поражение'; displayText = '4 МЕСТО'; }
                 } else {
                     weightKey = Object.keys(stageWeight).find(k => currentStage.includes(k)) || 'Групповой этап';
@@ -650,31 +656,37 @@
             badgesContainer.innerHTML = '';
             
             let badgesHtml = '';
-            let isChampion = championYears.length > 0;
+            let isChampion = goldYears.length > 0;
             
             const requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
             let isVeteran = requiredYears.every(y => activeArchiveYears.has(y));
             let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
 
-            if (isChampion) {
-                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-yellow-500/40 bg-yellow-500/10 text-yellow-500">🏆 Чемпион (${championYears.sort().join(', ')})</span>`;
+            // МИНИАТЮРНЫЙ СТИЛЬНЫЙ ЗАЛ СЛАВЫ НАГРАД КОМАНДЫ (МЕДАЛИ)
+            if (goldYears.length > 0) {
+                badgesHtml += `<div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full text-amber-400 text-[10px] font-black tracking-wide shadow-[0_0_10px_rgba(234,179,8,0.15)] select-none">🥇 <span class="opacity-70 font-bold">х</span>${goldYears.length}</div>`;
+            }
+            if (silverYears.length > 0) {
+                badgesHtml += `<div class="flex items-center gap-1 bg-slate-400/10 border border-slate-400/30 px-2.5 py-1 rounded-full text-slate-300 text-[10px] font-black tracking-wide select-none">🥈 <span class="opacity-70 font-bold">х</span>${silverYears.length}</div>`;
+            }
+            if (bronzeYears.length > 0) {
+                badgesHtml += `<div class="flex items-center gap-1 bg-amber-700/10 border border-amber-700/30 px-2.5 py-1 rounded-full text-amber-600 text-[10px] font-black tracking-wide select-none">🥉 <span class="opacity-70 font-bold">х</span>${bronzeYears.length}</div>`;
             }
             if (isVeteran) {
-                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-neon/40 bg-neon/10 text-neon">💎 Ветеран турнира</span>`;
+                badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide uppercase border border-neon/40 bg-neon/10 text-neon select-none">💎 Ветеран</span>`;
             }
             if (isHost) {
-                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-white/20 bg-white/5 text-white">🏠 Хозяева турнира</span>`;
+                badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide uppercase border border-white/20 bg-white/5 text-white select-none">🏠 Хозяева</span>`;
             }
             badgesContainer.innerHTML = badgesHtml;
 
             mainCardEl.className = mainCardEl.className.replace(/\s(before:bg-[^\s]+|border-[^\s]+|shadow-[^\s]+)/g, '');
 
-            // Переключение мягких внутренних градиентов без визуальных артефактов
             if (isChampion) {
                 mainCardEl.style.borderColor = 'rgba(234, 179, 8, 0.25)';
                 mainCardEl.style.boxShadow = '0 30px 60px -15px rgba(234, 179, 8, 0.12)';
                 mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(234, 179, 8, 0.12) 0%, rgba(0, 0, 0, 0) 100%)';
-            } else if (isVeteran) {
+            } else if (isVeteran || isHost) {
                 mainCardEl.style.borderColor = 'rgba(0, 230, 118, 0.25)';
                 mainCardEl.style.boxShadow = '0 30px 60px -15px rgba(0, 230, 118, 0.1)';
                 mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(0, 230, 118, 0.12) 0%, rgba(0, 0, 0, 0) 100%)';
@@ -735,7 +747,7 @@
             ['standings-count-node', 'playoffs-count-node'].forEach(id => { const el = document.getElementById(id); if(el) el.innerText = countText; });
 
             const bStandings = document.getElementById('banner-standings-2026'); const bPlayoffs = document.getElementById('banner-playoffs-2026');
-            if (groupMatchesFuture === 0) { bStandings?.classList.add('hidden'); bPlayoffs?.classList.add('hidden'); } 
+            if (groupMatchesFuture === 0) { bStandings?.classList.add('hidden'); bPlayoffs?.classList.add('hidden'); }
             else { bStandings?.classList.remove('hidden'); bPlayoffs?.classList.remove('hidden'); }
             
             updateLiveDateStrings();
@@ -773,7 +785,7 @@
             }
 
             if(activeArchiveTab === 'playoffs') {
-                pContainer.classList.remove('hidden'); const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа')); 
+                pContainer.classList.remove('hidden'); const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа'));
                 let stages = [...new Set(playM.map(m => m.stage))].filter(s => s && !s.toLowerCase().includes('3-е место'));
                 const order = ['1/32', '1/16', '1/8', '1/4', '1/2', 'Финал'];
                 stages.sort((a, b) => order.findIndex(o => a.toLowerCase().includes(o.toLowerCase())) - order.findIndex(o => b.toLowerCase().includes(o.toLowerCase())));
@@ -866,8 +878,8 @@
             let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0; let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
             let score1 = m ? `${s1Val}` : '-'; let score2 = m ? `${s2Val}` : '-';
             if (p1Val !== null && p2Val !== null) { 
-                score1 += ` <span class="text-[9px] text-white font-bold ml-1">${p1Val}</span>`; 
-                score2 += ` <span class="text-[9px] text-white font-bold ml-1">${p2Val}</span>`; 
+                score1 += ` <span class="text-[9px] text-white font-bold ml-1">${p1Val}</span>`;
+                score2 += ` <span class="text-[9px] text-white font-bold ml-1">${p2Val}</span>`;
             }
             
             let medal1 = '', medal2 = '';
@@ -1066,7 +1078,7 @@
                             </div>`;
                     }
                 } else { 
-                    stageMatches.forEach(m => { matchesHtml += renderPlayoffCardLive(m, m.t1, m.t2, '-', '-'); }); 
+                    stageMatches.forEach(m => { matchesHtml += renderPlayoffCardLive(m, m.t1, m.t2, '-', '-'); });
                 }
             }
             container.innerHTML = matchesHtml;
@@ -1078,8 +1090,8 @@
             let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0; let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
             let score1 = m ? `${s1Val}` : '-'; let score2 = m ? `${s2Val}` : '-';
             if (p1Val !== null && p2Val !== null) { 
-                score1 += ` <span class="text-[9px] text-white font-bold ml-1">${p1Val}</span>`; 
-                score2 += ` <span class="text-[9px] text-white font-bold ml-1">${p2Val}</span>`; 
+                score1 += ` <span class="text-[9px] text-white font-bold ml-1">${p1Val}</span>`;
+                score2 += ` <span class="text-[9px] text-white font-bold ml-1">${p2Val}</span>`;
             }
             let logo1 = defaultT1 === 'Команда' ? 'standart.png' : `${defaultT1}.png`; let logo2 = defaultT2 === 'Команда' ? 'standart.png' : `${defaultT2}.png`;
             return `
@@ -1136,7 +1148,7 @@
 
         function toggleDetails(containerId) {
             const el = document.getElementById(containerId); if (!el) return;
-            if (el.classList.contains('open')) { el.classList.remove('open'); } 
+            if (el.classList.contains('open')) { el.classList.remove('open'); }
             else { document.querySelectorAll('.details-container.open').forEach(o => o.classList.remove('open')); el.classList.add('open'); }
         }
 
