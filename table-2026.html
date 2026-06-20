@@ -13,7 +13,7 @@
             theme: {
                 extend: {
                     screens: { 'xs': '375px' },
-                    colors: { 'neon': '#00E676', 'dark': '#0a0a0c', 'zinc-card': '#111114' },
+                    colors: { 'neon': '#00E676', 'dark': '#0a0a0c', 'zinc-card': '#111114', 'dark-green': '#0d1a12' },
                     animation: { 'slide-right': 'slideRight 1.5s infinite ease-in-out' },
                     keyframes: {
                         slideRight: {
@@ -36,30 +36,40 @@
         }
 
         #olotau-app * { font-family: 'Montserrat', sans-serif !important; box-sizing: border-box !important; }
+        
+        /* Премиум остекление блоков */
+        .premium-glass-card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; }
+        .premium-glass-card * { background-color: transparent !important; }
+        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         .team-logo { height: 18px; width: 18px; object-fit: contain; display: inline-block; vertical-align: middle; flex-shrink: 0; }
         @media(min-width: 640px) { .team-logo { height: 20px; width: 20px; } }
         
-        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 14px; margin-bottom: 16px; }
-        @media(min-width: 375px) { .group-card { padding: 20px; } }
+        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 12px; margin-bottom: 16px; }
+        @media(min-width: 375px) { .group-card { padding: 16px; } }
 
-        table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
-        @media(min-width: 375px) { table { font-size: 12px; } }
-        table th { color: #71717a; font-size: 9px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
-        table th:first-child { text-align: left; width: 45%; color: #00E676; font-size: 11px; font-weight: 900; padding-left: 6px; }
-        table td { padding: 10px 2px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); text-align: center; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        table tr:last-child td { border-bottom: none; }
-        table td:first-child { text-align: left; font-weight: 700; text-transform: uppercase; padding-left: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
+        @media(min-width: 375px) { table { font-size: 11px; } }
         
-        .green-bar { position: relative; }
+        table Th { color: #71717a; font-size: 9px; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
+        table th.col-stat { width: 22px; }
+        @media(min-width: 375px) { table th.col-stat { width: 26px; } }
+        table th.col-score { width: 38px; }
+        @media(min-width: 375px) { table th.col-score { width: 44px; } }
+        
+        table th:first-child { text-align: left; color: #00E676; font-size: 11px; font-weight: 900; padding-left: 12px; }
+        table td { padding: 8px 1px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); text-align: center; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        table tr:last-child td { border-bottom: none; }
+        
+        .green-bar, .red-bar, .lime-bar { position: relative; padding-left: 12px !important; }
         .green-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
-        .red-bar { position: relative; }
         .red-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EF4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
-        .lime-bar { position: relative; }
         .lime-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
 
+        table td:first-child { text-align: left; font-weight: 700; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
         .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 12px 14px; margin-top: 8px; transition: all 0.2s; }
         .match-row.clickable-match { cursor: pointer; }
         .match-row.clickable-match:hover { border-color: #3f3f46; }
@@ -118,7 +128,6 @@
                 <div class="text-zinc-500 text-xs font-medium uppercase tracking-widest mt-1">Сбор данных с полей...</div>
             </div>
 
-            <!-- СЕЗОН 2026 КОНТЕЙНЕРЫ ВКЛАДОК -->
             <div id="view-2026" class="hidden flex flex-col gap-4">
                 <div id="sub-2026-tables" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 <div id="regulations-info-2026" class="hidden"></div>
@@ -145,7 +154,15 @@
                     <div class="group-card !bg-black/40">
                         <table id="overall-table">
                             <thead>
-                                <tr><th># Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>Мячи</th><th>О</th></tr>
+                                <tr>
+                                    <th># Команда</th>
+                                    <th class="col-stat">И</th>
+                                    <th class="col-stat">В</th>
+                                    <th class="col-stat">Н</th>
+                                    <th class="col-stat">П</th>
+                                    <th class="col-score">Мячи</th>
+                                    <th class="col-stat">О</th>
+                                </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -183,7 +200,6 @@
                 </div>
             </div>
 
-            <!-- АРХИВ КОНТЕЙНЕРЫ -->
             <div id="view-archive" class="hidden flex flex-col gap-4">
                 <div id="archive-tabs-nav" class="grid grid-cols-3 gap-2 bg-zinc-900/40 p-1.5 border border-zinc-800/60 rounded-2xl w-full max-w-lg mx-auto">
                     <button class="tab-btn-top active !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-groups" onclick="switchArchiveTab('groups', this)">Группы</button>
@@ -204,14 +220,91 @@
                 </div>
                 <div id="archive-results" class="hidden flex flex-col gap-4"></div>
             </div>
+
+            <div id="view-stats" class="hidden flex flex-col gap-4 max-w-2xl mx-auto w-full relative">
+                <div class="grid grid-cols-2 gap-3 bg-zinc-900/40 p-2 border border-zinc-800/60 rounded-2xl relative z-10">
+                    <select id="stats-gender" class="custom-select text-xs font-black"></select>
+                    <select id="stats-team" class="custom-select text-xs font-black"></select>
+                </div>
+
+                <div id="stats-content" class="hidden flex flex-col gap-4 relative z-10">
+                    
+                    <div id="stats-team-card" class="premium-glass-card relative overflow-hidden border border-white/10 shadow-[0_24px_50px_rgba(0,0,0,0.85)] rounded-[32px] p-6 sm:p-8 flex flex-col items-center justify-center text-center gap-2.5 min-h-[240px]">
+                        
+                        <div id="stats-glow-glow" class="absolute -z-10 w-48 h-48 sm:w-56 sm:h-56 rounded-full filter blur-[60px] sm:blur-[75px] opacity-[0.35] -top-12 -left-12 pointer-events-none transition-all duration-500"></div>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none"></div>
+
+                        <img id="stats-team-logo" src="" class="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.6)] relative z-10">
+                        
+                        <h2 id="stats-team-title" class="text-xl sm:text-2xl font-black uppercase tracking-tight text-white mt-1 relative z-10 break-words max-w-full px-2"></h2>
+                        
+                        <div id="stats-team-geo" class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-widest relative z-10 mt-0.5 opacity-80 flex flex-col gap-1 items-center"></div>
+                        
+                        <div id="stats-team-badges" class="flex flex-wrap gap-2 justify-center mt-1.5 relative z-10"></div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                        <div class="premium-glass-card border border-white/10 rounded-2xl p-4 text-center shadow-md">
+                            <div id="stat-box-participations" class="text-2xl sm:text-3xl font-black text-neon">0</div>
+                            <div class="text-[8px] sm:text-[9px] uppercase text-gray-400 font-bold mt-1 leading-tight tracking-wider">Участий</div>
+                        </div>
+                        <div class="premium-glass-card border border-white/10 rounded-2xl py-4 px-1 text-center flex flex-col justify-center min-w-0 shadow-md">
+                            <div id="stat-box-result" class="text-[10px] sm:text-[11px] font-black text-white uppercase leading-tight tracking-tight whitespace-normal break-words px-0.5">--</div>
+                            <div id="stat-box-result-year" class="text-[9px] text-neon font-bold mt-0.5"></div>
+                            <div class="text-[8px] sm:text-[9px] uppercase text-gray-400 font-bold mt-0.5 leading-tight tracking-wider">Лучший результат</div>
+                        </div>
+                        <div class="premium-glass-card border border-white/10 rounded-2xl p-4 text-center shadow-md">
+                            <div id="stat-box-games" class="text-2xl sm:text-3xl font-black text-white">0</div>
+                            <div class="text-[8px] sm:text-[9px] uppercase text-gray-400 font-bold mt-1 leading-tight tracking-wider">Матчей</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                        <div class="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-2.5 text-center">
+                            <div id="stat-box-w" class="text-lg font-black text-neon">0</div>
+                            <div class="text-[8px] uppercase text-zinc-500 font-bold">Победы</div>
+                        </div>
+                        <div class="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-2.5 text-center">
+                            <div id="stat-box-d" class="text-lg font-black text-zinc-300">0</div>
+                            <div class="text-[8px] uppercase text-zinc-500 font-bold">Ничьи</div>
+                        </div>
+                        <div class="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-2.5 text-center">
+                            <div id="stat-box-l" class="text-lg font-black text-red-500">0</div>
+                            <div class="text-[8px] uppercase text-zinc-500 font-bold">Поражения</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                        <div class="bg-zinc-900/30 border border-zinc-800/60 rounded-2xl p-3 flex justify-between items-center px-4">
+                            <span class="text-[9px] uppercase font-black text-zinc-400">Забито мячей</span>
+                            <span id="stat-box-gf" class="text-base font-black text-neon">0</span>
+                        </div>
+                        <div class="bg-zinc-900/30 border border-zinc-800/60 rounded-2xl p-3 flex justify-between items-center px-4">
+                            <span class="text-[9px] uppercase font-black text-zinc-400">Пропущено</span>
+                            <span id="stat-box-ga" class="text-base font-black text-red-400">0</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-3 pl-1">История по годам</h3>
+                        <div id="stats-years-container" class="flex flex-col gap-4"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
-            <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer">
+        <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm premium-glass-card border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
+            <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 <span class="text-[8px] font-bold uppercase tracking-wider">Сезон 2026</span>
             </button>
-            <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+            <button id="mode-btn-stats" onclick="setGlobalMode('stats')" class="flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <span class="text-[8px] font-bold uppercase tracking-wider">Команды</span>
+            </button>
+            <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="text-[8px] font-bold uppercase tracking-wider">Архив</span>
             </button>
@@ -219,80 +312,52 @@
     </div>
 
     <script>
-        const GOOGLE_APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbyd81K872ehvq_eyJci9E-4Ft_x5739Ge6bv3RU37v9PRt6EDpDmIvihLpzZNy1Mdkf/exec';
-        
         const URLS_2026 = {
             archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
             matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
             goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
-            players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv'
+            players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv',
+            geo: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=603732331&single=true&output=csv'
         };
 
-        let db = { matches2026: [], goals2026: [], players2026: [], archive: [] };
-        let currentGlobalMode = '2026';
-        let active2026Tab = 'tables';
-        let activeArchiveTab = 'groups';
-        let archiveYear = '';
-        let archiveTournament = '';
-        let currentPlayoffStage2026 = '1/16';
-        let currentPlayoffStageArchive = '';
+        let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {} };
+        let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
+        let archiveYear = ''; let archiveTournament = ''; let currentPlayoffStage2026 = '1/16'; let currentPlayoffStageArchive = '';
 
-        // Функция сокращения длинных названий команд для мобильных дисплеев
-        function smartTeamName(name) {
+        function normalizeTeamName(name) {
             if (!name) return '';
             let s = name.trim();
             let upper = s.toUpperCase();
-            
-            if (upper.startsWith("НОВО")) {
-                s = "Н-" + s.substring(4);
-            } else if (upper.startsWith("БОЛЬШИЕ") || upper.startsWith("БОЛЬШАЯ") || upper.startsWith("БОЛЬШОЕ")) {
-                let parts = s.split(/\s+/);
-                s = "Б. " + parts.slice(1).join(" ");
-            } else if (upper.startsWith("СТАРО")) {
-                s = "С-" + s.substring(5);
-            } else if (upper.startsWith("КРАСНАЯ")) {
-                let parts = s.split(/\s+/);
-                s = "КР. " + parts.slice(1).join(" ");
+            if (upper.endsWith("-1") || upper.endsWith(" 1")) {
+                s = s.substring(0, s.length - 2).trim();
             }
+            return s;
+        }
+
+        function smartTeamName(name) {
+            let s = normalizeTeamName(name);
+            if (!s) return '';
+            let upper = s.toUpperCase();
+            if (upper.startsWith("НОВО")) { s = "Н-" + s.substring(4); } 
+            else if (upper.startsWith("БОЛЬШИЕ") || upper.startsWith("БОЛЬШАЯ") || upper.startsWith("БОЛЬШОЕ")) { let parts = s.split(/\s+/); s = "Б. " + parts.slice(1).join(" "); } 
+            else if (upper.startsWith("СТАРО")) { s = "С-" + s.substring(5); } 
+            else if (upper.startsWith("КРАСНАЯ")) { let parts = s.split(/\s+/); s = "КР. " + parts.slice(1).join(" "); }
             return s;
         }
 
         function updateLiveDateStrings() {
             let playedMatches = db.matches2026.filter(m => m.status && m.status.toLowerCase().trim() === 'past');
-            let dateText = '';
-            
-            if (playedMatches.length > 0) {
-                let lastMatch = playedMatches[playedMatches.length - 1];
-                dateText = `ОБНОВЛЕНО: ${lastMatch.date || '15 ИЮНЯ'}, ${lastMatch.time || '18:00'}`;
-            } else {
-                dateText = 'ОБНОВЛЕНО: 15 ИЮНЯ, 18:00';
-            }
-            
-            const sDate = document.getElementById('standings-date-node');
-            const pDate = document.getElementById('playoffs-date-node');
-            if(sDate) sDate.innerText = dateText.toUpperCase();
-            if(pDate) pDate.innerText = dateText.toUpperCase();
+            let dateText = playedMatches.length > 0 ? `ОБНОВЛЕНО: ${playedMatches[playedMatches.length - 1].date || '15 ИЮНЯ'}, ${playedMatches[playedMatches.length - 1].time || '18:00'}` : 'ОБНОВЛЕНО: 15 ИЮНЯ, 18:00';
+            const sDate = document.getElementById('standings-date-node'); const pDate = document.getElementById('playoffs-date-node');
+            if(sDate) sDate.innerText = dateText.toUpperCase(); if(pDate) pDate.innerText = dateText.toUpperCase();
         }
 
         function startLoaderAnimation() {
-            const word = "ОЛОТАУ ";
-            const secondWord = "ЙЫЙЫНЫ";
-            const el = document.getElementById('text-anim-loader');
-            let idx = 0;
-            if(!el) return;
-            el.innerHTML = "";
+            const word = "ОЛОТАУ "; const secondWord = "ЙЫЙЫНЫ"; const el = document.getElementById('text-anim-loader'); let idx = 0; if(!el) return; el.innerHTML = "";
             const interval = setInterval(() => {
-                if(idx < word.length) {
-                    el.innerHTML = `<span class="text-neon">${word.substring(0, idx + 1)}</span>`;
-                    idx++;
-                } else if (idx < word.length + secondWord.length) {
-                    let sWordPart = secondWord.substring(0, idx - word.length + 1);
-                    el.innerHTML = `<span class="text-neon">${word}</span><span class="text-white">${sWordPart}</span>`;
-                    idx++;
-                } else {
-                    el.innerHTML = "";
-                    idx = 0;
-                }
+                if(idx < word.length) { el.innerHTML = `<span class="text-neon">${word.substring(0, idx + 1)}</span>`; idx++; } 
+                else if (idx < word.length + secondWord.length) { el.innerHTML = `<span class="text-neon">${word}</span><span class="text-white">${secondWord.substring(0, idx - word.length + 1)}</span>`; idx++; } 
+                else { el.innerHTML = ""; idx = 0; }
             }, 150);
             return interval;
         }
@@ -300,92 +365,78 @@
         async function init() {
             const animId = startLoaderAnimation();
             try {
-                const [rM, rG, rP, rA] = await Promise.all([
+                const [rM, rG, rP, rA, rGeo] = await Promise.all([
                     fetch(URLS_2026.matches + '&cb=' + Date.now()).then(r => r.text()),
                     fetch(URLS_2026.goals + '&cb=' + Date.now()).then(r => r.text()),
                     fetch(URLS_2026.players + '&cb=' + Date.now()).then(r => r.text()),
-                    fetch(URLS_2026.archive + '&cb=' + Date.now()).then(r => r.text())
+                    fetch(URLS_2026.archive + '&cb=' + Date.now()).then(r => r.text()),
+                    fetch(URLS_2026.geo + '&cb=' + Date.now()).then(r => r.text())
                 ]);
-
-                db.matches2026 = parseCoreCSV(rM, 'm');
-                db.goals2026 = parseCoreCSV(rG, 'g');
-                db.players2026 = parseCoreCSV(rP, 'p');
-                db.archive = parseArchiveCSV(rA);
-
-                clearInterval(animId);
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('mode-container').classList.remove('hidden');
-
-                setupFiltersAndSelectors();
-                setGlobalMode('2026');
+                db.matches2026 = parseCoreCSV(rM, 'm'); db.goals2026 = parseCoreCSV(rG, 'g'); db.players2026 = parseCoreCSV(rP, 'p'); db.archive = parseArchiveCSV(rA);
+                parseGeoCSV(rGeo);
+                clearInterval(animId); document.getElementById('loader').style.display = 'none'; document.getElementById('mode-container').classList.remove('hidden');
+                setupFiltersAndSelectors(); setupStatsSelectors(); setGlobalMode('2026');
             } catch (err) {
-                clearInterval(animId);
-                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных.</div>`;
+                clearInterval(animId); document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных.</div>`;
             }
         }
 
-        function parseCoreCSV(text, mode) {
+        function parseGeoCSV(text) {
             const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-            const res = [];
             for(let i = 1; i < lines.length; i++) {
-                const sep = lines[i].includes(';') ? ';' : ',';
-                const p = lines[i].split(sep).map(x => x.trim());
-                
-                if (mode === 'p') {
-                    if (p[0] && p[1] && p[0] !== "" && p[1] !== "" && p[0].toLowerCase() !== "team") {
-                        res.push({ team: p[0], name: p[1] });
-                    }
-                    continue;
+                const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
+                if (p[0]) {
+                    let normKey = normalizeTeamName(p[0]).toUpperCase();
+                    // Считываем также 4-й столбец (distance) с индексом 3
+                    db.geo[normKey] = { district: p[1] || '', subject: p[2] || '', distance: p[3] || '' };
+                }
+            }
+        }
+
+        function getTeamGeoHtml(teamName, isMen = true) {
+            const key = normalizeTeamName(teamName).toUpperCase();
+            if (db.geo[key]) {
+                const item = db.geo[key];
+                let dist = item.district;
+                if (isMen && dist && !dist.toLowerCase().includes('район') && !dist.toLowerCase().includes('р-н')) {
+                    dist += ' район';
                 }
                 
+                let baseGeo = `${dist}${dist && item.subject ? ', ' : ''}${item.subject}`.toUpperCase();
+                
+                // Рендерим блок расстояния только если оно есть, больше нуля и команда не является хозяевами (не само Кутуево)
+                let distanceHtml = '';
+                if (item.distance && parseInt(item.distance) > 0 && !key.includes('КУТУЕВО')) {
+                    distanceHtml = `<div class="text-neon/90 font-extrabold text-[10px] tracking-wider mt-0.5">ДО КУТУЕВО ${item.distance} КМ</div>`;
+                }
+                
+                return `<span>${baseGeo}</span>${distanceHtml}`;
+            }
+            return '';
+        }
+
+        function parseCoreCSV(text, mode) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== ''); const res = [];
+            for(let i = 1; i < lines.length; i++) {
+                const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
+                if (mode === 'p') { if (p[0] && p[1] && p[0] !== "" && p[0].toLowerCase() !== "team") { res.push({ team: normalizeTeamName(p[0]), name: p[1] }); } continue; }
                 if(mode === 'm') {
-                    let matchId = (p[0] && p[0] !== "") ? p[0].toString() : i.toString();
                     if (!p[3] || !p[4] || p[3] === "" || p[4] === "") continue;
-                    
-                    res.push({ 
-                        id: matchId, 
-                        stage: p[1] || '', 
-                        group: p[2] || '', 
-                        t1: p[3], 
-                        t2: p[4], 
-                        s1: (p[5] !== undefined && p[5] !== "") ? parseInt(p[5]) : 0, 
-                        s2: (p[6] !== undefined && p[6] !== "") ? parseInt(p[6]) : 0, 
-                        p1: (p[7] && p[7] !== "") ? parseInt(p[7]) : null, 
-                        p2: (p[8] && p[8] !== "") ? parseInt(p[8]) : null, 
-                        time: p[9] || '00:00', 
-                        date: p[10] || '', 
-                        field: p[11] || '1', 
-                        status: p[12] ? p[12].toLowerCase() : 'future' 
-                    });
+                    res.push({ id: p[0] || i.toString(), stage: p[1] || '', group: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(p[4]), s1: p[5] !== "" ? parseInt(p[5]) : 0, s2: p[6] !== "" ? parseInt(p[6]) : 0, p1: p[7] ? parseInt(p[7]) : null, p2: p[8] ? parseInt(p[8]) : null, time: p[9] || '00:00', date: p[10] || '', field: p[11] || '1', status: p[12] ? p[12].toLowerCase() : 'future' });
                 } else if(mode === 'g' && p.length >= 5) {
                     if (!p[0] || p[0] === "") continue;
-                    res.push({ match_id: p[0].toString(), team: p[1], player: p[2], assistant: p[3], minute: parseInt(p[4]||1) });
+                    res.push({ match_id: p[0].toString(), team: normalizeTeamName(p[1]), player: p[2], assistant: p[3], minute: parseInt(p[4]||1) });
                 }
             }
             return res;
         }
 
         function parseArchiveCSV(text) {
-            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-            const result = [];
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== ''); const result = [];
             for(let i = 1; i < lines.length; i++) {
-                const sep = lines[i].includes(';') ? ';' : ',';
-                const p = lines[i].split(sep).map(x => x.trim());
-                
-                if (!p[3] || p[3] === "" || !p[4] || p[4] === "") continue; 
-                
-                result.push({
-                    year: p[0] ? p[0].toString() : '2025', 
-                    tournament: p[1] || 'Мужчины', 
-                    stage: p[2] || '',
-                    t1: p[3], 
-                    t2: p[4],
-                    s1: p[5] !== undefined && p[5] !== "" ? parseInt(p[5]) : 0, 
-                    s2: p[6] !== undefined && p[6] !== "" ? parseInt(p[6]) : 0,
-                    p1: (p[7] && p[7] !== "") ? parseInt(p[7]) : null, 
-                    p2: (p[8] && p[8] !== "") ? parseInt(p[8]) : null,
-                    status: 'past'
-                });
+                const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
+                if (!p[3] || !p[4]) continue; 
+                result.push({ year: p[0] || '2025', tournament: p[1] || 'Мужчины', stage: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(p[4]), s1: p[5] !== "" ? parseInt(p[5]) : 0, s2: p[6] !== "" ? parseInt(p[6]) : 0, p1: p[7] ? parseInt(p[7]) : null, p2: p[8] ? parseInt(p[8]) : null, status: 'past' });
             }
             return result;
         }
@@ -393,24 +444,16 @@
         function calculateGroupStats(matches) {
             let stats = {};
             matches.forEach(m => {
-                if (!stats[m.t1]) stats[m.t1] = { name: m.t1, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
-                if (!stats[m.t2]) stats[m.t2] = { name: m.t2, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
+                let t1Norm = normalizeTeamName(m.t1);
+                let t2Norm = normalizeTeamName(m.t2);
+                if (!stats[t1Norm]) stats[t1Norm] = { name: t1Norm, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
+                if (!stats[t2Norm]) stats[t2Norm] = { name: t2Norm, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
                 
                 if (m.status === 'past' || (m.s1 !== null && m.s2 !== null && (m.s1 !== 0 || m.s2 !== 0))) {
-                    stats[m.t1].games++;
-                    stats[m.t2].games++;
-                    stats[m.t1].gf += m.s1;
-                    stats[m.t1].ga += m.s2;
-                    stats[m.t2].gf += m.s2;
-                    stats[m.t2].ga += m.s1;
-
-                    if (m.s1 > m.s2) {
-                        stats[m.t1].w++; stats[m.t1].pts += 3; stats[m.t2].l++;
-                    } else if (m.s1 < m.s2) {
-                        stats[m.t2].w++; stats[m.t2].pts += 3; stats[m.t1].l++;
-                    } else {
-                        stats[m.t1].d++; stats[m.t1].pts += 1; stats[m.t2].d++; stats[m.t2].pts += 1;
-                    }
+                    stats[t1Norm].games++; stats[t2Norm].games++; stats[t1Norm].gf += m.s1; stats[t1Norm].ga += m.s2; stats[t2Norm].gf += m.s2; stats[t2Norm].ga += m.s1;
+                    if (m.s1 > m.s2) { stats[t1Norm].w++; stats[t1Norm].pts += 3; stats[t2Norm].l++; } 
+                    else if (m.s1 < m.s2) { stats[t2Norm].w++; stats[t2Norm].pts += 3; stats[t1Norm].l++; } 
+                    else { stats[t1Norm].d++; stats[t1Norm].pts += 1; stats[t2Norm].d++; stats[t2Norm].pts += 1; }
                 }
             });
             return Object.values(stats).sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga) || b.gf - a.gf);
@@ -421,83 +464,242 @@
             document.getElementById('archive-tournament').innerHTML = tArch.map(t => `<option value="${t}">${t}</option>`).join('');
             if(tArch.length > 0) archiveTournament = tArch[0];
 
-            document.getElementById('archive-tournament').addEventListener('change', (e) => { 
-                archiveTournament = e.target.value; 
-                toggleSupercupBanner(archiveTournament);
-                currentPlayoffStageArchive = '';
-                updateArchiveYears(); 
-            });
-
-            document.getElementById('archive-year').addEventListener('change', (e) => { 
-                archiveYear = e.target.value; 
-                currentPlayoffStageArchive = '';
-                renderArchiveCore(); 
-            });
+            document.getElementById('archive-tournament').addEventListener('change', (e) => { archiveTournament = e.target.value; toggleSupercupBanner(archiveTournament); currentPlayoffStageArchive = ''; updateArchiveYears(); });
+            document.getElementById('archive-year').addEventListener('change', (e) => { archiveYear = e.target.value; currentPlayoffStageArchive = ''; renderArchiveCore(); });
 
             const teams = [...new Set(db.matches2026.flatMap(m => [m.t1, m.t2]))].filter(Boolean).sort();
             document.getElementById('filter-teams').innerHTML = '<option value="all">Все команды</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
             document.getElementById('filter-stages').innerHTML = '<option value="all">Все стадии</option><option value="Групповой этап">Групповой этап</option><option value="Плей-офф">Плей-офф</option>';
 
-            ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => {
-                document.getElementById(id).addEventListener('change', render2026Schedule);
-            });
+            ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => { document.getElementById(id).addEventListener('change', render2026Schedule); });
             updateArchiveYears();
         }
 
         function updateArchiveYears() {
             if (!archiveTournament) return;
-            const matchesForTournament = db.archive.filter(m => m.tournament === archiveTournament);
-            const dynamicYears = [...new Set(matchesForTournament.map(m => m.year))].sort((a,b)=>b-a);
+            const dynamicYears = [...new Set(db.archive.filter(m => m.tournament === archiveTournament).map(m => m.year))].sort((a,b)=>b-a);
             document.getElementById('archive-year').innerHTML = dynamicYears.map(y => `<option value="${y}">${y} ГОД</option>`).join('');
             archiveYear = dynamicYears[0] || '';
-            
-            const isSupercup = archiveTournament.toUpperCase().includes('СУПЕРКУБОК');
-            switchArchiveTab(isSupercup ? 'playoffs' : 'groups', document.getElementById(isSupercup ? 'arch-tab-playoffs' : 'arch-tab-groups'));
+            switchArchiveTab(archiveTournament.toUpperCase().includes('СУПЕРКУБОК') ? 'playoffs' : 'groups', document.getElementById(archiveTournament.toUpperCase().includes('СУПЕРКУБОК') ? 'arch-tab-playoffs' : 'arch-tab-groups'));
         }
 
         function toggleSupercupBanner(tournamentName) {
             const banner = document.getElementById('supercup-banner');
-            if(banner) tournamentName && tournamentName.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
+            if(banner) tournamentName?.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
         }
 
-        // Возвращает форматированную строку события (гола) с коротким именем игрока
         function shortenPlayerName(fullName) {
-            if (!fullName) return '';
-            let parts = fullName.trim().split(/\s+/);
-            if (parts.length >= 2) {
-                return `${parts[0]} ${parts[1].substring(0, 1).toUpperCase()}.`;
+            if (!fullName) return ''; let parts = fullName.trim().split(/\s+/);
+            return parts.length >= 2 ? `${parts[0]} ${parts[1].substring(0, 1).toUpperCase()}.` : fullName;
+        }
+
+        function setupStatsSelectors() {
+            document.getElementById('stats-gender').innerHTML = `<option value="Мужчины">МУЖЧИНЫ</option><option value="Женщины">ЖЕНЩИНЫ</option><option value="Суперкубок">СУПЕРКУБОК</option>`;
+            document.getElementById('stats-gender').addEventListener('change', updateStatsTeamsList);
+            document.getElementById('stats-team').addEventListener('change', renderTeamStatistics);
+            updateStatsTeamsList();
+        }
+
+        function updateStatsTeamsList() {
+            const gender = document.getElementById('stats-gender').value; let allTeams = new Set();
+            db.archive.forEach(m => { 
+                if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) { 
+                    if(m.t1 && m.t1 !== '-' && m.t1 !== '') allTeams.add(normalizeTeamName(m.t1)); 
+                    if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2)); 
+                } 
+            });
+            if (gender === 'Мужчины') { 
+                db.matches2026.forEach(m => { 
+                    if(m.t1 && m.t1 !== '-' && m.t1 !== '') allTeams.add(normalizeTeamName(m.t1)); 
+                    if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2)); 
+                }); 
             }
-            return fullName;
+            
+            const sortedTeams = [...allTeams].sort(); const teamSelect = document.getElementById('stats-team');
+            if (sortedTeams.length > 0) {
+                teamSelect.innerHTML = sortedTeams.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
+                document.getElementById('stats-content').classList.remove('hidden'); renderTeamStatistics();
+            } else {
+                teamSelect.innerHTML = '<option value="">Нет команд</option>'; document.getElementById('stats-content').classList.add('hidden');
+            }
+        }
+
+        function renderTeamStatistics() {
+            const team = document.getElementById('stats-team').value; const gender = document.getElementById('stats-gender').value;
+            if (!team) return;
+
+            let isMen = (gender === 'Мужчины');
+            document.getElementById('stats-team-title').innerText = team;
+            
+            const logoUrl = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${team}.png`;
+            const logoEl = document.getElementById('stats-team-logo');
+            logoEl.src = logoUrl;
+            logoEl.onerror = function() { this.src = 'https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'; };
+            
+            document.getElementById('stats-team-geo').innerHTML = getTeamGeoHtml(team, isMen);
+
+            let participations = new Set(); let games = 0, w = 0, d = 0, l = 0, gf = 0, ga = 0;
+            let historyMatches = []; let bestWeight = -1; let bestStageText = 'Групповой этап'; let bestYear = '--';
+            
+            let championYears = [];
+            let activeArchiveYears = new Set();
+
+            const stageWeight = { 'Финал_Победа': 10, 'Финал_Поражение': 9, '3-е место_Победа': 8, '3-е место_Поражение': 7, '1/2': 6, '1/4': 5, '1/8': 4, '1/16': 3, '1/32': 2, 'Групповой этап': 1 };
+
+            function processMatch(m, yearStr) {
+                let t1Norm = normalizeTeamName(m.t1);
+                let t2Norm = normalizeTeamName(m.t2);
+                if (t1Norm !== team && t2Norm !== team) return;
+                if (!t1Norm || t1Norm === '-' || t1Norm === '' || !t2Norm || t2Norm === '-' || t2Norm === '') return;
+                
+                participations.add(yearStr);
+                if (yearStr !== '2026') {
+                    activeArchiveYears.add(yearStr);
+                }
+                games++;
+                
+                let isT1 = t1Norm === team; let teamScore = isT1 ? m.s1 : m.s2; let oppScore = isT1 ? m.s2 : m.s1;
+                let teamPen = isT1 ? m.p1 : m.p2; let oppPen = isT1 ? m.p2 : m.p1;
+                gf += teamScore; ga += oppScore;
+
+                let isWin = false, isLoss = false;
+                if (teamScore > oppScore) isWin = true; else if (teamScore < oppScore) isLoss = true;
+                else if (teamPen !== null && oppPen !== null) { if (teamPen > oppPen) isWin = true; else isLoss = true; }
+
+                if (isWin) w++; else if (isLoss) l++; else d++;
+
+                let currentStage = m.stage || 'Групповой этап';
+                if (m.group && m.group.toLowerCase().includes('группа')) currentStage = 'Групповой этап';
+
+                let weightKey = 'Групповой этап';
+                let displayText = currentStage.toLowerCase().includes('группа') ? 'ГРУППОВОЙ ЭТАП' : currentStage.toUpperCase();
+
+                if (currentStage.toLowerCase().includes('финал') && !currentStage.toLowerCase().includes('3-е')) {
+                    if (isWin) { 
+                        weightKey = 'Финал_Победа'; displayText = '1 МЕСТО 🏆'; 
+                        if (yearStr !== '2026') championYears.push(yearStr);
+                    } 
+                    else { weightKey = 'Финал_Поражение'; displayText = '2 МЕСТО 🥈'; }
+                } else if (currentStage.toLowerCase().includes('3-е место')) {
+                    if (isWin) { weightKey = '3-е место_Победа'; displayText = '3 МЕСТО 🥉'; } 
+                    else { weightKey = '3-е место_Поражение'; displayText = '4 МЕСТО'; }
+                } else {
+                    weightKey = Object.keys(stageWeight).find(k => currentStage.includes(k)) || 'Групповой этап';
+                }
+
+                let currentWeight = stageWeight[weightKey] || 1;
+                if (currentWeight > bestWeight) {
+                    bestWeight = currentWeight; bestStageText = displayText; bestYear = yearStr;
+                }
+
+                historyMatches.push({
+                    year: yearStr, stage: currentStage.toLowerCase().includes('группа') ? 'Групповой этап' : currentStage, opponent: isT1 ? t2Norm : t1Norm,
+                    scoreText: `${teamScore}:${oppScore}` + (teamPen !== null ? ` (${teamPen}:${oppPen} пен)` : ''),
+                    isWin: isWin, isLoss: isLoss
+                });
+            }
+
+            db.archive.forEach(m => { if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) processMatch(m, m.year); });
+            if (gender === 'Мужчины' || gender === 'Женщины') { db.matches2026.forEach(m => { if (m.status === 'past') processMatch(m, '2026'); }); }
+
+            document.getElementById('stat-box-participations').innerText = participations.size;
+            document.getElementById('stat-box-result').innerHTML = bestStageText === 'ГРУППОВОЙ ЭТАП' ? 'ГРУППОВОЙ<br>ЭТАП' : bestStageText;
+            document.getElementById('stat-box-result-year').innerText = bestYear !== '--' ? `${bestYear} ГОД` : '';
+            document.getElementById('stat-box-games').innerText = games;
+            document.getElementById('stat-box-w').innerText = w; document.getElementById('stat-box-d').innerText = d; document.getElementById('stat-box-l').innerText = l;
+            document.getElementById('stat-box-gf').innerText = gf; document.getElementById('stat-box-ga').innerText = ga;
+
+            // НАСТРОЙКА НЕОНОВОГО ИЛИ ЗОЛОТОГО СВЕЧЕНИЯ СЛЕВА СВЕРХУ
+            const badgesContainer = document.getElementById('stats-team-badges');
+            const glowEl = document.getElementById('stats-glow-glow');
+            const mainCardEl = document.getElementById('stats-team-card');
+            badgesContainer.innerHTML = '';
+            
+            let badgesHtml = '';
+            let isChampion = championYears.length > 0;
+            
+            const requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
+            let isVeteran = requiredYears.every(y => activeArchiveYears.has(y));
+
+            // Логика хозяев турнира: применяется ко всем составам Кутуево
+            let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
+
+            if (isChampion) {
+                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-yellow-500/40 bg-yellow-500/20 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]">🏆 Чемпион (${championYears.sort().join(', ')})</span>`;
+            }
+            if (isVeteran) {
+                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-neon/40 bg-neon/20 text-neon shadow-[0_0_15px_rgba(0,230,118,0.3)]">💎 Ветеран турнира</span>`;
+            }
+            if (isHost) {
+                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-white/20 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]">🏠 Хозяева турнира</span>`;
+            }
+            badgesContainer.innerHTML = badgesHtml;
+
+            if (isChampion) {
+                glowEl.style.backgroundColor = '#EAB308';
+                mainCardEl.style.borderColor = 'rgba(234, 179, 8, 0.25)';
+                mainCardEl.style.boxShadow = '0 25px 60px -15px rgba(234, 179, 8, 0.15)';
+            } else {
+                glowEl.style.backgroundColor = '#00E676';
+                mainCardEl.style.borderColor = (isVeteran || isHost) ? 'rgba(0, 230, 118, 0.25)' : 'rgba(255, 255, 255, 0.1)';
+                mainCardEl.style.boxShadow = (isVeteran || isHost) ? '0 25px 60px -15px rgba(0, 230, 118, 0.15)' : '0 25px 50px -12px rgba(0, 0, 0, 0.8)';
+            }
+
+            historyMatches.sort((a, b) => b.year - a.year);
+            let matchesByYear = {};
+            historyMatches.forEach(m => { if (!matchesByYear[m.year]) matchesByYear[m.year] = []; matchesByYear[m.year].push(m); });
+
+            const yearsContainer = document.getElementById('stats-years-container');
+            if (historyMatches.length === 0) {
+                yearsContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-6 italic">Матчи не найдены</div>`;
+            } else {
+                yearsContainer.innerHTML = Object.keys(matchesByYear).sort((a, b) => b - a).map(year => {
+                    let matchesHtml = matchesByYear[year].map(m => {
+                        let resColor = m.isWin ? 'text-neon' : (m.isLoss ? 'text-red-500' : 'text-zinc-400');
+                        return `
+                            <div class="bg-zinc-card/30 border border-zinc-900/60 p-3 rounded-xl flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
+                                <div class="space-y-0.5 flex-1 min-w-0 pr-2">
+                                    <div class="text-zinc-500 text-[9px] font-bold">${m.stage}</div>
+                                    <div class="flex items-center text-white truncate font-medium">
+                                        <span class="text-zinc-500 font-bold mr-1.5">vs</span>
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.opponent}.png" class="team-logo mr-1.5" onerror="this.style.visibility='hidden'">
+                                        <span class="truncate text-zinc-300 font-bold">${smartTeamName(m.opponent)}</span>
+                                    </div>
+                                </div>
+                                <div class="text-right font-black shrink-0 ${resColor} text-xs sm:text-sm tracking-wide pl-2">
+                                    ${m.scoreText}
+                                </div>
+                            </div>`;
+                    }).join('');
+
+                    return `
+                        <div class="bg-zinc-card/60 border border-zinc-800/80 rounded-[24px] p-3 flex flex-col gap-2">
+                            <div class="text-neon font-black text-xs sm:text-sm tracking-wider px-1 py-0.5 border-b border-zinc-800/50 pb-1.5 flex items-center justify-between">
+                                <span>${year} ГОД</span>
+                                <span class="text-[9px] text-zinc-500 font-bold">${matchesByYear[year].length} МАТЧ(ЕЙ)</span>
+                            </div>
+                            <div class="flex flex-col gap-1.5">${matchesHtml}</div>
+                        </div>`;
+                }).join('');
+            }
         }
 
         function render2026Core() {
             const tabs = ['tables', 'schedule', 'standings', 'playoffs', 'scorers', 'assistants'];
-            tabs.forEach(t => document.getElementById(`sub-2026-${t}`)?.classList.add('hidden'));
+            tabs.forEach(t => { const el = document.getElementById(`sub-2026-${t}`); if(el) el.classList.add('hidden'); });
 
             const currentContainer = document.getElementById(`sub-2026-${active2026Tab}`);
             if (currentContainer) currentContainer.classList.remove('hidden');
 
-            const groupMatchesFuture = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа') && m.status && m.status.toLowerCase().trim() === 'future').length;
-            
+            const groupMatchesFuture = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа') && m.status === 'future').length;
             const countText = `ОСТАЛОСЬ МАТЧЕЙ В ГРУППАХ: ${groupMatchesFuture}.`;
-            const sCount = document.getElementById('standings-count-node');
-            const pCount = document.getElementById('playoffs-count-node');
-            if(sCount) sCount.innerText = countText;
-            if(pCount) pCount.innerText = countText;
+            ['standings-count-node', 'playoffs-count-node'].forEach(id => { const el = document.getElementById(id); if(el) el.innerText = countText; });
 
-            const bannerStandings = document.getElementById('banner-standings-2026');
-            const bannerPlayoffs = document.getElementById('banner-playoffs-2026');
-
-            if (groupMatchesFuture === 0) {
-                if (bannerStandings) bannerStandings.classList.add('hidden');
-                if (bannerPlayoffs) bannerPlayoffs.classList.add('hidden');
-            } else {
-                if (bannerStandings) bannerStandings.classList.remove('hidden');
-                if (bannerPlayoffs) bannerPlayoffs.classList.remove('hidden');
-            }
+            const bStandings = document.getElementById('banner-standings-2026'); const bPlayoffs = document.getElementById('banner-playoffs-2026');
+            if (groupMatchesFuture === 0) { bStandings?.classList.add('hidden'); bPlayoffs?.classList.add('hidden'); } 
+            else { bStandings?.classList.remove('hidden'); bPlayoffs?.classList.remove('hidden'); }
             
             updateLiveDateStrings();
-
             if(active2026Tab === 'tables') render2026Tables();
             else if(active2026Tab === 'schedule') render2026Schedule();
             else if(active2026Tab === 'standings') render2026OverallStandings();
@@ -508,120 +710,61 @@
         function renderArchiveCore() {
             if (!archiveYear || !archiveTournament) return;
             const mArch = db.archive.filter(m => m.year === archiveYear && m.tournament === archiveTournament);
-            
-            const gContainer = document.getElementById('archive-groups');
-            const pContainer = document.getElementById('archive-playoffs');
-            const rContainer = document.getElementById('archive-results');
-            const regInfoArch = document.getElementById('regulations-info-archive');
-
-            gContainer.classList.add('hidden'); pContainer.classList.add('hidden'); rContainer.classList.add('hidden'); regInfoArch.classList.add('hidden');
+            const gContainer = document.getElementById('archive-groups'); const pContainer = document.getElementById('archive-playoffs'); const rContainer = document.getElementById('archive-results');
+            [gContainer, pContainer, rContainer, document.getElementById('regulations-info-archive')].forEach(c => c?.classList.add('hidden'));
             const isSupercup = archiveTournament.toUpperCase().includes('СУПЕРКУБОК');
 
             if(activeArchiveTab === 'groups') {
-                if (isSupercup) {
-                    gContainer.classList.remove('hidden');
-                    gContainer.innerHTML = `<div class="text-zinc-500 text-xs text-center py-12 italic">Групповой этап не проводился</div>`;
-                    return;
-                }
-
                 gContainer.classList.remove('hidden'); gContainer.innerHTML = '';
-                
-                const groupM = mArch.filter(m => m.stage.toLowerCase().includes('группа'));
-                const groups = [...new Set(groupM.map(m => m.stage))].sort();
+                if (isSupercup) { gContainer.innerHTML = `<div class="text-zinc-500 text-xs text-center py-12 italic">Групповой этап не проводился</div>`; return; }
+                const groupM = mArch.filter(m => m.stage.toLowerCase().includes('группа')); const groups = [...new Set(groupM.map(m => m.stage))].sort();
+                if(groups.length === 0) { gContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Групповой этап не найден.</div>`; return; }
 
-                if(groups.length === 0) {
-                    gContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Групповой этап не найден. Посмотрите вкладку "Результаты"</div>`;
-                    return;
-                }
-
-                const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа'));
-                const playoffTeams = new Set(playM.flatMap(m => [m.t1, m.t2]).filter(Boolean));
-
+                const playoffTeams = new Set(mArch.filter(m => !m.stage.toLowerCase().includes('группа')).flatMap(m => [m.t1, m.t2]).filter(Boolean));
                 groups.forEach(g => {
                     const sorted = calculateGroupStats(groupM.filter(m => m.stage === g));
-                    let html = `<div class="group-card"><table><thead><tr><th>${g}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
-                    
+                    let html = `<div class="group-card"><table><thead><tr><th>${g}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
                     sorted.forEach((t, idx) => {
-                        let bar = 'red-bar';
-                        if (archiveYear === '2023') {
-                            if (idx === 0) bar = 'green-bar';
-                            else if (idx === 1 || idx === 2) bar = 'lime-bar';
-                        } else {
-                            if (playoffTeams.has(t.name)) bar = 'green-bar';
-                        }
-                        
-                        html += `<tr><td class="${bar} max-w-[140px] truncate text-[10px] sm:text-[12px]"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">${smartTeamName(t.name)}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                        let bar = playoffTeams.has(t.name) ? 'green-bar' : 'red-bar';
+                        if (archiveYear === '2023') bar = idx === 0 ? 'green-bar' : (idx === 1 || idx === 2 ? 'lime-bar' : 'red-bar');
+                        html += `<tr><td class="${bar} max-w-[140px] truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-1.5" onerror="this.style.visibility='hidden'">${smartTeamName(t.name)}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
                     });
                     gContainer.innerHTML += html + `</tbody></table></div>`;
                 });
-
-                let legendHtml = `
-                    <div class="mt-4 p-4 bg-zinc-900/40 border border-zinc-800 rounded-2xl space-y-2 text-[11px] text-zinc-400">
-                        <div class="font-bold text-white uppercase tracking-wider text-[10px]">Легенда зон и правила:</div>
-                        <div class="flex flex-wrap gap-4 border-b border-zinc-800 pb-2 mb-2">
-                            <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#00E676] rounded-sm"></span> <span>Плей-офф</span></div>
-                            ${archiveYear === '2023' ? '<div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#EAB308] rounded-sm"></span> <span>Плей-ин</span></div>' : ''}
-                            <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#EF4444] rounded-sm"></span> <span>Выбыл из турнира</span></div>
-                        </div>
-                        <div class="text-[11px] text-zinc-400 leading-relaxed">
-                            При равенстве очков:<br>
-                            1) Личные встречи;<br>
-                            2) Разница мячей;<br>
-                            3) Забитые мячи.
-                        </div>
-                    </div>`;
-                gContainer.innerHTML += legendHtml;
             }
 
             if(activeArchiveTab === 'playoffs') {
-                pContainer.classList.remove('hidden');
-                const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа')); 
+                pContainer.classList.remove('hidden'); const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа')); 
                 let stages = [...new Set(playM.map(m => m.stage))].filter(s => s && !s.toLowerCase().includes('3-е место'));
-
                 const order = ['1/32', '1/16', '1/8', '1/4', '1/2', 'Финал'];
                 stages.sort((a, b) => order.findIndex(o => a.toLowerCase().includes(o.toLowerCase())) - order.findIndex(o => b.toLowerCase().includes(o.toLowerCase())));
-
-                if(stages.length === 0) {
-                    document.getElementById('archive-playoff-nav').innerHTML = '';
-                    document.getElementById('archive-playoff-matches').innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Плей-офф отсутствует</div>`;
-                    return;
-                }
+                if(stages.length === 0) { document.getElementById('archive-playoff-matches').innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Плей-офф отсутствует</div>`; return; }
 
                 if(!currentPlayoffStageArchive || !stages.includes(currentPlayoffStageArchive)) currentPlayoffStageArchive = stages[0];
                 document.getElementById('archive-playoff-nav').innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 text-[10px] !py-2.5 ${currentPlayoffStageArchive === s ? 'active' : ''}" onclick="setPlayoffStageArchive('${s}')">${s}</button>`).join('');
 
-                let matchesHtml = '';
-                let stageMatches = playM.filter(m => m.stage === currentPlayoffStageArchive);
-                
-                if(currentPlayoffStageArchive.toLowerCase().includes('финал')) {
-                    const thirdPlaceMatch = playM.find(m => m.stage.toLowerCase().includes('3-е место'));
-                    if(thirdPlaceMatch) {
-                        stageMatches.push(thirdPlaceMatch);
-                    }
-                }
-
+                let matchesHtml = ''; let stageMatches = playM.filter(m => m.stage === currentPlayoffStageArchive);
+                if(currentPlayoffStageArchive.toLowerCase().includes('финал')) { const tm = playM.find(m => m.stage.toLowerCase().includes('3-е место')); if(tm) stageMatches.push(tm); }
                 stageMatches.forEach(m => { matchesHtml += renderPlayoffCard(m, m.t1, m.t2); });
                 document.getElementById('archive-playoff-matches').innerHTML = matchesHtml;
             }
 
             if(activeArchiveTab === 'results') {
-                rContainer.classList.remove('hidden'); rContainer.innerHTML = '';
-                const stages = [...new Set(mArch.map(m => m.stage))];
+                rContainer.classList.remove('hidden'); rContainer.innerHTML = ''; const stages = [...new Set(mArch.map(m => m.stage))];
                 if(stages.length === 0) { rContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи отсутствуют</div>`; return; }
-
                 rContainer.innerHTML = stages.map(stg => {
-                    let matchesList = mArch.filter(m => m.stage === stg).map(m => {
+                    let ml = mArch.filter(m => m.stage === stg).map(m => {
                         let scores = getScoreDisplay(m);
                         return `
                             <div class="bg-zinc-card/40 border border-zinc-900 p-3 rounded-xl flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                                <div class="space-y-1.5 flex-1 min-w-0 pr-2">
-                                    <div class="flex items-center truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">${smartTeamName(m.t1)}</div>
-                                    <div class="flex items-center truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">${smartTeamName(m.t2)}</div>
+                                <div class="space-y-1 flex-1 min-w-0 pr-2">
+                                    <div class="flex items-center truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-2" onerror="this.style.visibility='hidden'">${smartTeamName(m.t1)}</div>
+                                    <div class="flex items-center truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo mr-2" onerror="this.style.visibility='hidden'">${smartTeamName(m.t2)}</div>
                                 </div>
-                                <div class="text-right text-neon font-black space-y-1.5 shrink-0"><div>${scores.s1}</div><div>${scores.s2}</div></div>
+                                <div class="text-right text-neon font-black space-y-1 shrink-0"><div>${scores.s1}</div><div>${scores.s2}</div></div>
                             </div>`;
                     }).join('');
-                    return `<div class="mb-4"><h4 class="text-xs font-black text-neon uppercase tracking-wider mb-2">${stg}</h4><div class="flex flex-col gap-2 w-full">${matchesList}</div></div>`;
+                    return `<div class="mb-4"><h4 class="text-xs font-black text-neon uppercase tracking-wider mb-2">${stg}</h4><div class="flex flex-col gap-2 w-full">${ml}</div></div>`;
                 }).join('');
             }
         }
@@ -629,43 +772,31 @@
         function setPlayoffStageArchive(stage) { currentPlayoffStageArchive = stage; renderArchiveCore(); }
 
         function renderPlayoffCard(m, defaultT1, defaultT2) {
-            let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0;
-            let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
-            
+            let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0; let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
             let score1 = m ? `${s1Val}` : '-'; let score2 = m ? `${s2Val}` : '-';
-            if (p1Val !== null && p2Val !== null) {
-                score1 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p1Val}</span>`;
-                score2 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p2Val}</span>`;
+            if (p1Val !== null && p2Val !== null) { 
+                score1 += ` <span class="text-[9px] text-white font-bold ml-1">${p1Val}</span>`; 
+                score2 += ` <span class="text-[9px] text-white font-bold ml-1">${p2Val}</span>`; 
             }
-
+            
             let medal1 = '', medal2 = '';
             if(m && m.stage) {
-                let stageLower = m.stage.toLowerCase();
-                let isFinal = stageLower.includes('финал') && !stageLower.includes('3-е');
-                let isThird = stageLower.includes('3-е место');
+                let stg = m.stage.toLowerCase();
+                let isFin = stg.includes('финал') && !stg.includes('3-е');
+                let is3rd = stg.includes('3-е место');
                 let t1Win = (s1Val > s2Val) || (p1Val !== null && p1Val > p2Val);
-
-                if (isFinal) { 
-                    medal1 = t1Win ? '🥇' : '🥈'; medal2 = t1Win ? '🥈' : '🥇'; 
-                } else if (isThird) { 
-                    medal1 = t1Win ? '🥉' : ''; medal2 = t1Win ? '' : '🥉'; 
-                }
+                if (isFin) { medal1 = t1Win ? '🥇' : '🥈'; medal2 = t1Win ? '🥈' : '🥇'; }
+                else if (is3rd) { medal1 = t1Win ? '🥉' : ''; medal2 = t1Win ? '' : '🥉'; }
             }
 
             return `
                 <div class="match-row !cursor-default w-full flex flex-col gap-2">
                     <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT1}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">
-                            <span class="truncate">${smartTeamName(defaultT1)}</span><span class="ml-1">${medal1}</span>
-                        </div>
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT1}.png" class="team-logo mr-2" onerror="this.style.visibility='hidden'"><span class="truncate">${smartTeamName(defaultT1)}</span><span class="ml-1">${medal1}</span></div>
                         <div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
                     </div>
                     <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT2}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">
-                            <span class="truncate">${smartTeamName(defaultT2)}</span><span class="ml-1">${medal2}</span>
-                        </div>
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT2}.png" class="team-logo mr-2" onerror="this.style.visibility='hidden'"><span class="truncate">${smartTeamName(defaultT2)}</span><span class="ml-1">${medal2}</span></div>
                         <div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
                     </div>
                 </div>`;
@@ -673,129 +804,65 @@
 
         function getScoreDisplay(m) {
             let score1 = `${m.s1}`; let score2 = `${m.s2}`;
-            if (m.p1 !== null && m.p2 !== null) {
-                score1 += ` <span class="text-[10px] text-white font-normal">${m.p1}</span>`;
-                score2 += ` <span class="text-[10px] text-white font-normal">${m.p2}</span>`;
-            }
+            if (m.p1 !== null && m.p2 !== null) { score1 += ` <span class="text-[8.5px] text-white font-bold ml-1">${m.p1}</span>`; score2 += ` <span class="text-[8.5px] text-white font-bold ml-1">${m.p2}</span>`; }
             return { s1: score1, s2: score2 };
         }
 
         function render2026Tables() {
-            const container = document.getElementById('sub-2026-tables');
-            container.innerHTML = '';
+            const container = document.getElementById('sub-2026-tables'); container.innerHTML = '';
             const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
             const groups = [...new Set(groupMatches.map(m => m.group))].sort();
+            if(groups.length === 0) { container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа 2026 не найдены.</div>`; return; }
 
-            if(groups.length === 0) {
-                container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа 2026 не найдены.</div>`;
-                return;
-            }
-
-            let overallStandings = getStandingsArray();
-            let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
+            let overallStandings = getStandingsArray(); let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
 
             groups.forEach(gName => {
-                const mInGroup = groupMatches.filter(m => m.group === gName);
-                const sortedTeams = calculateGroupStats(mInGroup);
-
-                let html = `<div class="group-card"><table><thead><tr><th>${gName}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
+                const mInGroup = groupMatches.filter(m => m.group === gName); const sortedTeams = calculateGroupStats(mInGroup);
+                let html = `<div class="group-card"><table><thead><tr><th>${gName}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
                 sortedTeams.forEach((t) => {
-                    let isTeamInPlayoffZone = playoffTeams2026.includes(t.name.trim().toUpperCase());
-                    let barColor = isTeamInPlayoffZone ? 'green-bar' : 'red-bar';
-                    
-                    html += `<tr><td class="${barColor} max-w-[130px] truncate text-[10px] sm:text-[12px]"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">${smartTeamName(t.name)}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                    let barColor = playoffTeams2026.includes(t.name.trim().toUpperCase()) ? 'green-bar' : 'red-bar';
+                    html += `<tr><td class="${barColor} max-w-[130px] truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-1.5" onerror="this.style.visibility='hidden'">${smartTeamName(t.name)}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
                 });
-                html += `</tbody></table><div class="mt-4 border-t border-zinc-800/60 pt-2 space-y-2">`;
+                html += `</tbody></table><div class="mt-3 border-t border-zinc-800/60 pt-1.5 space-y-1.5">`;
 
                 mInGroup.forEach(m => {
-                    const isPast = m.status === 'past';
-                    let scores = getScoreDisplay(m);
-                    
-                    let scoreBadge = isPast 
-                        ? `<div class="text-neon font-black text-[11px] bg-zinc-900/80 px-2 py-0.5 rounded flex items-center gap-1 shrink-0 select-none">${scores.s1} : ${scores.s2} <span class="text-[8px] text-zinc-500">▼</span></div>` 
-                        : `<div class="text-zinc-500 text-[11px] bg-zinc-900/30 px-2 py-0.5 rounded shrink-0 select-none">- : -</div>`;
-
+                    const isPast = m.status === 'past'; let scores = getScoreDisplay(m);
+                    let scoreBadge = isPast ? `<div class="text-neon font-black text-[11px] bg-zinc-900/80 px-2 py-0.5 rounded flex items-center gap-1 shrink-0 select-none">${scores.s1} : ${scores.s2}</div>` : `<div class="text-zinc-500 text-[11px] bg-zinc-900/30 px-2 py-0.5 rounded shrink-0 select-none">- : -</div>`;
                     html += `
                         <div class="match-row clickable-match" onclick="toggleDetails('det-2026-${m.id}')">
                             <div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase gap-2 w-full">
-                                <div class="flex-1 min-w-0 truncate flex items-center pr-1">
-                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">
-                                    <span class="truncate">${smartTeamName(m.t1)}</span>
-                                </div>
+                                <div class="flex-1 min-w-0 truncate flex items-center pr-1"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-1.5" onerror="this.style.visibility='hidden'"><span class="truncate">${smartTeamName(m.t1)}</span></div>
                                 ${scoreBadge}
-                                <div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1">
-                                    <span class="truncate">${smartTeamName(m.t2)}</span>
-                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-2 sm:mr-0 mr-3" onerror="this.style.visibility='hidden'">
-                                </div>
+                                <div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1"><span class="truncate">${smartTeamName(m.t2)}</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-1.5" onerror="this.style.visibility='hidden'"></div>
                             </div>
-                            <div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400">
-                                <div class="pt-2 border-t border-zinc-900/60 space-y-2 mt-2">
-                                    ${renderEventsInline(m.id, isPast)}
-                                </div>
-                            </div>
+                            <div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400"><div class="pt-2 border-t border-zinc-900/60 space-y-2 mt-2">${renderEventsInline(m.id, isPast)}</div></div>
                         </div>`;
                 });
                 container.innerHTML += html + `</div></div>`;
             });
-
-            let legendHtml2026 = `
-                <div class="group-card col-span-1 lg:col-span-2 !bg-zinc-card/30 border border-zinc-800/80 p-4 space-y-2 text-[11px] text-zinc-400 mt-2">
-                    <div class="font-bold text-white uppercase tracking-wider text-[10px]">Легенда зон и правила сезона 2026:</div>
-                    <div class="flex flex-wrap gap-4 border-b border-zinc-800 pb-2 mb-2">
-                        <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#00E676] rounded-sm"></span> <span>Выход в Плей-офф (Топ-32 общего зачета)</span></div>
-                        <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#EF4444] rounded-sm"></span> <span>Выбывание из турнира</span></div>
-                    </div>
-                    <div class="text-[11px] text-zinc-400 leading-relaxed">
-                        При равенстве очков на групповом этапе:<br>
-                        1) Личные встречи;<br>
-                        2) Разница забитых и пропущенных мячей;<br>
-                        3) Количество забитых мячей.
-                    </div>
-                </div>`;
-            container.innerHTML += legendHtml2026;
         }
 
-        // Рендерит вкладку бомбардиров / ассистентов
         function render2026StatList(type) {
-            const listContainer = document.getElementById(type === 'scorers' ? 'scorers-list' : 'assistants-list');
-            if(!listContainer) return;
-            listContainer.innerHTML = '';
-            
+            const listContainer = document.getElementById(type === 'scorers' ? 'scorers-list' : 'assistants-list'); if(!listContainer) return; listContainer.innerHTML = '';
             let statsMap = {};
             db.goals2026.forEach(g => {
-                let pName = type === 'scorers' ? g.player : g.assistant;
-                if(!pName || pName.toLowerCase() === 'автогол' || pName === '') return;
-                let key = pName + '|||' + g.team;
-                if(!statsMap[key]) statsMap[key] = { name: pName, team: g.team, count: 0 };
-                statsMap[key].count++;
+                let pName = type === 'scorers' ? g.player : g.assistant; if(!pName || pName.toLowerCase() === 'автогол' || pName === '') return;
+                let key = pName + '|||' + g.team; if(!statsMap[key]) statsMap[key] = { name: pName, team: g.team, count: 0 }; statsMap[key].count++;
             });
-
             let sorted = Object.values(statsMap).sort((a,b) => b.count - a.count);
-            if(sorted.length === 0) {
-                listContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет зарегистрированных данных</div>`;
-                return;
-            }
-
-            // ИСПРАВЛЕНИЕ: Выводится полное оригинальное имя игрока (p.name вместо сокращенного), добавлен отступ mr-2/sm:mr-3 к иконке
+            if(sorted.length === 0) { listContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет зарегистрированных данных</div>`; return; }
             listContainer.innerHTML = sorted.map((p, idx) => `
                 <div class="grid grid-cols-12 text-[10px] sm:text-xs font-bold items-center p-3 text-center uppercase">
                     <div class="col-span-1 text-left text-zinc-500">${idx+1}</div>
-                    <div class="col-span-6 text-left text-white truncate flex items-center pr-1">
-                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${p.team}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">${p.name}
-                    </div>
+                    <div class="col-span-6 text-left text-white truncate flex items-center pr-1"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${p.team}.png" class="team-logo mr-2" onerror="this.style.visibility='hidden'">${p.name}</div>
                     <div class="col-span-3 text-zinc-400 text-[9px] sm:text-[11px] truncate text-left">${smartTeamName(p.team)}</div>
                     <div class="col-span-2 text-right text-neon font-black">${p.count}</div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         function render2026Schedule() {
-            const container = document.getElementById('schedule-list');
-            if(!container) return;
-            const tFilter = document.getElementById('filter-teams').value;
-            const sFilter = document.getElementById('filter-stages').value;
-            const statusFilter = document.getElementById('filter-status').value;
-
+            const container = document.getElementById('schedule-list'); if(!container) return;
+            const tFilter = document.getElementById('filter-teams').value; const sFilter = document.getElementById('filter-stages').value; const statusFilter = document.getElementById('filter-status').value;
             let filtered = db.matches2026.filter(m => {
                 if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
                 if(sFilter !== 'all') {
@@ -806,296 +873,180 @@
                 if(statusFilter === 'past' && m.status !== 'past') return false;
                 return true;
             });
-
-            if(filtered.length === 0) {
-                container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи не найдены</div>`;
-                return;
-            }
-
+            if(filtered.length === 0) { container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи не найдены</div>`; return; }
             container.innerHTML = filtered.map(m => {
-                let labelHeader = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
-                const isPast = m.status === 'past';
-                const timeDisplay = isPast ? 'СЫГРАН' : m.time;
-                const opacityClass = isPast ? 'opacity-60' : '';
-
+                let lh = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
                 return `
-                    <div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center gap-4 ${opacityClass}">
-                        <div class="w-24 shrink-0 border-r border-zinc-800/80 pr-2 text-left">
-                            <div class="text-[10px] font-black text-neon truncate uppercase tracking-wider">${labelHeader}</div>
-                            <div class="text-[9px] text-zinc-500 font-bold uppercase mt-0.5">ПОЛЕ #${m.field}</div>
-                        </div>
-                        
+                    <div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center gap-4 ${m.status === 'past' ? 'opacity-60' : ''}">
+                        <div class="w-24 shrink-0 border-r border-zinc-800/80 pr-2 text-left"><div class="text-[10px] font-black text-neon truncate uppercase tracking-wider">${lh}</div><div class="text-[9px] text-zinc-500 font-bold uppercase mt-0.5">ПОЛЕ #${m.field}</div></div>
                         <div class="flex-grow flex flex-col gap-2 min-w-0">
-                            <div class="flex items-center text-[10px] sm:text-xs font-bold text-white uppercase truncate">
-                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">
-                                <span class="truncate">${smartTeamName(m.t1)}</span>
-                            </div>
-                            <div class="flex items-center text-[10px] sm:text-xs font-bold text-white uppercase truncate">
-                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">
-                                <span class="truncate">${smartTeamName(m.t2)}</span>
-                            </div>
+                            <div class="flex items-center text-[10px] sm:text-xs font-bold text-white uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-2"><span class="truncate">${smartTeamName(m.t1)}</span></div>
+                            <div class="flex items-center text-[10px] sm:text-xs font-bold text-white uppercase truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo mr-2"><span class="truncate">${smartTeamName(m.t2)}</span></div>
                         </div>
-                        
-                        <div class="text-right shrink-0 pl-2 border-l border-zinc-800/80 min-w-[85px]">
-                            <div class="text-xs font-black text-white tracking-wide uppercase">${timeDisplay}</div>
-                            <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date}</div>
-                        </div>
+                        <div class="text-right shrink-0 pl-2 border-l border-zinc-800/80 min-w-[85px]"><div class="text-xs font-black text-white tracking-wide uppercase">${m.status === 'past' ? 'СЫГРАН' : m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date}</div></div>
                     </div>`;
             }).join('');
         }
 
         function getStandingsArray() {
             const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
-            const groups = [...new Set(groupMatches.map(m => m.group))].sort();
-            let structuredMap = [];
-
-            groups.forEach(g => {
-                calculateGroupStats(groupMatches.filter(m => m.group === g)).forEach((tStats, rank) => {
-                    structuredMap.push({ ...tStats, groupRank: rank + 1 });
-                });
-            });
-
-            structuredMap.sort((a,b) => a.groupRank !== b.groupRank ? a.groupRank - b.groupRank : b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
-            return structuredMap;
+            const groups = [...new Set(groupMatches.map(m => m.group))].sort(); let sm = [];
+            groups.forEach(g => { calculateGroupStats(groupMatches.filter(m => m.group === g)).forEach((tStats, rank) => { sm.push({ ...tStats, groupRank: rank + 1 }); }); });
+            sm.sort((a,b) => a.groupRank !== b.groupRank ? a.groupRank - b.groupRank : b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
+            return sm;
         }
 
         function render2026OverallStandings() {
-            const tbody = document.querySelector('#overall-table tbody');
-            if(!tbody) return; tbody.innerHTML = '';
-            
-            let structuredMap = getStandingsArray();
-            if(structuredMap.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-zinc-600 text-xs text-center py-10 italic">Нет данных</td></tr>`; return; }
-
-            tbody.innerHTML = structuredMap.map((t, i) => {
-                let isPlayoff = i < 32;
-                let barClass = isPlayoff ? 'green-bar' : 'red-bar';
-
-                return `
+            const tbody = document.querySelector('#overall-table tbody'); if(!tbody) return; tbody.innerHTML = '';
+            let sm = getStandingsArray(); if(sm.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-zinc-600 text-xs text-center py-10 italic">Нет данных</td></tr>`; return; }
+            tbody.innerHTML = sm.map((t, i) => `
                 <tr class="hover:bg-zinc-900/30 transition-colors">
-                    <td class="text-left font-bold py-3 text-[10px] sm:text-xs max-w-[150px] truncate ${barClass}">
-                        <span class="inline-block w-6 text-zinc-500 font-bold">${i+1}.</span>
-                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-2 sm:mr-3" onerror="this.style.visibility='hidden'">
+                    <td class="text-left font-bold py-3 text-[10px] sm:text-xs max-w-[150px] truncate ${i < 32 ? 'green-bar' : 'red-bar'}">
+                        <span class="inline-block text-zinc-500 font-bold mr-1">${i+1}.</span>
+                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-1.5" onerror="this.style.visibility='hidden'">
                         <span>${smartTeamName(t.name)}</span>
                     </td>
                     <td>${t.games}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td>
-                </tr>`;
-            }).join('');
+                </tr>`).join('');
         }
 
         function render2026Playoffs() {
-            const nav = document.getElementById('playoff-stages-nav-2026');
-            const container = document.getElementById('playoff-matches-2026');
+            const nav = document.getElementById('playoff-stages-nav-2026'); const container = document.getElementById('playoff-matches-2026');
             if(!container || !nav) return; container.innerHTML = '';
-
-            const pMatches = db.matches2026.filter(m => !m.group || !m.group.toLowerCase().includes('группа'));
-            let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
-
+            const pMatches = db.matches2026.filter(m => !m.group || !m.group.toLowerCase().includes('группа')); let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
             if(!stages.includes(currentPlayoffStage2026)) currentPlayoffStage2026 = stages[0];
             nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
 
-            let matchesHtml = '';
-            let standings = getStandingsArray().map(x => x.name);
-            while(standings.length < 32) { standings.push('Команда'); }
+            let matchesHtml = ''; let standings = getStandingsArray().map(x => x.name); while(standings.length < 32) { standings.push('Команда'); }
 
             if (currentPlayoffStage2026 === '1/16') {
-                const pairs = [
-                    [1, 32], [13, 20], [5, 28], [9, 24], 
-                    [3, 30], [15, 18], [7, 26], [11, 22], 
-                    [2, 31], [14, 19], [6, 27], [10, 23], 
-                    [4, 29], [16, 17], [8, 25], [12, 21]
-                ];
-
+                const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
                 pairs.forEach((p) => {
-                    let t1 = standings[p[0] - 1];
-                    let t2 = standings[p[1] - 1];
-                    
-                    let realMatch = pMatches.find(m => m.stage === '1/16' && (
-                        (m.t1.trim().toUpperCase() === t1.trim().toUpperCase() || m.t2.trim().toUpperCase() === t1.trim().toUpperCase())
-                    ));
-
+                    let t1 = standings[p[0] - 1]; let t2 = standings[p[1] - 1];
+                    let realMatch = pMatches.find(m => m.stage === '1/16' && ((m.t1.trim().toUpperCase() === t1.trim().toUpperCase() || m.t2.trim().toUpperCase() === t1.trim().toUpperCase())));
                     matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1]);
                 });
-            } else {
-                let stageMatches = pMatches.filter(m => m.stage === currentPlayoffStage2026);
-                
-                if (currentPlayoffStage2026.toLowerCase().includes('финал')) {
-                    const real3rd = pMatches.find(m => m.stage.toLowerCase().includes('3-е место'));
-                    if (real3rd) stageMatches.push(real3rd);
+            } else if (currentPlayoffStage2026 === 'Финал') {
+                const realFinal = pMatches.find(m => m.stage.toLowerCase() === 'финал');
+                if (realFinal) {
+                    matchesHtml += renderPlayoffCardLive(realFinal, realFinal.t1, realFinal.t2, '-', '-');
+                } else {
+                    matchesHtml += `
+                        <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40">
+                            <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
+                                <div class="flex items-center"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2">Победитель 1/2 #1</div><div class="text-zinc-600 font-black">-</div>
+                            </div>
+                            <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
+                                <div class="flex items-center"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2">Победитель 1/2 #2</div><div class="text-zinc-600 font-black">-</div>
+                            </div>
+                        </div>`;
                 }
 
+                const real3rd = pMatches.find(m => m.stage.toLowerCase().includes('3-е место'));
+                if (real3rd) {
+                    matchesHtml += `<div class="mt-4"></div>` + renderPlayoffCardLive(real3rd, real3rd.t1, real3rd.t2, '-', '-');
+                } else {
+                    matchesHtml += `
+                        <div class="mt-4"></div>
+                        <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40">
+                            <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
+                                <div class="flex items-center"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2">Проигравший 1/2 #1</div><div class="text-zinc-600 font-black">-</div>
+                            </div>
+                            <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
+                                <div class="flex items-center"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2">Проигравший 1/2 #2</div><div class="text-zinc-600 font-black">-</div>
+                            </div>
+                        </div>`;
+                }
+            } else {
+                let stageMatches = pMatches.filter(m => m.stage === currentPlayoffStage2026);
                 if (stageMatches.length === 0) {
-                    let count = currentPlayoffStage2026 === '1/8' ? 8 : currentPlayoffStage2026 === '1/4' ? 4 : currentPlayoffStage2026 === '1/2' ? 2 : 1;
-                    
-                    let prevStage = '1/16';
-                    if (currentPlayoffStage2026 === '1/4') prevStage = '1/8';
-                    else if (currentPlayoffStage2026 === '1/2') prevStage = '1/4';
-                    else if (currentPlayoffStage2026.toLowerCase().includes('финал')) prevStage = '1/2';
+                    let count = currentPlayoffStage2026 === '1/8' ? 8 : (currentPlayoffStage2026 === '1/4' ? 4 : 2);
+                    let prevStage = currentPlayoffStage2026 === '1/8' ? '1/16' : (currentPlayoffStage2026 === '1/4' ? '1/8' : '1/4');
                     
                     for(let i = 1; i <= count; i++) {
                         matchesHtml += `
                             <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40">
                                 <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                                    <div class="flex items-center">
-                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2 sm:mr-3">Победитель ${prevStage} #${i * 2 - 1}
-                                    </div>
-                                    <div class="text-zinc-600 font-black">-</div>
+                                    <div class="flex items-center"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2">Победитель ${prevStage} #${i * 2 - 1}</div><div class="text-zinc-600 font-black">-</div>
                                 </div>
                                 <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                                    <div class="flex items-center">
-                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2 sm:mr-3">Победитель ${prevStage} #${i * 2}
-                                    </div>
-                                    <div class="text-zinc-600 font-black">-</div>
+                                    <div class="flex items-center"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2">Победитель ${prevStage} #${i * 2}</div><div class="text-zinc-600 font-black">-</div>
                                 </div>
                             </div>`;
                     }
-                    if (currentPlayoffStage2026.toLowerCase().includes('финал')) {
-                        matchesHtml += `
-                            <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40 border border-zinc-800/50">
-                                <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full text-zinc-400">
-                                    <div class="flex items-center">
-                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2 sm:mr-3">Проигравший 1/2 #1
-                                    </div>
-                                    <div class="text-zinc-600 font-black">-</div>
-                                </div>
-                                <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full text-zinc-400">
-                                    <div class="flex items-center">
-                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-2 sm:mr-3">Проигравший 1/2 #2
-                                    </div>
-                                    <div class="text-zinc-600 font-black">-</div>
-                                </div>
-                            </div>`;
-                    }
-                } else {
-                    stageMatches.forEach(m => { matchesHtml += renderPlayoffCardLive(m, m.t1, m.t2, '-', '-'); });
+                } else { 
+                    stageMatches.forEach(m => { matchesHtml += renderPlayoffCardLive(m, m.t1, m.t2, '-', '-'); }); 
                 }
             }
             container.innerHTML = matchesHtml;
         }
 
-        function setPlayoffStage2026(stage) { 
-            currentPlayoffStage2026 = stage; 
-            render2026Playoffs(); 
-        }
+        function setPlayoffStage2026(stage) { currentPlayoffStage2026 = stage; render2026Playoffs(); }
 
         function renderPlayoffCardLive(m, defaultT1, defaultT2, rank1, rank2) {
-            let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0;
-            let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
-            
+            let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0; let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
             let score1 = m ? `${s1Val}` : '-'; let score2 = m ? `${s2Val}` : '-';
-            if (p1Val !== null && p2Val !== null) {
-                score1 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p1Val}</span>`;
-                score2 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p2Val}</span>`;
+            if (p1Val !== null && p2Val !== null) { 
+                score1 += ` <span class="text-[9px] text-white font-bold ml-1">${p1Val}</span>`; 
+                score2 += ` <span class="text-[9px] text-white font-bold ml-1">${p2Val}</span>`; 
             }
-
-            let logo1 = defaultT1 === 'Команда' ? 'standart.png' : `${defaultT1}.png`;
-            let logo2 = defaultT2 === 'Команда' ? 'standart.png' : `${defaultT2}.png`;
-
+            let logo1 = defaultT1 === 'Команда' ? 'standart.png' : `${defaultT1}.png`; let logo2 = defaultT2 === 'Команда' ? 'standart.png' : `${defaultT2}.png`;
             return `
                 <div class="match-row !cursor-default w-full flex flex-col gap-2">
                     <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
-                            <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0 select-none">${rank1}</span>
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo1}" class="team-logo mr-2 sm:mr-3" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
-                            <span class="truncate">${smartTeamName(defaultT1)}</span>
-                        </div>
-                        <div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0">${rank1}</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo1}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(defaultT1)}</span></div><div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
                     </div>
                     <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
-                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
-                            <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0 select-none">${rank2}</span>
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo2}" class="team-logo mr-2 sm:mr-3" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
-                            <span class="truncate">${smartTeamName(defaultT2)}</span>
-                        </div>
-                        <div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2"><span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0">${rank2}</span><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo2}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(defaultT2)}</span></div><div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
                     </div>
                 </div>`;
         }
 
         function setGlobalMode(mode) {
             currentGlobalMode = mode;
-            const view2026 = document.getElementById('view-2026');
-            const viewArch = document.getElementById('view-archive');
-            const tabs2026 = document.getElementById('nav-2026-tabs').parentElement;
-            const ctrlsArch = document.getElementById('archive-controls');
+            const view2026 = document.getElementById('view-2026'); const viewArch = document.getElementById('view-archive'); const viewStats = document.getElementById('view-stats');
+            const tabs2026 = document.getElementById('nav-2026-tabs').parentElement; const ctrlsArch = document.getElementById('archive-controls');
             
-            const btn2026 = document.getElementById('mode-btn-2026');
-            const btnArch = document.getElementById('mode-btn-archive');
+            [view2026, viewArch, viewStats].forEach(v => v.classList.add('hidden'));
+            ['mode-btn-2026', 'mode-btn-stats', 'mode-btn-archive'].forEach(id => document.getElementById(id).className = "flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer");
 
             if(mode === '2026') {
-                view2026.classList.remove('hidden'); viewArch.classList.add('hidden');
-                tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden');
-                
-                btn2026.className = "flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer";
-                btnArch.className = "flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer";
-                
+                view2026.classList.remove('hidden'); tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden');
+                document.getElementById('mode-btn-2026').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
                 render2026Core();
-            } else {
-                viewArch.classList.remove('hidden'); view2026.classList.add('hidden');
-                tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden');
-                
-                btnArch.className = "flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer";
-                btn2026.className = "flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer";
-                
-                renderArchiveCore(); 
+            } else if (mode === 'archive') {
+                viewArch.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden');
+                document.getElementById('mode-btn-archive').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
+                renderArchiveCore();
+            } else if (mode === 'stats') {
+                viewStats.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.add('hidden');
+                document.getElementById('mode-btn-stats').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
+                renderTeamStatistics();
             }
         }
 
-        function switch2026Tab(tabName, btn) {
-            active2026Tab = tabName;
-            document.querySelectorAll('#nav-2026-tabs button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            render2026Core();
-        }
-
-        function switchArchiveTab(tabName, btn) {
-            activeArchiveTab = tabName;
-            document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            renderArchiveCore();
-        }
+        function switch2026Tab(tabName, btn) { active2026Tab = tabName; document.querySelectorAll('#nav-2026-tabs button').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render2026Core(); }
+        function switchArchiveTab(tabName, btn) { activeArchiveTab = tabName; document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); renderArchiveCore(); }
 
         function renderEventsInline(matchId, isPast) {
             if (!isPast) return `<div class="text-center italic text-zinc-500 text-[11px] py-1.5 font-medium">Матч еще не сыгран</div>`;
-
-            const events = db.goals2026.filter(e => e.match_id == matchId);
-            if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Голы не зафиксированы</div>`;
-            
-            let s1Running = 0;
-            let s2Running = 0;
-            const matchObj = db.matches2026.find(m => m.id == matchId);
-            if(!matchObj) return '';
-
+            const events = db.goals2026.filter(e => e.match_id == matchId); if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Голы не зафиксированы</div>`;
+            let s1 = 0, s2 = 0; const mo = db.matches2026.find(m => m.id == matchId); if(!mo) return '';
             return events.map(e => {
-                if(e.team.trim().toUpperCase() === matchObj.t1.trim().toUpperCase()) {
-                    s1Running++;
-                } else {
-                    s2Running++;
-                }
+                if(e.team.trim().toUpperCase() === mo.t1.trim().toUpperCase()) { s1++; } else { s2++; }
                 return `
                 <div class="flex items-center gap-2 text-[11px] w-full text-left py-0.5">
                     <span class="text-zinc-500 font-bold shrink-0">${e.minute}'</span>
-                    <span class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-neon font-black text-[10px] tracking-tighter border border-zinc-700/30 shrink-0">${s1Running}-${s2Running}</span>
+                    <span class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-neon font-black text-[10px] tracking-tighter border border-zinc-700/30 shrink-0">${s1}-${s2}</span>
                     <span class="font-medium text-zinc-300 truncate">${shortenPlayerName(e.player)}${e.assistant ? ` (${shortenPlayerName(e.assistant)})` : ''}</span>
                 </div>`;
             }).join('');
         }
 
         function toggleDetails(containerId) {
-            const el = document.getElementById(containerId);
-            if (!el) return;
-            
-            if (el.classList.contains('open')) {
-                el.classList.remove('open');
-            } else {
-                document.querySelectorAll('.details-container.open').forEach(openEl => {
-                    openEl.classList.remove('open');
-                });
-                el.classList.add('open');
-            }
+            const el = document.getElementById(containerId); if (!el) return;
+            if (el.classList.contains('open')) { el.classList.remove('open'); } 
+            else { document.querySelectorAll('.details-container.open').forEach(o => o.classList.remove('open')); el.classList.add('open'); }
         }
 
         init();
