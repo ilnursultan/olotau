@@ -37,12 +37,12 @@
 
         #olotau-app * { font-family: 'Montserrat', sans-serif !important; box-sizing: border-box !important; }
         
-        /* Премиум остекление блоков */
-        .premium-glass-card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; }
+        .premium-glass-card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }
         .premium-glass-card * { background-color: transparent !important; }
         
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .drag-active { cursor: grabbing !important; scroll-behavior: auto !important; }
         
         .team-logo { height: 18px; width: 18px; object-fit: contain; display: inline-block; vertical-align: middle; flex-shrink: 0; }
         @media(min-width: 640px) { .team-logo { height: 20px; width: 20px; } }
@@ -74,15 +74,15 @@
         .match-row.clickable-match { cursor: pointer; }
         .match-row.clickable-match:hover { border-color: #3f3f46; }
         
-        .tab-btn-top { padding: 10px 16px; border-radius: 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.05); color: #a1a1aa; white-space: nowrap; transition: all 0.2s; cursor: pointer; }
+        .tab-btn-top { padding: 10px 20px; border-radius: 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.05); color: #a1a1aa; white-space: nowrap; transition: all 0.2s; cursor: pointer; flex-shrink: 0; }
         .tab-btn-top.active { background: #00E676; color: #000; font-weight: 900; box-shadow: 0 0 15px rgba(0, 230, 118, 0.25); border-color: #00E676; }
         
         .playoff-stage-btn { padding: 10px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; background: #141417; border: 1px solid #27272a; color: #a1a1aa; transition: all 0.2s; white-space: nowrap; cursor: pointer; text-transform: uppercase; text-align: center; }
         .playoff-stage-btn.active { background: #fff; color: #000; font-weight: 900; border-color: #fff; }
 
         .custom-select { appearance: none; background-color: #141417; color: white; border: 1px solid #27272a; border-radius: 14px; padding: 12px 36px 12px 16px; font-size: 12px; font-weight: 800; text-transform: uppercase; tracking-wider; cursor: pointer; outline: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300E676'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; }
-        .scorer-header { background: #00E676; color: black; font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 0.05em; border-radius: 16px 16px 0 0; padding: 14px; text-align: center; }
-
+        .scorer-header { background: #111114; color: white; border: 1px solid #27272a; font-weight: 900; text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; border-radius: 20px 20px 0 0; padding: 16px; text-align: left; border-bottom: none; display: flex; items-center: center; gap: 10px; }
+        
         .details-container { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out; opacity: 0; }
         .details-container.open { max-height: 1000px; opacity: 1; }
     </style>
@@ -101,11 +101,11 @@
         <div class="max-w-5xl mx-auto px-4 pt-6">
             <div id="mode-container" class="hidden flex flex-col gap-4">
                 <div class="relative w-full border-b border-zinc-900 mb-2">
-                    <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 lg:hidden pointer-events-none z-10">
+                    <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 md:hidden pointer-events-none z-10">
                         <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
                         <svg class="w-3 h-3 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                     </div>
-                    <div id="nav-2026-tabs" class="flex overflow-x-auto hide-scrollbar gap-2 pb-3 pt-1">
+                    <div id="nav-2026-tabs" class="flex overflow-x-auto hide-scrollbar gap-2 pb-3 pt-1 draggable">
                         <button class="tab-btn-top active" onclick="switch2026Tab('tables', this)">Таблицы и результаты</button>
                         <button class="tab-btn-top" onclick="switch2026Tab('schedule', this)">Расписание</button>
                         <button class="tab-btn-top" onclick="switch2026Tab('standings', this)">Общий зачет</button>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
 
-                <div id="archive-controls" class="hidden flex justify-center gap-4 mb-2">
+                <div id="archive-controls" class="hidden flex justify-center gap-4 mb-4">
                     <select id="archive-tournament" class="custom-select w-44 text-center"></select>
                     <select id="archive-year" class="custom-select w-44 text-center"></select>
                 </div>
@@ -180,7 +180,7 @@
                 </div>
 
                 <div id="sub-2026-scorers" class="hidden max-w-xl mx-auto w-full">
-                    <div class="scorer-header">Лучшие Бомбардиры</div>
+                    <div class="scorer-header" style="background:#00E676; color:black;">Лучшие Бомбардиры</div>
                     <div class="bg-zinc-card border border-zinc-800 rounded-b-2xl p-2">
                         <div class="grid grid-cols-12 text-[10px] uppercase font-black tracking-widest text-zinc-500 p-3 border-b border-zinc-800 text-center">
                             <div class="col-span-1 text-left">№</div><div class="col-span-5 text-left">Игрок</div><div class="col-span-4">Команда</div><div class="col-span-2 text-right text-neon">Голы</div>
@@ -190,7 +190,7 @@
                 </div>
 
                 <div id="sub-2026-assistants" class="hidden max-w-xl mx-auto w-full">
-                    <div class="scorer-header">Лучшие Ассистенты</div>
+                    <div class="scorer-header" style="background:#00E676; color:black;">Лучшие Ассистенты</div>
                     <div class="bg-zinc-card border border-zinc-800 rounded-b-2xl p-2">
                         <div class="grid grid-cols-12 text-[10px] uppercase font-black tracking-widest text-zinc-500 p-3 border-b border-zinc-800 text-center">
                             <div class="col-span-1 text-left">№</div><div class="col-span-5 text-left">Игрок</div><div class="col-span-4">Команда</div><div class="col-span-2 text-right text-neon">Пасы</div>
@@ -201,10 +201,17 @@
             </div>
 
             <div id="view-archive" class="hidden flex flex-col gap-4">
-                <div id="archive-tabs-nav" class="grid grid-cols-3 gap-2 bg-zinc-900/40 p-1.5 border border-zinc-800/60 rounded-2xl w-full max-w-lg mx-auto">
-                    <button class="tab-btn-top active !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-groups" onclick="switchArchiveTab('groups', this)">Группы</button>
-                    <button class="tab-btn-top !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-playoffs" onclick="switchArchiveTab('playoffs', this)">Плей-офф</button>
-                    <button class="tab-btn-top !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-results" onclick="switchArchiveTab('results', this)">Результаты</button>
+                <div class="w-full flex flex-col">
+                    <div id="scroll-indicator-archive" class="w-full flex justify-end items-center gap-1 text-gray-500 md:hidden pointer-events-none mb-2 pr-1">
+                        <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
+                        <svg class="w-3 h-3 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
+                    <div id="archive-tabs-nav" class="flex overflow-x-auto hide-scrollbar gap-2 pb-3 pt-1 w-full max-w-xl mx-auto draggable">
+                        <button class="tab-btn-top active" id="arch-tab-groups" onclick="switchArchiveTab('groups', this)">Группы</button>
+                        <button class="tab-btn-top" id="arch-tab-playoffs" onclick="switchArchiveTab('playoffs', this)">Плей-офф</button>
+                        <button class="tab-btn-top" id="arch-tab-results" onclick="switchArchiveTab('results', this)">Результаты</button>
+                        <button class="tab-btn-top" id="arch-tab-best" onclick="switchArchiveTab('best', this)">Лучшие игроки</button>
+                    </div>
                 </div>
                 
                 <div id="supercup-banner" class="hidden p-5 rounded-3xl bg-yellow-500/5 border border-yellow-500/20 text-center relative overflow-hidden">
@@ -219,6 +226,16 @@
                     <div id="archive-playoff-matches" class="flex flex-col gap-4 w-full"></div>
                 </div>
                 <div id="archive-results" class="hidden flex flex-col gap-4"></div>
+
+                <div id="archive-best" class="hidden max-w-xl mx-auto w-full">
+                    <div class="scorer-header">
+                        <svg class="w-4 h-4 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        Лучшие игроки
+                    </div>
+                    <div class="bg-zinc-card border border-zinc-800 rounded-b-2xl p-3">
+                        <div id="best-players-list" class="space-y-2"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="view-stats" class="hidden flex flex-col gap-4 max-w-2xl mx-auto w-full relative">
@@ -229,17 +246,15 @@
 
                 <div id="stats-content" class="hidden flex flex-col gap-4 relative z-10">
                     
-                    <div id="stats-team-card" class="premium-glass-card relative overflow-hidden border border-white/10 shadow-[0_24px_50px_rgba(0,0,0,0.85)] rounded-[32px] p-6 sm:p-8 flex flex-col items-center justify-center text-center gap-2.5 min-h-[240px]">
+                    <div id="stats-team-card" class="relative overflow-hidden border border-zinc-800/80 bg-zinc-950 rounded-[32px] p-6 sm:p-8 flex flex-col items-center justify-center text-center gap-2.5 min-h-[240px] transition-all duration-500">
                         
-                        <div id="stats-glow-glow" class="absolute -z-10 w-48 h-48 sm:w-56 sm:h-56 rounded-full filter blur-[60px] sm:blur-[75px] opacity-[0.35] -top-12 -left-12 pointer-events-none transition-all duration-500"></div>
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-transparent pointer-events-none"></div>
 
                         <img id="stats-team-logo" src="" class="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.6)] relative z-10">
                         
                         <h2 id="stats-team-title" class="text-xl sm:text-2xl font-black uppercase tracking-tight text-white mt-1 relative z-10 break-words max-w-full px-2"></h2>
                         
-                        <div id="stats-team-geo" class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-widest relative z-10 mt-0.5 opacity-80 flex flex-col gap-1 items-center"></div>
+                        <div id="stats-team-geo" class="text-[9px] sm:text-[10px] relative z-10 mt-0.5 flex flex-col gap-1 items-center"></div>
                         
                         <div id="stats-team-badges" class="flex flex-wrap gap-2 justify-center mt-1.5 relative z-10"></div>
                     </div>
@@ -317,10 +332,11 @@
             matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
             goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
             players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv',
-            geo: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=603732331&single=true&output=csv'
+            geo: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=603732331&single=true&output=csv',
+            best: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1220926923&single=true&output=csv'
         };
 
-        let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {} };
+        let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [] };
         let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
         let archiveYear = ''; let archiveTournament = ''; let currentPlayoffStage2026 = '1/16'; let currentPlayoffStageArchive = '';
 
@@ -365,15 +381,18 @@
         async function init() {
             const animId = startLoaderAnimation();
             try {
-                const [rM, rG, rP, rA, rGeo] = await Promise.all([
+                const [rM, rG, rP, rA, rGeo, rB] = await Promise.all([
                     fetch(URLS_2026.matches + '&cb=' + Date.now()).then(r => r.text()),
                     fetch(URLS_2026.goals + '&cb=' + Date.now()).then(r => r.text()),
                     fetch(URLS_2026.players + '&cb=' + Date.now()).then(r => r.text()),
                     fetch(URLS_2026.archive + '&cb=' + Date.now()).then(r => r.text()),
-                    fetch(URLS_2026.geo + '&cb=' + Date.now()).then(r => r.text())
+                    fetch(URLS_2026.geo + '&cb=' + Date.now()).then(r => r.text()),
+                    fetch(URLS_2026.best + '&cb=' + Date.now()).then(r => r.text())
                 ]);
                 db.matches2026 = parseCoreCSV(rM, 'm'); db.goals2026 = parseCoreCSV(rG, 'g'); db.players2026 = parseCoreCSV(rP, 'p'); db.archive = parseArchiveCSV(rA);
                 parseGeoCSV(rGeo);
+                parseBestPlayersCSV(rB);
+                
                 clearInterval(animId); document.getElementById('loader').style.display = 'none'; document.getElementById('mode-container').classList.remove('hidden');
                 setupFiltersAndSelectors(); setupStatsSelectors(); setGlobalMode('2026');
             } catch (err) {
@@ -387,9 +406,25 @@
                 const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
                 if (p[0]) {
                     let normKey = normalizeTeamName(p[0]).toUpperCase();
-                    // Считываем также 4-й столбец (distance) с индексом 3
                     db.geo[normKey] = { district: p[1] || '', subject: p[2] || '', distance: p[3] || '' };
                 }
+            }
+        }
+
+        function parseBestPlayersCSV(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            db.bestPlayers = [];
+            for(let i = 1; i < lines.length; i++) {
+                const sep = lines[i].includes(';') ? ';' : ',';
+                const p = lines[i].split(sep).map(x => x.replace(/^"|"$/g, '').trim());
+                if (p.length < 5 || !p[0]) continue;
+                db.bestPlayers.push({
+                    year: p[0].trim(),
+                    sex: p[1].trim().toLowerCase(),
+                    nomination: p[2],
+                    name: p[3],
+                    team: p[4]
+                });
             }
         }
 
@@ -402,12 +437,12 @@
                     dist += ' район';
                 }
                 
-                let baseGeo = `${dist}${dist && item.subject ? ', ' : ''}${item.subject}`.toUpperCase();
+                // Район и республика выделены жирным, километры — серым
+                let baseGeo = `<span class="font-extrabold text-zinc-300">${dist}${dist && item.subject ? ', ' : ''}${item.subject}</span>`.toUpperCase();
                 
-                // Рендерим блок расстояния только если оно есть, больше нуля и команда не является хозяевами (не само Кутуево)
                 let distanceHtml = '';
                 if (item.distance && parseInt(item.distance) > 0 && !key.includes('КУТУЕВО')) {
-                    distanceHtml = `<div class="text-neon/90 font-extrabold text-[10px] tracking-wider mt-0.5">ДО КУТУЕВО ${item.distance} КМ</div>`;
+                    distanceHtml = `<div class="text-zinc-500 font-bold text-[10px] tracking-wider mt-0.5">ДО КУТУЕВО ${item.distance} КМ</div>`;
                 }
                 
                 return `<span>${baseGeo}</span>${distanceHtml}`;
@@ -494,7 +529,8 @@
         }
 
         function setupStatsSelectors() {
-            document.getElementById('stats-gender').innerHTML = `<option value="Мужчины">МУЖЧИНЫ</option><option value="Женщины">ЖЕНЩИНЫ</option><option value="Суперкубок">СУПЕРКУБОК</option>`;
+            // По ТЗ убираем "Суперкубок" из выпадающего списка категорий
+            document.getElementById('stats-gender').innerHTML = `<option value="Мужчины">МУЖЧИНЫ</option><option value="Женщины">ЖЕНЩИНЫ</option>`;
             document.getElementById('stats-gender').addEventListener('change', updateStatsTeamsList);
             document.getElementById('stats-team').addEventListener('change', renderTeamStatistics);
             updateStatsTeamsList();
@@ -609,9 +645,7 @@
             document.getElementById('stat-box-w').innerText = w; document.getElementById('stat-box-d').innerText = d; document.getElementById('stat-box-l').innerText = l;
             document.getElementById('stat-box-gf').innerText = gf; document.getElementById('stat-box-ga').innerText = ga;
 
-            // НАСТРОЙКА НЕОНОВОГО ИЛИ ЗОЛОТОГО СВЕЧЕНИЯ СЛЕВА СВЕРХУ
             const badgesContainer = document.getElementById('stats-team-badges');
-            const glowEl = document.getElementById('stats-glow-glow');
             const mainCardEl = document.getElementById('stats-team-card');
             badgesContainer.innerHTML = '';
             
@@ -620,29 +654,34 @@
             
             const requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
             let isVeteran = requiredYears.every(y => activeArchiveYears.has(y));
-
-            // Логика хозяев турнира: применяется ко всем составам Кутуево
             let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
 
             if (isChampion) {
-                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-yellow-500/40 bg-yellow-500/20 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]">🏆 Чемпион (${championYears.sort().join(', ')})</span>`;
+                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-yellow-500/40 bg-yellow-500/10 text-yellow-500">🏆 Чемпион (${championYears.sort().join(', ')})</span>`;
             }
             if (isVeteran) {
-                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-neon/40 bg-neon/20 text-neon shadow-[0_0_15px_rgba(0,230,118,0.3)]">💎 Ветеран турнира</span>`;
+                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-neon/40 bg-neon/10 text-neon">💎 Ветеран турнира</span>`;
             }
             if (isHost) {
-                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-white/20 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.25)]">🏠 Хозяева турнира</span>`;
+                badgesHtml += `<span class="px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase border border-white/20 bg-white/5 text-white">🏠 Хозяева турнира</span>`;
             }
             badgesContainer.innerHTML = badgesHtml;
 
+            mainCardEl.className = mainCardEl.className.replace(/\s(before:bg-[^\s]+|border-[^\s]+|shadow-[^\s]+)/g, '');
+
+            // Переключение мягких внутренних градиентов без визуальных артефактов
             if (isChampion) {
-                glowEl.style.backgroundColor = '#EAB308';
                 mainCardEl.style.borderColor = 'rgba(234, 179, 8, 0.25)';
-                mainCardEl.style.boxShadow = '0 25px 60px -15px rgba(234, 179, 8, 0.15)';
+                mainCardEl.style.boxShadow = '0 30px 60px -15px rgba(234, 179, 8, 0.12)';
+                mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(234, 179, 8, 0.12) 0%, rgba(0, 0, 0, 0) 100%)';
+            } else if (isVeteran) {
+                mainCardEl.style.borderColor = 'rgba(0, 230, 118, 0.25)';
+                mainCardEl.style.boxShadow = '0 30px 60px -15px rgba(0, 230, 118, 0.1)';
+                mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(0, 230, 118, 0.12) 0%, rgba(0, 0, 0, 0) 100%)';
             } else {
-                glowEl.style.backgroundColor = '#00E676';
-                mainCardEl.style.borderColor = (isVeteran || isHost) ? 'rgba(0, 230, 118, 0.25)' : 'rgba(255, 255, 255, 0.1)';
-                mainCardEl.style.boxShadow = (isVeteran || isHost) ? '0 25px 60px -15px rgba(0, 230, 118, 0.15)' : '0 25px 50px -12px rgba(0, 0, 0, 0.8)';
+                mainCardEl.style.borderColor = 'rgba(63, 63, 70, 0.4)';
+                mainCardEl.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.5)';
+                mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0) 100%)';
             }
 
             historyMatches.sort((a, b) => b.year - a.year);
@@ -710,8 +749,8 @@
         function renderArchiveCore() {
             if (!archiveYear || !archiveTournament) return;
             const mArch = db.archive.filter(m => m.year === archiveYear && m.tournament === archiveTournament);
-            const gContainer = document.getElementById('archive-groups'); const pContainer = document.getElementById('archive-playoffs'); const rContainer = document.getElementById('archive-results');
-            [gContainer, pContainer, rContainer, document.getElementById('regulations-info-archive')].forEach(c => c?.classList.add('hidden'));
+            const gContainer = document.getElementById('archive-groups'); const pContainer = document.getElementById('archive-playoffs'); const rContainer = document.getElementById('archive-results'); const bContainer = document.getElementById('archive-best');
+            [gContainer, pContainer, rContainer, bContainer, document.getElementById('regulations-info-archive')].forEach(c => c?.classList.add('hidden'));
             const isSupercup = archiveTournament.toUpperCase().includes('СУПЕРКУБОК');
 
             if(activeArchiveTab === 'groups') {
@@ -766,6 +805,58 @@
                     }).join('');
                     return `<div class="mb-4"><h4 class="text-xs font-black text-neon uppercase tracking-wider mb-2">${stg}</h4><div class="flex flex-col gap-2 w-full">${ml}</div></div>`;
                 }).join('');
+            }
+
+            if(activeArchiveTab === 'best') {
+                bContainer.classList.remove('hidden');
+                loadFilteredBestPlayers();
+            }
+        }
+
+        function loadFilteredBestPlayers() {
+            const container = document.getElementById('best-players-list');
+            container.innerHTML = '';
+            
+            const selectedTournament = document.getElementById('archive-tournament').value.trim().toLowerCase();
+            const selectedYearRaw = document.getElementById('archive-year').value;
+            const selectedYear = selectedYearRaw.replace(/\s*ГОД\s*/i, '').trim();
+
+            let matchCount = 0;
+
+            db.bestPlayers.forEach(p => {
+                if(p.year !== selectedYear || p.sex !== selectedTournament) {
+                    return;
+                }
+
+                matchCount++;
+
+                let bCode = '⚽';
+                let bClass = 'text-neon bg-zinc-900 border border-zinc-800';
+                if(p.nomination.toLowerCase().includes('вратарь')) { bCode = 'GK'; bClass = 'text-blue-400 bg-blue-500/10 border border-blue-500/20'; }
+                else if(p.nomination.toLowerCase().includes('защитник')) { bCode = 'DF'; bClass = 'text-purple-400 bg-purple-500/10 border border-purple-500/20'; }
+                else if(p.nomination.toLowerCase().includes('бомбардир') || p.nomination.toLowerCase().includes('нападающий') || p.nomination.toLowerCase().includes('игрок')) { bCode = 'FW'; bClass = 'text-amber-400 bg-amber-500/10 border border-amber-500/20'; }
+
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-zinc-900 transition-all hover:border-zinc-800">
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${p.team}.png" class="w-8 h-8 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                            <div class="min-w-0 flex-1">
+                                <div class="text-xs font-black text-white truncate">${p.name}</div>
+                                <div class="text-[10px] text-zinc-500 font-bold mt-0.5 truncate uppercase">
+                                    ${smartTeamName(p.team)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right pl-2 shrink-0">
+                            <span class="text-[9px] font-black uppercase tracking-wider bg-zinc-900 text-zinc-300 border border-zinc-800 px-2.5 py-1 rounded-md">
+                                ${p.nomination}
+                            </span>
+                        </div>
+                    </div>`;
+            });
+
+            if(matchCount === 0) {
+                container.innerHTML = `<div class="text-center italic text-zinc-600 text-xs py-8">Для указанного сезона лауреаты не внесены</div>`;
             }
         }
 
@@ -1048,6 +1139,24 @@
             if (el.classList.contains('open')) { el.classList.remove('open'); } 
             else { document.querySelectorAll('.details-container.open').forEach(o => o.classList.remove('open')); el.classList.add('open'); }
         }
+
+        const sliders = document.querySelectorAll('.draggable');
+        let isDown = false; let startX; let scrollLeft;
+        sliders.forEach(slider => {
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true; slider.classList.add('drag-active');
+                startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('drag-active'); });
+            slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('drag-active'); });
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2;
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        });
 
         init();
     </script>
