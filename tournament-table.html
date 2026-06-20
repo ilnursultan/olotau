@@ -39,17 +39,37 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        .team-logo { height: 20px; width: 20px; object-fit: contain; margin-right: 8px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
-        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 16px; margin-bottom: 16px; }
+        .team-logo { height: 18px; width: 18px; object-fit: contain; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+        @media(min-width: 640px) { .team-logo { height: 20px; width: 20px; } }
+        
+        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 14px; margin-bottom: 16px; }
         @media(min-width: 375px) { .group-card { padding: 20px; } }
 
+        /* Сетка колонок таблиц для исключения наездов текста и цифр */
         table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
         @media(min-width: 375px) { table { font-size: 12px; } }
-        table th { color: #71717a; font-size: 9px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
-        table th:first-child { text-align: left; width: 42%; color: #00E676; font-size: 11px; font-weight: 900; padding-left: 10px; }
-        table td { padding: 10px 2px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); text-align: center; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        table th { color: #71717a; font-size: 10px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
+        
+        table th:first-child, table td:first-child { text-align: left; width: 44%; padding-left: 14px !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 9%; text-align: center; }
+        table th:nth-child(3), table td:nth-child(3) { width: 9%; text-align: center; }
+        table th:nth-child(4), table td:nth-child(4) { width: 9%; text-align: center; }
+        table th:nth-child(5), table td:nth-child(5) { width: 18%; text-align: center; }
+        table th:nth-child(6), table td:nth-child(6) { width: 11%; text-align: center; }
+
+        /* Адаптивная структура под Общий Зачет */
+        #overall-table th:first-child, #overall-table td:first-child { width: 40%; padding-left: 14px !important; }
+        #overall-table th:nth-child(2), #overall-table td:nth-child(2) { width: 8%; text-align: center; }
+        #overall-table th:nth-child(3), #overall-table td:nth-child(3) { width: 8%; text-align: center; }
+        #overall-table th:nth-child(4), #overall-table td:nth-child(4) { width: 8%; text-align: center; }
+        #overall-table th:nth-child(5), #overall-table td:nth-child(5) { width: 8%; text-align: center; }
+        #overall-table th:nth-child(6), #overall-table td:nth-child(6) { width: 18%; text-align: center; }
+        #overall-table th:nth-child(7), #overall-table td:nth-child(7) { width: 10%; text-align: center; }
+
+        table td { padding: 12px 2px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         table tr:last-child td { border-bottom: none; }
-        table td:first-child { text-align: left; font-weight: 700; text-transform: uppercase; padding-left: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        table td:first-child { font-weight: 700; text-transform: uppercase; }
         
         .green-bar { position: relative; }
         .green-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
@@ -58,7 +78,7 @@
         .lime-bar { position: relative; }
         .lime-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
 
-        .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 12px 16px; margin-top: 8px; transition: all 0.2s; }
+        .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 12px 14px; margin-top: 8px; transition: all 0.2s; }
         .match-row.clickable-match { cursor: pointer; }
         .match-row.clickable-match:hover { border-color: #3f3f46; }
         
@@ -232,6 +252,26 @@
         let archiveTournament = '';
         let currentPlayoffStage2026 = '1/16';
         let currentPlayoffStageArchive = '';
+
+        // Функция автоматического адаптивного сокращения названий команд
+        function smartTeamName(name) {
+            if (!name) return '';
+            let s = name.trim();
+            let upper = s.toUpperCase();
+            
+            if (upper.startsWith("НОВО")) {
+                s = "Н-" + s.substring(4);
+            } else if (upper.startsWith("БОЛЬШИЕ") || upper.startsWith("БОЛЬШАЯ") || upper.startsWith("БОЛЬШОЕ")) {
+                let parts = s.split(/\s+/);
+                s = "Б. " + parts.slice(1).join(" ");
+            } else if (upper.startsWith("СТАРО")) {
+                s = "С-" + s.substring(5);
+            } else if (upper.startsWith("КРАСНАЯ")) {
+                let parts = s.split(/\s+/);
+                s = "КР. " + parts.slice(1).join(" ");
+            }
+            return s;
+        }
 
         function updateLiveDateStrings() {
             let playedMatches = db.matches2026.filter(m => m.status && m.status.toLowerCase().trim() === 'past');
@@ -525,7 +565,7 @@
                             if (playoffTeams.has(t.name)) bar = 'green-bar';
                         }
                         
-                        html += `<tr><td class="${bar} max-w-[140px] truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                        html += `<tr><td class="${bar} max-w-[140px] truncate"><div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'"><span>${smartTeamName(t.name)}</span></div></td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
                     });
                     gContainer.innerHTML += html + `</tbody></table></div>`;
                 });
@@ -590,8 +630,8 @@
                         return `
                             <div class="bg-zinc-card/40 border border-zinc-900 p-3 rounded-xl flex justify-between text-[11px] font-bold uppercase items-center w-full">
                                 <div class="space-y-1.5 flex-1 min-w-0 pr-2">
-                                    <div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t1}</div>
-                                    <div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t2}</div>
+                                    <div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">${smartTeamName(m.t1)}</div>
+                                    <div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">${smartTeamName(m.t2)}</div>
                                 </div>
                                 <div class="text-right text-neon font-black space-y-1.5 shrink-0"><div>${scores.s1}</div><div>${scores.s2}</div></div>
                             </div>`;
@@ -631,15 +671,15 @@
                 <div class="match-row !cursor-default w-full flex flex-col gap-2">
                     <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
                         <div class="flex items-center min-w-0 flex-1 truncate pr-2">
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT1}.png" class="team-logo" onerror="this.style.visibility='hidden'">
-                            <span class="truncate">${defaultT1}</span><span class="ml-1">${medal1}</span>
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT1}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">
+                            <span class="truncate">${smartTeamName(defaultT1)}</span><span class="ml-1">${medal1}</span>
                         </div>
                         <div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
                     </div>
                     <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
                         <div class="flex items-center min-w-0 flex-1 truncate pr-2">
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT2}.png" class="team-logo" onerror="this.style.visibility='hidden'">
-                            <span class="truncate">${defaultT2}</span><span class="ml-1">${medal2}</span>
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT2}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">
+                            <span class="truncate">${smartTeamName(defaultT2)}</span><span class="ml-1">${medal2}</span>
                         </div>
                         <div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
                     </div>
@@ -666,7 +706,6 @@
                 return;
             }
 
-            // ИСПРАВЛЕНИЕ: Получаем массив общего зачета и вытаскиваем Топ-32 участников плей-офф
             let overallStandings = getStandingsArray();
             let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
 
@@ -676,11 +715,10 @@
 
                 let html = `<div class="group-card"><table><thead><tr><th>${gName}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
                 sortedTeams.forEach((t) => {
-                    // ИСПРАВЛЕНИЕ: Прямая синхронизация цвета с общим сквозным зачетом
                     let isTeamInPlayoffZone = playoffTeams2026.includes(t.name.trim().toUpperCase());
                     let barColor = isTeamInPlayoffZone ? 'green-bar' : 'red-bar';
                     
-                    html += `<tr><td class="${barColor} max-w-[130px] truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                    html += `<tr><td class="${barColor} max-w-[130px] truncate text-[10px] sm:text-[12px]"><div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'"><span class="truncate">${smartTeamName(t.name)}</span></div></td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
                 });
                 html += `</tbody></table><div class="mt-4 border-t border-zinc-800/60 pt-2 space-y-2">`;
 
@@ -694,15 +732,15 @@
 
                     html += `
                         <div class="match-row clickable-match" onclick="toggleDetails('det-2026-${m.id}')">
-                            <div class="flex justify-between items-center text-[11px] font-bold uppercase gap-2 w-full">
+                            <div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase gap-2 w-full">
                                 <div class="flex-1 min-w-0 truncate flex items-center pr-1">
-                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">
-                                    <span class="truncate">${m.t1}</span>
+                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">
+                                    <span class="truncate">${smartTeamName(m.t1)}</span>
                                 </div>
                                 ${scoreBadge}
                                 <div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1">
-                                    <span class="truncate">${m.t2}</span>
-                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-2 mr-0" onerror="this.style.visibility='hidden'">
+                                    <span class="truncate">${smartTeamName(m.t2)}</span>
+                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-3" onerror="this.style.visibility='hidden'">
                                 </div>
                             </div>
                             <div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400">
@@ -715,7 +753,6 @@
                 container.innerHTML += html + `</div></div>`;
             });
 
-            // ИСПРАВЛЕНИЕ: Добавление инфо-панели (информации о вылете как в архиве)
             let legendHtml2026 = `
                 <div class="group-card col-span-1 lg:col-span-2 !bg-zinc-card/30 border border-zinc-800/80 p-4 space-y-2 text-[11px] text-zinc-400 mt-2">
                     <div class="font-bold text-white uppercase tracking-wider text-[10px]">Легенда зон и правила сезона 2026:</div>
@@ -754,10 +791,12 @@
             }
 
             listContainer.innerHTML = sorted.map((p, idx) => `
-                <div class="grid grid-cols-12 text-xs font-bold items-center p-3 text-center uppercase">
+                <div class="grid grid-cols-12 text-[10px] sm:text-xs font-bold items-center p-3 text-center uppercase">
                     <div class="col-span-1 text-left text-zinc-500">${idx+1}</div>
-                    <div class="col-span-5 text-left text-white truncate flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${p.team}.png" class="team-logo" onerror="this.style.visibility='hidden'">${p.name}</div>
-                    <div class="col-span-4 text-zinc-400 text-[11px] truncate">${p.team}</div>
+                    <div class="col-span-6 text-left text-white truncate flex items-center pr-1">
+                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${p.team}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'"><span>${p.name}</span>
+                    </div>
+                    <div class="col-span-3 text-zinc-400 text-[9px] sm:text-[11px] truncate text-left">${smartTeamName(p.team)}</div>
                     <div class="col-span-2 text-right text-neon font-black">${p.count}</div>
                 </div>
             `).join('');
@@ -788,8 +827,6 @@
 
             container.innerHTML = filtered.map(m => {
                 let labelHeader = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
-                
-                // ИСПРАВЛЕНИЕ: Если матч сыгран — пишем СЫГРАН и снижаем прозрачность (opacity-60)
                 const isPast = m.status === 'past';
                 const timeDisplay = isPast ? 'СЫГРАН' : m.time;
                 const opacityClass = isPast ? 'opacity-60' : '';
@@ -802,13 +839,13 @@
                         </div>
                         
                         <div class="flex-grow flex flex-col gap-2 min-w-0">
-                            <div class="flex items-center text-xs font-bold text-white uppercase truncate">
-                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">
-                                <span class="truncate">${m.t1}</span>
+                            <div class="flex items-center text-[10px] sm:text-xs font-bold text-white uppercase truncate">
+                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">
+                                <span class="truncate">${smartTeamName(m.t1)}</span>
                             </div>
-                            <div class="flex items-center text-xs font-bold text-white uppercase truncate">
-                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">
-                                <span class="truncate">${m.t2}</span>
+                            <div class="flex items-center text-[10px] sm:text-xs font-bold text-white uppercase truncate">
+                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">
+                                <span class="truncate">${smartTeamName(m.t2)}</span>
                             </div>
                         </div>
                         
@@ -848,10 +885,10 @@
 
                 return `
                 <tr class="hover:bg-zinc-900/30 transition-colors">
-                    <td class="text-left font-bold py-3 text-xs max-w-[150px] truncate ${barClass}">
-                        <span class="inline-block w-6 text-zinc-500 font-bold">${i+1}.</span>
-                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">
-                        <span>${t.name}</span>
+                    <td class="text-left font-bold py-3 text-[10px] sm:text-xs max-w-[150px] truncate ${barClass}">
+                        <div class="flex items-center"><span class="inline-block w-6 text-zinc-500 font-bold">${i+1}.</span>
+                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo mr-3" onerror="this.style.visibility='hidden'">
+                        <span class="truncate">${smartTeamName(t.name)}</span></div>
                     </td>
                     <td>${t.games}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td>
                 </tr>`;
@@ -901,22 +938,26 @@
 
                 if (stageMatches.length === 0) {
                     let count = currentPlayoffStage2026 === '1/8' ? 8 : currentPlayoffStage2026 === '1/4' ? 4 : currentPlayoffStage2026 === '1/2' ? 2 : 1;
-                    let prevStage = currentPlayoffStage2026 === '1/8' ? '1/16' : currentPlayoffStage2026 === '1/4' ? '1/8' : currentPlayoffStage2026 === '1/2' ? '1/4' : '1/4';
+                    
+                    let prevStage = '1/16';
+                    if (currentPlayoffStage2026 === '1/4') prevStage = '1/8';
+                    else if (currentPlayoffStage2026 === '1/2') prevStage = '1/4';
+                    else if (currentPlayoffStage2026.toLowerCase().includes('финал')) prevStage = '1/2';
                     
                     for(let i = 1; i <= count; i++) {
                         matchesHtml += `
                             <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40">
-                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                                <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
                                     <div class="flex items-center">
                                         <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Победитель ${prevStage} #${i * 2 - 1}
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-3">Победитель ${prevStage} #${i * 2 - 1}
                                     </div>
                                     <div class="text-zinc-600 font-black">-</div>
                                 </div>
-                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                                <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
                                     <div class="flex items-center">
                                         <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Победитель ${prevStage} #${i * 2}
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-3">Победитель ${prevStage} #${i * 2}
                                     </div>
                                     <div class="text-zinc-600 font-black">-</div>
                                 </div>
@@ -925,17 +966,17 @@
                     if (currentPlayoffStage2026.toLowerCase().includes('финал')) {
                         matchesHtml += `
                             <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40 border border-zinc-800/50">
-                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full text-zinc-400">
+                                <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full text-zinc-400">
                                     <div class="flex items-center">
                                         <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Проигравший 1/2 #1
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-3">Проигравший 1/2 #1
                                     </div>
                                     <div class="text-zinc-600 font-black">-</div>
                                 </div>
-                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full text-zinc-400">
+                                <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full text-zinc-400">
                                     <div class="flex items-center">
                                         <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
-                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Проигравший 1/2 #2
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo mr-3">Проигравший 1/2 #2
                                     </div>
                                     <div class="text-zinc-600 font-black">-</div>
                                 </div>
@@ -968,19 +1009,19 @@
 
             return `
                 <div class="match-row !cursor-default w-full flex flex-col gap-2">
-                    <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                    <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
                         <div class="flex items-center min-w-0 flex-1 truncate pr-2">
                             <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0 select-none">${rank1}</span>
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo1}" class="team-logo" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
-                            <span class="truncate">${defaultT1}</span>
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo1}" class="team-logo mr-3" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                            <span class="truncate">${smartTeamName(defaultT1)}</span>
                         </div>
                         <div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
                     </div>
-                    <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                    <div class="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase items-center w-full">
                         <div class="flex items-center min-w-0 flex-1 truncate pr-2">
                             <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0 select-none">${rank2}</span>
-                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo2}" class="team-logo" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
-                            <span class="truncate">${defaultT2}</span>
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo2}" class="team-logo mr-3" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                            <span class="truncate">${smartTeamName(defaultT2)}</span>
                         </div>
                         <div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
                     </div>
@@ -1056,7 +1097,6 @@
             }).join('');
         }
 
-        // Выпадающий блок деталей матча
         function toggleDetails(containerId) {
             const el = document.getElementById(containerId);
             if (!el) return;
