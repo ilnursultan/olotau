@@ -229,7 +229,6 @@
                     <div class="bg-gradient-to-br from-dark-green to-zinc-950 border border-zinc-800 rounded-[32px] p-6 flex flex-col items-center justify-center text-center gap-2">
                         <img id="stats-team-logo" src="" class="w-20 h-20 object-contain" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
                         <h2 id="stats-team-title" class="text-2xl font-black uppercase tracking-tight text-white"></h2>
-                        <!-- Район и субъект выводятся ТОЛЬКО ТУТ согласно условию -->
                         <div id="stats-team-geo" class="text-[10px] text-zinc-400 font-bold uppercase tracking-wide"></div>
                     </div>
 
@@ -238,8 +237,9 @@
                             <div id="stat-box-participations" class="text-2xl sm:text-3xl font-black text-neon">0</div>
                             <div class="text-[8px] sm:text-[9px] uppercase text-gray-400 font-bold mt-1 leading-tight">Участий</div>
                         </div>
-                        <div class="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-3 text-center flex flex-col justify-center min-w-0">
-                            <div id="stat-box-result" class="text-xs sm:text-[13px] font-black text-white uppercase truncate px-0.5">--</div>
+                        <!-- ОПТИМИЗАЦИЯ: Уменьшен шрифт и настроены отступы, чтобы длинные стадии переносились и не обрезались -->
+                        <div class="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl py-3 px-1 text-center flex flex-col justify-center min-w-0">
+                            <div id="stat-box-result" class="text-[10px] sm:text-[11px] font-black text-white uppercase leading-tight tracking-tight whitespace-normal break-words px-0.5">--</div>
                             <div id="stat-box-result-year" class="text-[9px] text-neon font-bold mt-0.5"></div>
                             <div class="text-[8px] sm:text-[9px] uppercase text-gray-400 font-bold mt-0.5 leading-tight">Лучший результат</div>
                         </div>
@@ -313,13 +313,10 @@
         let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
         let archiveYear = ''; let archiveTournament = ''; let currentPlayoffStage2026 = '1/16'; let currentPlayoffStageArchive = '';
 
-        // Функция нормализации названий команд для объединения дубликатов (КУТУЕВО-1 -> КУТУЕВО и т.д.)
         function normalizeTeamName(name) {
             if (!name) return '';
             let s = name.trim();
             let upper = s.toUpperCase();
-            
-            // Если имя оканчивается на -1 или пробел 1, отрезаем число, но сохраняем -2, -3
             if (upper.endsWith("-1") || upper.endsWith(" 1")) {
                 s = s.substring(0, s.length - 2).trim();
             }
@@ -512,8 +509,12 @@
 
             let isMen = (gender === 'Мужчины');
             document.getElementById('stats-team-title').innerText = team;
-            document.getElementById('stats-team-logo').src = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${team}.png`;
-            // Гео-данные выводятся ИСКЛЮЧИТЕЛЬНО ТУТ
+            
+            // ИСПРАВЛЕНИЕ 2: Принудительный сброс на щит перед установкой новой ссылки, чтобы не зависал прошлый мужской логотип у женщин
+            const logoEl = document.getElementById('stats-team-logo');
+            logoEl.src = 'https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png';
+            logoEl.src = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${team}.png`;
+            
             document.getElementById('stats-team-geo').innerText = getTeamGeoHtml(team, isMen);
 
             let participations = new Set(); let games = 0, w = 0, d = 0, l = 0, gf = 0, ga = 0;
@@ -571,7 +572,7 @@
             if (gender === 'Мужчины' || gender === 'Женщины') { db.matches2026.forEach(m => { if (m.status === 'past') processMatch(m, '2026'); }); }
 
             document.getElementById('stat-box-participations').innerText = participations.size;
-            document.getElementById('stat-box-result').innerText = bestStageText;
+            document.getElementById('stat-box-result').innerHTML = bestStageText === 'ГРУППОВОЙ ЭТАП' ? 'ГРУППОВОЙ<br>ЭТАП' : bestStageText;
             document.getElementById('stat-box-result-year').innerText = bestYear !== '--' ? `${bestYear} ГОД` : '';
             document.getElementById('stat-box-games').innerText = games;
             document.getElementById('stat-box-w').innerText = w; document.getElementById('stat-box-d').innerText = d; document.getElementById('stat-box-l').innerText = l;
