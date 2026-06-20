@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Турнирная таблица | Олотау йыйыны</title>
+    <title>Турнирный Центр | Олотау йыйыны</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
@@ -12,7 +12,8 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { 'neon': '#00E676', 'dark': '#0a0a0c' },
+                    screens: { 'xs': '375px' },
+                    colors: { 'neon': '#00E676', 'dark': '#0a0a0c', 'zinc-card': '#111114' },
                     animation: { 'slide-right': 'slideRight 1.5s infinite ease-in-out' },
                     keyframes: {
                         slideRight: {
@@ -26,672 +27,1051 @@
     </script>
 
     <style>
-        /* ========================================================
-           ЖЕСТКОЕ ПЕРЕКРЫТИЕ И УБИЙСТВО СТИЛЕЙ Т-БАНКА
-           ======================================================== */
         html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: 100% !important; background: #0a0a0c !important; overflow: hidden !important; }
-        
-        /* Прячем весь интерфейс Т-Банка, кроме нашего аппа */
-        body > div:not(#olotau-app), .tbank-ad-block, .t-store__cart, .t-btn_up, .t-up, .t-chat, .messenger-button, .s-footer, [data-type="footer"] { 
-            display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; z-index: -999 !important; 
-        }
+        body > div:not(#olotau-app) { display: none !important; }
 
         #olotau-app { 
-            position: fixed !important; 
-            inset: 0 !important; 
-            width: 100vw !important; 
-            height: 100vh !important; 
-            z-index: 2147483647 !important; 
-            overflow-y: auto !important; 
-            background: #0a0a0c !important; 
-            color: white !important; 
-            font-family: 'Montserrat', sans-serif !important; 
-            -webkit-overflow-scrolling: touch;
+            position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 2147483647 !important; 
+            overflow-y: auto !important; background: #0a0a0c !important; color: white !important; font-family: 'Montserrat', sans-serif !important; -webkit-overflow-scrolling: touch;
         }
 
-        /* ========================================================
-           НАШИ СТИЛИ
-           ======================================================== */
         #olotau-app * { font-family: 'Montserrat', sans-serif !important; box-sizing: border-box !important; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .team-logo { height: 20px; width: 20px; object-fit: contain; margin-right: 12px; vertical-align: middle; display: inline-block; }
         
-        .group-card { background: rgba(24, 24, 27, 0.4); border: 1px solid rgba(63, 63, 70, 0.5); border-radius: 24px; padding: 16px; margin-bottom: 24px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        table th { color: #71717a; font-size: 10px; text-transform: uppercase; padding-bottom: 12px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
-        table th:first-child { text-align: left; width: 45%; color: #00E676; font-size: 14px; font-weight: 900; }
-        table td { padding: 12px 4px; border-bottom: 1px solid rgba(63, 63, 70, 0.3); text-align: center; font-weight: 600; }
+        .team-logo { height: 20px; width: 20px; object-fit: contain; margin-right: 8px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+        .group-card { background: rgba(20, 20, 23, 0.7); border: 1px solid rgba(63, 63, 70, 0.4); border-radius: 24px; padding: 16px; margin-bottom: 16px; }
+        @media(min-width: 375px) { .group-card { padding: 20px; } }
+
+        table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
+        @media(min-width: 375px) { table { font-size: 12px; } }
+        table th { color: #71717a; font-size: 9px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(63, 63, 70, 0.5); font-weight: 700; text-align: center; }
+        table th:first-child { text-align: left; width: 42%; color: #00E676; font-size: 11px; font-weight: 900; padding-left: 10px; }
+        table td { padding: 10px 2px; border-bottom: 1px solid rgba(63, 63, 70, 0.2); text-align: center; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         table tr:last-child td { border-bottom: none; }
-        table td:first-child { text-align: left; display: flex; align-items: center; font-weight: 700; }
-        table td:last-child { font-weight: 900; }
+        table td:first-child { text-align: left; font-weight: 700; text-transform: uppercase; padding-left: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         
-        .green-bar, .red-bar, .lime-bar { position: relative; }
-        .green-bar::before, .red-bar::before, .lime-bar::before { content: ''; position: absolute; left: -16px; top: 50%; transform: translateY(-50%); height: 60%; width: 3px; border-radius: 4px; }
-        .green-bar::before { background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
-        .lime-bar::before { background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
-        .red-bar::before { background-color: #EF4444; }
+        .green-bar { position: relative; }
+        .green-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
+        .red-bar { position: relative; }
+        .red-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EF4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+        .lime-bar { position: relative; }
+        .lime-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
 
-        .match { background: rgba(24, 24, 27, 0.6); border: 1px solid rgba(63, 63, 70, 0.5); border-radius: 20px; margin-bottom: 12px; display: flex; flex-direction: column; overflow: hidden; }
-        .team { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid rgba(63, 63, 70, 0.3); }
-        .team:last-child { border-bottom: none; }
-        .team-name { font-size: 14px; font-weight: 700; display: flex; align-items: center; color: #fff; }
+        .match-row { background: #141417; border: 1px solid #27272a; border-radius: 16px; padding: 12px 16px; margin-top: 8px; transition: all 0.2s; }
+        .match-row.clickable-match { cursor: pointer; }
+        .match-row.clickable-match:hover { border-color: #3f3f46; }
         
-        .team-score { font-size: 16px; font-weight: 900; background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 10px; min-width: 48px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;}
-        .pen-score { font-size: 11px; color: #00E676; font-weight: 900; opacity: 0.9; }
+        .tab-btn-top { padding: 10px 16px; border-radius: 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.05); color: #a1a1aa; white-space: nowrap; transition: all 0.2s; cursor: pointer; }
+        .tab-btn-top.active { background: #00E676; color: #000; font-weight: 900; box-shadow: 0 0 15px rgba(0, 230, 118, 0.25); border-color: #00E676; }
         
-        .loser.team-name { color: #52525b; }
-        .team:has(.loser) .team-score { background: transparent; color: #52525b; }
-        .team:has(.loser) .pen-score { color: #52525b; }
-        .team:not(:has(.loser)) .team-score { background: rgba(0, 230, 118, 0.15); color: #00E676; border: 1px solid rgba(0, 230, 118, 0.3); }
+        .playoff-stage-btn { padding: 10px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; background: #141417; border: 1px solid #27272a; color: #a1a1aa; transition: all 0.2s; white-space: nowrap; cursor: pointer; text-transform: uppercase; text-align: center; }
+        .playoff-stage-btn.active { background: #fff; color: #000; font-weight: 900; border-color: #fff; }
 
-        /* Стиль для ничьей */
-        .team-score.is-draw { background: rgba(234, 179, 8, 0.15) !important; color: #EAB308 !important; border: 1px solid rgba(234, 179, 8, 0.3) !important; }
-        .team-score.is-draw .pen-score { color: #EAB308 !important; }
+        .custom-select { appearance: none; background-color: #141417; color: white; border: 1px solid #27272a; border-radius: 14px; padding: 12px 36px 12px 16px; font-size: 12px; font-weight: 800; text-transform: uppercase; tracking-wider; cursor: pointer; outline: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300E676'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; }
+        .scorer-header { background: #00E676; color: black; font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 0.05em; border-radius: 16px 16px 0 0; padding: 14px; text-align: center; }
 
-        .fin3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 900; text-align: center; margin: 24px 0 12px 0; border-bottom: 1px solid rgba(63, 63, 70, 0.3); padding-bottom: 8px;}
-
-        .tab-btn { flex: 1; padding: 14px 4px; border-radius: 16px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s; border: 2px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; text-align: center; }
-        .tab-btn.active-tab { background-color: #00E676; color: #000; border-color: #00E676; box-shadow: 0 0 20px rgba(0, 230, 118, 0.3); }
-        
-        .playoff-btn { padding: 10px 24px; border-radius: 12px; font-size: 12px; font-weight: 800; background: rgba(24, 24, 27, 0.8); border: 1px solid rgba(63, 63, 70, 0.5); color: #a1a1aa; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; cursor: pointer; }
-        .playoff-btn.active { background: #fff; color: #000; border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-        
-        .custom-select { appearance: none; background-color: rgba(24, 24, 27, 0.8); color: white; border: 1px solid rgba(63, 63, 70, 0.8); border-radius: 16px; padding: 14px 40px 14px 20px; font-size: 14px; font-weight: 800; cursor: pointer; outline: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300E676'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; background-size: 20px; }
-        
-        .drag-active { cursor: grabbing !important; scroll-behavior: auto !important; }
-        .draggable { cursor: grab; }
+        .details-container { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out; opacity: 0; }
+        .details-container.open { max-height: 1000px; opacity: 1; }
     </style>
 </head>
 <body>
     
-    <div id="olotau-app">
-        <nav class="w-full p-4 flex items-center justify-between z-50 relative border-b border-zinc-800/50 bg-black/50 backdrop-blur-lg sticky top-0">
+    <div id="olotau-app" class="pb-28">
+        <nav class="w-full p-4 flex items-center justify-between border-b border-zinc-800/50 bg-black/70 backdrop-blur-lg sticky top-0 z-50">
             <a href="/" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                <span class="text-xs font-bold uppercase tracking-widest">На главную</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <span class="text-[10px] font-black uppercase tracking-widest">На главную</span>
             </a>
-            <div class="text-neon font-black italic text-xl tracking-tighter">ОЛОТАУ</div>
+            <div id="app-logo" class="text-neon font-black italic text-xl tracking-tighter select-none">ОЛОТАУ</div>
         </nav>
 
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-10">
-            <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight mb-8 text-center text-white">
-                Турнирная<br><span class="text-gray-600">Таблица</span>
-            </h1>
-
-            <div class="flex flex-col gap-6 mb-8" id="controls" style="display: none;">
-                <div class="flex justify-center gap-4 flex-wrap">
-                    <select id="tournament-select" class="custom-select w-44 text-center"></select>
-                    <select id="year-select" class="custom-select w-44 text-center"></select>
+        <div class="max-w-5xl mx-auto px-4 pt-6">
+            <div id="mode-container" class="hidden flex flex-col gap-4">
+                <div class="relative w-full border-b border-zinc-900 mb-2">
+                    <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 lg:hidden pointer-events-none z-10">
+                        <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
+                        <svg class="w-3 h-3 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
+                    <div id="nav-2026-tabs" class="flex overflow-x-auto hide-scrollbar gap-2 pb-3 pt-1">
+                        <button class="tab-btn-top active" onclick="switch2026Tab('tables', this)">Таблицы и результаты</button>
+                        <button class="tab-btn-top" onclick="switch2026Tab('schedule', this)">Расписание</button>
+                        <button class="tab-btn-top" onclick="switch2026Tab('standings', this)">Общий зачет</button>
+                        <button class="tab-btn-top" onclick="switch2026Tab('playoffs', this)">Плей-офф</button>
+                        <button class="tab-btn-top" onclick="switch2026Tab('scorers', this)">Бомбардиры</button>
+                        <button class="tab-btn-top" onclick="switch2026Tab('assistants', this)">Ассистенты</button>
+                    </div>
                 </div>
-                <div id="tabs-container" class="flex gap-2 bg-zinc-900/50 p-2 rounded-[20px] border border-zinc-800/50 w-full max-w-lg mx-auto">
-                    <button id="tab-groups" class="tab-btn active-tab">Группы</button>
-                    <button id="tab-playoffs" class="tab-btn">Плей-офф</button>
-                    <button id="tab-results" class="tab-btn">Результаты</button>
+
+                <div id="archive-controls" class="hidden flex justify-center gap-4 mb-2">
+                    <select id="archive-tournament" class="custom-select w-44 text-center"></select>
+                    <select id="archive-year" class="custom-select w-44 text-center"></select>
                 </div>
             </div>
 
-            <!-- Контейнер Групп -->
-            <div id="content-groups" class="hidden">
-                <div id="groups-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
-                <div id="groups-legend" class="mt-8 bg-zinc-900/50 border border-zinc-800/50 rounded-3xl p-6 text-sm text-gray-400">
-                    <h4 class="font-bold text-white mb-3 text-base">Правила и Регламент</h4>
-                    <ul class="list-none mb-5 space-y-2">
-                        <li class="flex items-start gap-2">
-                            <svg class="w-5 h-5 text-neon shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>При равенстве очков места определяются: 1. Личные встречи ➔ 2. Общая разница мячей ➔ 3. Забитые голы.</span>
-                        </li>
-                    </ul>
-                    <div id="legend-colors-container" class="flex flex-col gap-3 bg-black/30 p-4 rounded-2xl border border-zinc-800/50">
+            <div id="loader" class="text-center mt-20">
+                <div class="min-h-[40px] flex items-center justify-center">
+                    <div id="text-anim-loader" class="text-neon font-black italic text-3xl tracking-tighter"></div>
+                </div>
+                <div class="text-zinc-500 text-xs font-medium uppercase tracking-widest mt-1">Сбор данных с полей...</div>
+            </div>
+
+            <div id="view-2026" class="hidden flex flex-col gap-4">
+                <div id="sub-2026-tables" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+                <div id="regulations-info-2026" class="hidden"></div>
+
+                <div id="sub-2026-schedule" class="hidden flex flex-col gap-4">
+                    <div class="grid grid-cols-2 sm:flex gap-2 justify-between bg-zinc-900/40 p-2 border border-zinc-800/60 rounded-2xl">
+                        <select id="filter-teams" class="custom-select col-span-1 sm:flex-1"></select>
+                        <select id="filter-stages" class="custom-select col-span-1 sm:flex-1"></select>
+                        <select id="filter-status" class="custom-select col-span-2 sm:flex-1 mt-1 sm:mt-0">
+                            <option value="all">Все матчи</option>
+                            <option value="future">Предстоящие</option>
+                            <option value="past">Завершенные</option>
+                        </select>
+                    </div>
+                    <div id="schedule-list" class="flex flex-col gap-3"></div>
+                </div>
+
+                <div id="sub-2026-standings" class="hidden flex flex-col gap-4">
+                    <div id="banner-standings-2026" class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 p-3.5 rounded-3xl text-[11px] font-black uppercase text-center tracking-wide flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4 select-none">
+                        <span>⚠️ ГРУППОВОЙ ЭТАП ЕЩЕ НЕ ДОИГРАН.</span>
+                        <span id="standings-count-node"></span>
+                        <span id="standings-date-node" class="text-zinc-400 font-bold sm:border-l sm:border-yellow-500/20 sm:pl-4"></span>
+                    </div>
+                    <div class="group-card !bg-black/40">
+                        <table id="overall-table">
+                            <thead>
+                                <tr><th># Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>Мячи</th><th>О</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="sub-2026-playoffs" class="hidden flex flex-col gap-4">
+                    <div id="banner-playoffs-2026" class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 p-3.5 rounded-3xl text-[11px] font-black uppercase text-center tracking-wide flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4 select-none">
+                        <span>⚠️ ЛАЙВ СЕТКА.</span>
+                        <span id="playoffs-count-node"></span>
+                        <span id="playoffs-date-node" class="text-zinc-400 font-bold sm:border-l sm:border-yellow-500/20 sm:pl-4"></span>
+                    </div>
+                    <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-2 pb-1" id="playoff-stages-nav-2026"></div>
+                    <div id="playoff-matches-2026" class="flex flex-col gap-4 w-full"></div>
+                </div>
+
+                <div id="sub-2026-scorers" class="hidden max-w-xl mx-auto w-full">
+                    <div class="scorer-header">Лучшие Бомбардиры</div>
+                    <div class="bg-zinc-card border border-zinc-800 rounded-b-2xl p-2">
+                        <div class="grid grid-cols-12 text-[10px] uppercase font-black tracking-widest text-zinc-500 p-3 border-b border-zinc-800 text-center">
+                            <div class="col-span-1 text-left">№</div><div class="col-span-5 text-left">Игрок</div><div class="col-span-4">Команда</div><div class="col-span-2 text-right text-neon">Голы</div>
+                        </div>
+                        <div id="scorers-list" class="divide-y divide-zinc-900"></div>
+                    </div>
+                </div>
+
+                <div id="sub-2026-assistants" class="hidden max-w-xl mx-auto w-full">
+                    <div class="scorer-header">Лучшие Ассистенты</div>
+                    <div class="bg-zinc-card border border-zinc-800 rounded-b-2xl p-2">
+                        <div class="grid grid-cols-12 text-[10px] uppercase font-black tracking-widest text-zinc-500 p-3 border-b border-zinc-800 text-center">
+                            <div class="col-span-1 text-left">№</div><div class="col-span-5 text-left">Игрок</div><div class="col-span-4">Команда</div><div class="col-span-2 text-right text-neon">Пасы</div>
+                        </div>
+                        <div id="assistants-list" class="divide-y divide-zinc-900"></div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Контейнер Плей-офф -->
-            <div id="content-playoffs" class="hidden">
-                <div id="scroll-indicator" class="hidden items-center gap-2 text-gray-500 mb-2 md:hidden justify-end">
-                    <span class="text-[9px] uppercase tracking-widest font-bold">Листайте</span>
-                    <svg class="w-4 h-4 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </div>
-                <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-6 pb-2 draggable" id="playoff-stages-nav"></div>
-                <div id="playoff-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            </div>
 
-            <!-- Контейнер Результатов -->
-            <div id="content-results" class="hidden flex flex-col gap-6"></div>
-            
-            <div id="loader" class="text-center mt-10">
-                <div class="text-neon font-bold text-xl animate-pulse mb-2">Сбор данных с полей...</div>
+            <div id="view-archive" class="hidden flex flex-col gap-4">
+                <div id="archive-tabs-nav" class="grid grid-cols-3 gap-2 bg-zinc-900/40 p-1.5 border border-zinc-800/60 rounded-2xl w-full max-w-lg mx-auto">
+                    <button class="tab-btn-top active !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-groups" onclick="switchArchiveTab('groups', this)">Группы</button>
+                    <button class="tab-btn-top !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-playoffs" onclick="switchArchiveTab('playoffs', this)">Плей-офф</button>
+                    <button class="tab-btn-top !py-2.5 !px-1 !text-[10px] text-center" id="arch-tab-results" onclick="switchArchiveTab('results', this)">Результаты</button>
+                </div>
+                
+                <div id="supercup-banner" class="hidden p-5 rounded-3xl bg-yellow-500/5 border border-yellow-500/20 text-center relative overflow-hidden">
+                    <p class="text-xs text-yellow-500 font-bold uppercase tracking-wider">🏆 В этом турнире играют все чемпионы «Олотау йыйыны» прошлых лет.</p>
+                </div>
+
+                <div id="archive-groups" class="grid grid-cols-1 lg:grid-cols-2 gap-6 hidden"></div>
+                <div id="regulations-info-archive" class="hidden"></div>
+                
+                <div id="archive-playoffs" class="hidden flex flex-col gap-4">
+                    <div id="archive-playoff-nav" class="flex overflow-x-auto hide-scrollbar gap-2 mb-2 pb-1 w-full"></div>
+                    <div id="archive-playoff-matches" class="flex flex-col gap-4 w-full"></div>
+                </div>
+                <div id="archive-results" class="hidden flex flex-col gap-4"></div>
             </div>
         </div>
+
+        <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
+            <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <span class="text-[8px] font-bold uppercase tracking-wider">Сезон 2026</span>
+            </button>
+            <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="text-[8px] font-bold uppercase tracking-wider">Архив</span>
+            </button>
+        </nav>
     </div>
 
     <script>
-        // Агрессивный скрипт для очистки мусора конструктора Т-Банка
-        document.body.appendChild(document.getElementById('olotau-app'));
-        setInterval(() => {
-            document.querySelectorAll('body > div:not(#olotau-app), .tbank-ad-block, .t-store__cart, .t-btn_up, .t-up, .t-chat, .messenger-button, .s-footer, [data-type="footer"]').forEach(el => {
-                el.style.setProperty('display', 'none', 'important');
-                el.style.setProperty('opacity', '0', 'important');
-            });
-        }, 100);
+        const GOOGLE_APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbyd81K872ehvq_eyJci9E-4Ft_x5739Ge6bv3RU37v9PRt6EDpDmIvihLpzZNy1Mdkf/exec';
+        
+        const URLS_2026 = {
+            archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
+            matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
+            goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
+            players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv'
+        };
 
-        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?output=csv'; 
+        let db = { matches2026: [], goals2026: [], players2026: [], archive: [] };
+        let currentGlobalMode = '2026';
+        let active2026Tab = 'tables';
+        let activeArchiveTab = 'groups';
+        let archiveYear = '';
+        let archiveTournament = '';
+        let currentPlayoffStage2026 = '1/16';
+        let currentPlayoffStageArchive = '';
 
-        let allMatches = [];
-        let currentYear = '';
-        let currentTournament = '';
-        let currentStage = '';
+        function updateLiveDateStrings() {
+            let playedMatches = db.matches2026.filter(m => m.status && m.status.toLowerCase().trim() === 'past');
+            let dateText = '';
+            
+            if (playedMatches.length > 0) {
+                let lastMatch = playedMatches[playedMatches.length - 1];
+                dateText = `ОБНОВЛЕНО: ${lastMatch.date || '15 ИЮНЯ'}, ${lastMatch.time || '18:00'}`;
+            } else {
+                dateText = 'ОБНОВЛЕНО: 15 ИЮНЯ, 18:00';
+            }
+            
+            const sDate = document.getElementById('standings-date-node');
+            const pDate = document.getElementById('playoffs-date-node');
+            if(sDate) sDate.innerText = dateText.toUpperCase();
+            if(pDate) pDate.innerText = dateText.toUpperCase();
+        }
+
+        function startLoaderAnimation() {
+            const word = "ОЛОТАУ ";
+            const secondWord = "ЙЫЙЫНЫ";
+            const el = document.getElementById('text-anim-loader');
+            let idx = 0;
+            if(!el) return;
+            el.innerHTML = "";
+            const interval = setInterval(() => {
+                if(idx < word.length) {
+                    el.innerHTML = `<span class="text-neon">${word.substring(0, idx + 1)}</span>`;
+                    idx++;
+                } else if (idx < word.length + secondWord.length) {
+                    let sWordPart = secondWord.substring(0, idx - word.length + 1);
+                    el.innerHTML = `<span class="text-neon">${word}</span><span class="text-white">${sWordPart}</span>`;
+                    idx++;
+                } else {
+                    el.innerHTML = "";
+                    idx = 0;
+                }
+            }, 150);
+            return interval;
+        }
 
         async function init() {
+            const animId = startLoaderAnimation();
             try {
-                const response = await fetch(SHEET_CSV_URL);
-                if (!response.ok) throw new Error("Network Error");
-                const csvText = await response.text();
+                const [rM, rG, rP, rA] = await Promise.all([
+                    fetch(URLS_2026.matches + '&cb=' + Date.now()).then(r => r.text()),
+                    fetch(URLS_2026.goals + '&cb=' + Date.now()).then(r => r.text()),
+                    fetch(URLS_2026.players + '&cb=' + Date.now()).then(r => r.text()),
+                    fetch(URLS_2026.archive + '&cb=' + Date.now()).then(r => r.text())
+                ]);
+
+                db.matches2026 = parseCoreCSV(rM, 'm');
+                db.goals2026 = parseCoreCSV(rG, 'g');
+                db.players2026 = parseCoreCSV(rP, 'p');
+                db.archive = parseArchiveCSV(rA);
+
+                clearInterval(animId);
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('mode-container').classList.remove('hidden');
+
+                setupFiltersAndSelectors();
+                setGlobalMode('2026');
+            } catch (err) {
+                clearInterval(animId);
+                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-sm">Ошибка синхронизации данных.</div>`;
+            }
+        }
+
+        function parseCoreCSV(text, mode) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            const res = [];
+            for(let i = 1; i < lines.length; i++) {
+                const sep = lines[i].includes(';') ? ';' : ',';
+                const p = lines[i].split(sep).map(x => x.trim());
                 
-                allMatches = parseCSV(csvText);
+                if (mode === 'p') {
+                    if (p[0] && p[1] && p[0] !== "" && p[1] !== "" && p[0].toLowerCase() !== "team") {
+                        res.push({ team: p[0], name: p[1] });
+                    }
+                    continue;
+                }
                 
-                if(allMatches.length === 0) {
-                    document.getElementById('loader').innerHTML = `<div class="text-yellow-500 font-bold text-xl mb-2">Таблица подключена!</div><div class="text-gray-400">Матчи пока не найдены.</div>`;
+                if(mode === 'm') {
+                    let matchId = (p[0] && p[0] !== "") ? p[0].toString() : i.toString();
+                    if (!p[3] || !p[4] || p[3] === "" || p[4] === "") continue;
+                    
+                    res.push({ 
+                        id: matchId, 
+                        stage: p[1] || '', 
+                        group: p[2] || '', 
+                        t1: p[3], 
+                        t2: p[4], 
+                        s1: (p[5] !== undefined && p[5] !== "") ? parseInt(p[5]) : 0, 
+                        s2: (p[6] !== undefined && p[6] !== "") ? parseInt(p[6]) : 0, 
+                        p1: (p[7] && p[7] !== "") ? parseInt(p[7]) : null, 
+                        p2: (p[8] && p[8] !== "") ? parseInt(p[8]) : null, 
+                        time: p[9] || '00:00', 
+                        date: p[10] || '', 
+                        field: p[11] || '1', 
+                        status: p[12] ? p[12].toLowerCase() : 'future' 
+                    });
+                } else if(mode === 'g' && p.length >= 5) {
+                    if (!p[0] || p[0] === "") continue;
+                    res.push({ match_id: p[0].toString(), team: p[1], player: p[2], assistant: p[3], minute: parseInt(p[4]||1) });
+                }
+            }
+            return res;
+        }
+
+        function parseArchiveCSV(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            const result = [];
+            for(let i = 1; i < lines.length; i++) {
+                const sep = lines[i].includes(';') ? ';' : ',';
+                const p = lines[i].split(sep).map(x => x.trim());
+                
+                if (!p[3] || p[3] === "" || !p[4] || p[4] === "") continue; 
+                
+                result.push({
+                    year: p[0] ? p[0].toString() : '2025', 
+                    tournament: p[1] || 'Мужчины', 
+                    stage: p[2] || '',
+                    t1: p[3], 
+                    t2: p[4],
+                    s1: p[5] !== undefined && p[5] !== "" ? parseInt(p[5]) : 0, 
+                    s2: p[6] !== undefined && p[6] !== "" ? parseInt(p[6]) : 0,
+                    p1: (p[7] && p[7] !== "") ? parseInt(p[7]) : null, 
+                    p2: (p[8] && p[8] !== "") ? parseInt(p[8]) : null,
+                    status: 'past'
+                });
+            }
+            return result;
+        }
+
+        function calculateGroupStats(matches) {
+            let stats = {};
+            matches.forEach(m => {
+                if (!stats[m.t1]) stats[m.t1] = { name: m.t1, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
+                if (!stats[m.t2]) stats[m.t2] = { name: m.t2, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
+                
+                if (m.status === 'past' || (m.s1 !== null && m.s2 !== null && (m.s1 !== 0 || m.s2 !== 0))) {
+                    stats[m.t1].games++;
+                    stats[m.t2].games++;
+                    stats[m.t1].gf += m.s1;
+                    stats[m.t1].ga += m.s2;
+                    stats[m.t2].gf += m.s2;
+                    stats[m.t2].ga += m.s1;
+
+                    if (m.s1 > m.s2) {
+                        stats[m.t1].w++; stats[m.t1].pts += 3; stats[m.t2].l++;
+                    } else if (m.s1 < m.s2) {
+                        stats[m.t2].w++; stats[m.t2].pts += 3; stats[m.t1].l++;
+                    } else {
+                        stats[m.t1].d++; stats[m.t1].pts += 1; stats[m.t2].d++; stats[m.t2].pts += 1;
+                    }
+                }
+            });
+            return Object.values(stats).sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga) || b.gf - a.gf);
+        }
+
+        function setupFiltersAndSelectors() {
+            const tArch = [...new Set(db.archive.map(m => m.tournament))].filter(Boolean);
+            document.getElementById('archive-tournament').innerHTML = tArch.map(t => `<option value="${t}">${t}</option>`).join('');
+            if(tArch.length > 0) archiveTournament = tArch[0];
+
+            document.getElementById('archive-tournament').addEventListener('change', (e) => { 
+                archiveTournament = e.target.value; 
+                toggleSupercupBanner(archiveTournament);
+                currentPlayoffStageArchive = '';
+                updateArchiveYears(); 
+            });
+
+            document.getElementById('archive-year').addEventListener('change', (e) => { 
+                archiveYear = e.target.value; 
+                currentPlayoffStageArchive = '';
+                renderArchiveCore(); 
+            });
+
+            const teams = [...new Set(db.matches2026.flatMap(m => [m.t1, m.t2]))].filter(Boolean).sort();
+            document.getElementById('filter-teams').innerHTML = '<option value="all">Все команды</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
+            document.getElementById('filter-stages').innerHTML = '<option value="all">Все стадии</option><option value="Групповой этап">Групповой этап</option><option value="Плей-офф">Плей-офф</option>';
+
+            ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => {
+                document.getElementById(id).addEventListener('change', render2026Schedule);
+            });
+            updateArchiveYears();
+        }
+
+        function updateArchiveYears() {
+            if (!archiveTournament) return;
+            const matchesForTournament = db.archive.filter(m => m.tournament === archiveTournament);
+            const dynamicYears = [...new Set(matchesForTournament.map(m => m.year))].sort((a,b)=>b-a);
+            document.getElementById('archive-year').innerHTML = dynamicYears.map(y => `<option value="${y}">${y} ГОД</option>`).join('');
+            archiveYear = dynamicYears[0] || '';
+            
+            const isSupercup = archiveTournament.toUpperCase().includes('СУПЕРКУБОК');
+            switchArchiveTab(isSupercup ? 'playoffs' : 'groups', document.getElementById(isSupercup ? 'arch-tab-playoffs' : 'arch-tab-groups'));
+        }
+
+        function toggleSupercupBanner(tournamentName) {
+            const banner = document.getElementById('supercup-banner');
+            if(banner) tournamentName && tournamentName.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
+        }
+
+        function shortenPlayerName(fullName) {
+            if (!fullName) return '';
+            let parts = fullName.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return `${parts[0]} ${parts[1].charAt(0)}.`;
+            }
+            return fullName;
+        }
+
+        function render2026Core() {
+            const tabs = ['tables', 'schedule', 'standings', 'playoffs', 'scorers', 'assistants'];
+            tabs.forEach(t => document.getElementById(`sub-2026-${t}`)?.classList.add('hidden'));
+
+            const currentContainer = document.getElementById(`sub-2026-${active2026Tab}`);
+            if (currentContainer) currentContainer.classList.remove('hidden');
+
+            const groupMatchesFuture = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа') && m.status && m.status.toLowerCase().trim() === 'future').length;
+            
+            const countText = `ОСТАЛОСЬ МАТЧЕЙ В ГРУППАХ: ${groupMatchesFuture}.`;
+            const sCount = document.getElementById('standings-count-node');
+            const pCount = document.getElementById('playoffs-count-node');
+            if(sCount) sCount.innerText = countText;
+            if(pCount) pCount.innerText = countText;
+
+            const bannerStandings = document.getElementById('banner-standings-2026');
+            const bannerPlayoffs = document.getElementById('banner-playoffs-2026');
+
+            if (groupMatchesFuture === 0) {
+                if (bannerStandings) bannerStandings.classList.add('hidden');
+                if (bannerPlayoffs) bannerPlayoffs.classList.add('hidden');
+            } else {
+                if (bannerStandings) bannerStandings.classList.remove('hidden');
+                if (bannerPlayoffs) bannerPlayoffs.classList.remove('hidden');
+            }
+            
+            updateLiveDateStrings();
+
+            if(active2026Tab === 'tables') render2026Tables();
+            else if(active2026Tab === 'schedule') render2026Schedule();
+            else if(active2026Tab === 'standings') render2026OverallStandings();
+            else if(active2026Tab === 'playoffs') render2026Playoffs();
+            else if(active2026Tab === 'scorers' || active2026Tab === 'assistants') render2026StatList(active2026Tab);
+        }
+
+        function renderArchiveCore() {
+            if (!archiveYear || !archiveTournament) return;
+            const mArch = db.archive.filter(m => m.year === archiveYear && m.tournament === archiveTournament);
+            
+            const gContainer = document.getElementById('archive-groups');
+            const pContainer = document.getElementById('archive-playoffs');
+            const rContainer = document.getElementById('archive-results');
+            const regInfoArch = document.getElementById('regulations-info-archive');
+
+            gContainer.classList.add('hidden'); pContainer.classList.add('hidden'); rContainer.classList.add('hidden'); regInfoArch.classList.add('hidden');
+            const isSupercup = archiveTournament.toUpperCase().includes('СУПЕРКУБОК');
+
+            if(activeArchiveTab === 'groups') {
+                if (isSupercup) {
+                    gContainer.classList.remove('hidden');
+                    gContainer.innerHTML = `<div class="text-zinc-500 text-xs text-center py-12 italic">Групповой этап не проводился</div>`;
                     return;
                 }
-                
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('controls').style.display = 'flex';
-                
-                setupTournaments();
-            } catch (error) {
-                document.getElementById('loader').innerHTML = `<div class="text-red-500 font-bold text-xl mb-2">Ошибка загрузки. Проверьте соединение.</div>`;
-            }
-        }
 
-        function parseCSV(text) {
-            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-            const matches = [];
-            for (let i = 1; i < lines.length; i++) {
-                const separator = lines[i].includes(';') ? ';' : ',';
-                const parts = lines[i].split(separator);
-                if(parts.length >= 7) {
-                    const year = parts[0]?.trim();
-                    const tournament = parts[1]?.trim();
-                    const stage = parts[2]?.trim();
-                    const team1 = parts[3]?.trim();
-                    const team2 = parts[4]?.trim();
-                    const score1 = parts[5]?.trim();
-                    const score2 = parts[6]?.trim();
-                    const pen1 = parts[7]?.trim();
-                    const pen2 = parts[8]?.trim();
+                gContainer.classList.remove('hidden'); gContainer.innerHTML = '';
+                
+                const groupM = mArch.filter(m => m.stage.toLowerCase().includes('группа'));
+                const groups = [...new Set(groupM.map(m => m.stage))].sort();
 
-                    if(team1 && team2 && score1 !== "" && score2 !== "") {
-                        matches.push({
-                            year: year, tournament: tournament, stage: stage,
-                            t1: team1, s1: parseInt(score1), p1: pen1 ? parseInt(pen1) : null,
-                            t2: team2, s2: parseInt(score2), p2: pen2 ? parseInt(pen2) : null
-                        });
-                    }
+                if(groups.length === 0) {
+                    gContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Групповой этап не найден. Посмотрите вкладку "Результаты"</div>`;
+                    return;
                 }
-            }
-            return matches;
-        }
 
-        function setupTournaments() {
-            const tournaments = [...new Set(allMatches.map(m => m.tournament))];
-            const tourSelect = document.getElementById('tournament-select');
-            
-            tourSelect.innerHTML = tournaments.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
-            currentTournament = tournaments.includes('Мужчины') ? 'Мужчины' : tournaments[0];
-            tourSelect.value = currentTournament;
+                const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа'));
+                const playoffTeams = new Set(playM.flatMap(m => [m.t1, m.t2]).filter(Boolean));
 
-            tourSelect.addEventListener('change', (e) => { 
-                currentTournament = e.target.value; 
-                updateYearsForTournament(); 
-            });
-
-            document.getElementById('tab-groups').addEventListener('click', (e) => { switchTab('groups', e.target); });
-            document.getElementById('tab-playoffs').addEventListener('click', (e) => { switchTab('playoffs', e.target); });
-            document.getElementById('tab-results').addEventListener('click', (e) => { switchTab('results', e.target); });
-
-            updateYearsForTournament();
-        }
-
-        function updateYearsForTournament() {
-            const matchesForTour = allMatches.filter(m => m.tournament === currentTournament);
-            const years = [...new Set(matchesForTour.map(m => m.year))].sort((a,b) => b - a);
-            
-            const yearSelect = document.getElementById('year-select');
-            yearSelect.innerHTML = years.map(y => `<option value="${y}">${y} ГОД</option>`).join('');
-            
-            if (!years.includes(currentYear)) currentYear = years[0];
-            yearSelect.value = currentYear;
-
-            if(!yearSelect.dataset.listener) {
-                yearSelect.addEventListener('change', (e) => { 
-                    currentYear = e.target.value; 
-                    resetTabs();
-                });
-                yearSelect.dataset.listener = "true";
-            }
-            
-            resetTabs();
-        }
-
-        function resetTabs() {
-            currentStage = ''; 
-            const isSupercup = currentTournament.toLowerCase().includes('суперкубок');
-            const tabGroups = document.getElementById('tab-groups');
-            const tabResults = document.getElementById('tab-results');
-            
-            if (isSupercup) {
-                tabGroups.style.display = 'none';
-                tabResults.style.display = 'none';
-                switchTab('playoffs', document.getElementById('tab-playoffs'));
-            } else {
-                tabGroups.style.display = 'block';
-                tabResults.style.display = 'block';
-                switchTab('groups', tabGroups);
-            }
-        }
-
-        function switchTab(tab, btnElement) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-            btnElement.classList.add('active-tab');
-            
-            document.getElementById('content-groups').classList.add('hidden');
-            document.getElementById('content-playoffs').classList.add('hidden');
-            document.getElementById('content-results').classList.add('hidden');
-            
-            if (tab === 'groups') {
-                document.getElementById('content-groups').classList.remove('hidden');
-                renderGroups();
-            } else if (tab === 'playoffs') {
-                currentStage = ''; 
-                document.getElementById('content-playoffs').classList.remove('hidden');
-                renderPlayoffsNav();
-            } else if (tab === 'results') {
-                document.getElementById('content-results').classList.remove('hidden');
-                renderResults();
-            }
-        }
-
-        function getStageLevel(stage) {
-            const s = stage.toLowerCase();
-            if (s.includes('1/32')) return 32;
-            if (s.includes('1/16')) return 16;
-            if (s.includes('1/8')) return 8;
-            if (s.includes('1/4')) return 4;
-            if (s.includes('1/2') || s.includes('полуфинал')) return 2;
-            if (s.includes('финал') || s.includes('3-е') || s.includes('3 место')) return 1;
-            return 0;
-        }
-
-        function renderGroups() {
-            const groupMatches = allMatches.filter(m => m.year === currentYear && m.tournament === currentTournament && m.stage.toLowerCase().includes('группа'));
-            const container = document.getElementById('groups-grid');
-            container.innerHTML = '';
-
-            const playoffMatches = allMatches.filter(m => m.year === currentYear && m.tournament === currentTournament && !m.stage.toLowerCase().includes('группа'));
-            
-            let earliestTournamentStageLvl = 0;
-            playoffMatches.forEach(m => {
-                const lvl = getStageLevel(m.stage);
-                if (lvl > earliestTournamentStageLvl) earliestTournamentStageLvl = lvl;
-            });
-
-            const teamEntryStages = {};
-            playoffMatches.forEach(m => {
-                const lvl = getStageLevel(m.stage);
-                if (!teamEntryStages[m.t1] || lvl > teamEntryStages[m.t1].lvl) teamEntryStages[m.t1] = { lvl: lvl, name: m.stage };
-                if (!teamEntryStages[m.t2] || lvl > teamEntryStages[m.t2].lvl) teamEntryStages[m.t2] = { lvl: lvl, name: m.stage };
-            });
-
-            const groups = {};
-            groupMatches.forEach(m => {
-                if(!groups[m.stage]) groups[m.stage] = [];
-                groups[m.stage].push(m);
-            });
-
-            let hasByes = false; 
-
-            Object.keys(groups).sort((a, b) => {
-                return a.replace(/группа/i, '').trim().localeCompare(b.replace(/группа/i, '').trim());
-            }).forEach(groupName => {
-                const matches = groups[groupName];
-                const stats = {};
-
-                matches.forEach(m => {
-                    if (!stats[m.t1]) stats[m.t1] = { name: m.t1, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
-                    if (!stats[m.t2]) stats[m.t2] = { name: m.t2, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
-
-                    stats[m.t1].games++; stats[m.t2].games++;
-                    stats[m.t1].gf += m.s1; stats[m.t1].ga += m.s2;
-                    stats[m.t2].gf += m.s2; stats[m.t2].ga += m.s1;
-
-                    if (m.s1 > m.s2) { stats[m.t1].w++; stats[m.t1].pts += 3; stats[m.t2].l++; }
-                    else if (m.s1 < m.s2) { stats[m.t2].w++; stats[m.t2].pts += 3; stats[m.t1].l++; }
-                    else { stats[m.t1].d++; stats[m.t2].d++; stats[m.t1].pts += 1; stats[m.t2].pts += 1; }
-                });
-
-                let teams = Object.values(stats);
-                
-                teams.sort((a, b) => {
-                    if (b.pts !== a.pts) return b.pts - a.pts; 
-                    let h2hA = 0, h2hB = 0;
-                    matches.forEach(m => {
-                        if (m.t1 === a.name && m.t2 === b.name) {
-                            if (m.s1 > m.s2) h2hA += 3; else if (m.s1 === m.s2) { h2hA += 1; h2hB += 1; } else h2hB += 3;
-                        } else if (m.t1 === b.name && m.t2 === a.name) {
-                            if (m.s1 > m.s2) h2hB += 3; else if (m.s1 === m.s2) { h2hB += 1; h2hA += 1; } else h2hA += 3;
-                        }
-                    });
-                    if (h2hB !== h2hA) return h2hB - h2hA;
-
-                    let diffA = a.gf - a.ga; let diffB = b.gf - b.ga;
-                    if (diffB !== diffA) return diffB - diffA;
+                groups.forEach(g => {
+                    const sorted = calculateGroupStats(groupM.filter(m => m.stage === g));
+                    let html = `<div class="group-card"><table><thead><tr><th>${g}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
                     
-                    return b.gf - a.gf;
-                });
-
-                let html = `<div class="group-card"><table><thead><tr><th>${groupName}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
-                
-                teams.forEach((t) => {
-                    const entryInfo = teamEntryStages[t.name];
-                    let barClass = 'red-bar';
-
-                    if (entryInfo) {
-                        if (entryInfo.lvl < earliestTournamentStageLvl) {
-                            barClass = 'lime-bar';
-                            hasByes = true;
+                    sorted.forEach((t, idx) => {
+                        let bar = 'red-bar';
+                        if (archiveYear === '2023') {
+                            if (idx === 0) bar = 'green-bar';
+                            else if (idx === 1 || idx === 2) bar = 'lime-bar';
                         } else {
-                            barClass = 'green-bar';
+                            if (playoffTeams.has(t.name)) bar = 'green-bar';
                         }
-                    }
-
-                    const logoUrl = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png`;
-                    html += `<tr>
-                        <td class="${barClass}">
-                            <div class="flex items-center">
-                                <img src="${logoUrl}" class="team-logo" onerror="this.style.display='none'">
-                                <div class="leading-tight text-white">${t.name}</div>
-                            </div>
-                        </td>
-                        <td class="text-white">${t.w}</td><td class="text-white">${t.d}</td><td class="text-white">${t.l}</td><td class="text-white">${t.gf}-${t.ga}</td><td class="text-white">${t.pts}</td>
-                    </tr>`;
+                        
+                        html += `<tr><td class="${bar} max-w-[140px] truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                    });
+                    gContainer.innerHTML += html + `</tbody></table></div>`;
                 });
-                html += `</tbody></table></div>`;
-                container.innerHTML += html;
-            });
 
-            const legendColorsContainer = document.getElementById('legend-colors-container');
-            if (currentYear === '2023') {
-                legendColorsContainer.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-[#EAB308] shadow-[0_0_10px_rgba(234,179,8,0.5)]"></div> 
-                        <span class="font-bold text-white">Выход в Плей-офф</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.5)]"></div> 
-                        <span class="font-bold text-white">Выход в Плей-ин</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-[#EF4444]"></div> 
-                        <span class="text-white">Зона вылета</span>
-                    </div>
-                `;
-            } else {
-                let byeHtml = hasByes ? `
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-[#EAB308] shadow-[0_0_10px_rgba(234,179,8,0.5)]"></div> 
-                        <span class="font-bold text-white">Прямая путевка в следующий раунд</span>
-                    </div>` : '';
+                let legendHtml = `
+                    <div class="mt-4 p-4 bg-zinc-900/40 border border-zinc-800 rounded-2xl space-y-2 text-[11px] text-zinc-400">
+                        <div class="font-bold text-white uppercase tracking-wider text-[10px]">Легенда зон и правила:</div>
+                        <div class="flex flex-wrap gap-4 border-b border-zinc-800 pb-2 mb-2">
+                            <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#00E676] rounded-sm"></span> <span>Плей-офф</span></div>
+                            ${archiveYear === '2023' ? '<div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#EAB308] rounded-sm"></span> <span>Плей-ин</span></div>' : ''}
+                            <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#EF4444] rounded-sm"></span> <span>Выбыл из турнира</span></div>
+                        </div>
+                        <div class="text-[11px] text-zinc-400 leading-relaxed">
+                            При равенстве очков:<br>
+                            1) Личные встречи;<br>
+                            2) Разница мячей;<br>
+                            3) Забитые мячи.
+                        </div>
+                    </div>`;
+                gContainer.innerHTML += legendHtml;
+            }
+
+            if(activeArchiveTab === 'playoffs') {
+                pContainer.classList.remove('hidden');
+                const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа')); 
+                let stages = [...new Set(playM.map(m => m.stage))].filter(s => s && !s.toLowerCase().includes('3-е место'));
+
+                const order = ['1/32', '1/16', '1/8', '1/4', '1/2', 'Финал'];
+                stages.sort((a, b) => order.findIndex(o => a.toLowerCase().includes(o.toLowerCase())) - order.findIndex(o => b.toLowerCase().includes(o.toLowerCase())));
+
+                if(stages.length === 0) {
+                    document.getElementById('archive-playoff-nav').innerHTML = '';
+                    document.getElementById('archive-playoff-matches').innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Плей-офф отсутствует</div>`;
+                    return;
+                }
+
+                if(!currentPlayoffStageArchive || !stages.includes(currentPlayoffStageArchive)) currentPlayoffStageArchive = stages[0];
+                document.getElementById('archive-playoff-nav').innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 text-[10px] !py-2.5 ${currentPlayoffStageArchive === s ? 'active' : ''}" onclick="setPlayoffStageArchive('${s}')">${s}</button>`).join('');
+
+                let matchesHtml = '';
+                let stageMatches = playM.filter(m => m.stage === currentPlayoffStageArchive);
                 
-                legendColorsContainer.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.5)]"></div> 
-                        <span class="font-bold text-white">Выход в Плей-офф</span>
-                    </div>
-                    ${byeHtml}
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-[#EF4444]"></div> 
-                        <span class="text-white">Зона вылета</span>
-                    </div>
-                `;
+                if(currentPlayoffStageArchive.toLowerCase().includes('финал')) {
+                    const thirdPlaceMatch = playM.find(m => m.stage.toLowerCase().includes('3-е место'));
+                    if(thirdPlaceMatch) {
+                        stageMatches.push(thirdPlaceMatch);
+                    }
+                }
+
+                stageMatches.forEach(m => { matchesHtml += renderPlayoffCard(m, m.t1, m.t2); });
+                document.getElementById('archive-playoff-matches').innerHTML = matchesHtml;
+            }
+
+            if(activeArchiveTab === 'results') {
+                rContainer.classList.remove('hidden'); rContainer.innerHTML = '';
+                const stages = [...new Set(mArch.map(m => m.stage))];
+                if(stages.length === 0) { rContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи отсутствуют</div>`; return; }
+
+                rContainer.innerHTML = stages.map(stg => {
+                    let matchesList = mArch.filter(m => m.stage === stg).map(m => {
+                        let scores = getScoreDisplay(m);
+                        return `
+                            <div class="bg-zinc-card/40 border border-zinc-900 p-3 rounded-xl flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                                <div class="space-y-1.5 flex-1 min-w-0 pr-2">
+                                    <div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t1}</div>
+                                    <div class="flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">${m.t2}</div>
+                                </div>
+                                <div class="text-right text-neon font-black space-y-1.5 shrink-0"><div>${scores.s1}</div><div>${scores.s2}</div></div>
+                            </div>`;
+                    }).join('');
+                    return `<div class="mb-4"><h4 class="text-xs font-black text-neon uppercase tracking-wider mb-2">${stg}</h4><div class="flex flex-col gap-2 w-full">${matchesList}</div></div>`;
+                }).join('');
             }
         }
 
-        function checkScrollIndicator() {
-            const nav = document.getElementById('playoff-stages-nav');
-            const ind = document.getElementById('scroll-indicator');
-            if(nav && ind && document.getElementById('content-playoffs').classList.contains('hidden') === false) {
-                if (nav.scrollWidth > nav.clientWidth + 5) {
-                    ind.style.display = 'flex';
-                } else {
-                    ind.style.display = 'none';
+        function setPlayoffStageArchive(stage) { currentPlayoffStageArchive = stage; renderArchiveCore(); }
+
+        function renderPlayoffCard(m, defaultT1, defaultT2) {
+            let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0;
+            let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
+            
+            let score1 = m ? `${s1Val}` : '-'; let score2 = m ? `${s2Val}` : '-';
+            if (p1Val !== null && p2Val !== null) {
+                score1 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p1Val}</span>`;
+                score2 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p2Val}</span>`;
+            }
+
+            let medal1 = '', medal2 = '';
+            if(m && m.stage) {
+                let stageLower = m.stage.toLowerCase();
+                let isFinal = stageLower.includes('финал') && !stageLower.includes('3-е');
+                let isThird = stageLower.includes('3-е место');
+                let t1Win = (s1Val > s2Val) || (p1Val !== null && p1Val > p2Val);
+
+                if (isFinal) { 
+                    medal1 = t1Win ? '🥇' : '🥈'; medal2 = t1Win ? '🥈' : '🥇'; 
+                } else if (isThird) { 
+                    medal1 = t1Win ? '🥉' : ''; medal2 = t1Win ? '' : '🥉'; 
                 }
             }
+
+            return `
+                <div class="match-row !cursor-default w-full flex flex-col gap-2">
+                    <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT1}.png" class="team-logo" onerror="this.style.visibility='hidden'">
+                            <span class="truncate">${defaultT1}</span><span class="ml-1">${medal1}</span>
+                        </div>
+                        <div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
+                    </div>
+                    <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${defaultT2}.png" class="team-logo" onerror="this.style.visibility='hidden'">
+                            <span class="truncate">${defaultT2}</span><span class="ml-1">${medal2}</span>
+                        </div>
+                        <div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
+                    </div>
+                </div>`;
         }
 
-        function renderPlayoffsNav() {
-            const playoffMatches = allMatches.filter(m => m.year === currentYear && m.tournament === currentTournament && !m.stage.toLowerCase().includes('группа'));
-            const nav = document.getElementById('playoff-stages-nav');
-            const container = document.getElementById('playoff-matches');
-            
-            const oldBanner = document.getElementById('supercup-banner');
-            if(oldBanner) oldBanner.remove();
+        function getScoreDisplay(m) {
+            let score1 = `${m.s1}`; let score2 = `${m.s2}`;
+            if (m.p1 !== null && m.p2 !== null) {
+                score1 += ` <span class="text-[10px] text-white font-normal">${m.p1}</span>`;
+                score2 += ` <span class="text-[10px] text-white font-normal">${m.p2}</span>`;
+            }
+            return { s1: score1, s2: score2 };
+        }
 
-            if (playoffMatches.length === 0) {
-                nav.innerHTML = '';
-                container.innerHTML = `<div class="text-gray-500 w-full md:col-span-2 text-center py-10">Матчи плей-офф еще не добавлены</div>`;
-                checkScrollIndicator();
+        function render2026Tables() {
+            const container = document.getElementById('sub-2026-tables');
+            container.innerHTML = '';
+            const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
+            const groups = [...new Set(groupMatches.map(m => m.group))].sort();
+
+            if(groups.length === 0) {
+                container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа 2026 не найдены.</div>`;
                 return;
             }
 
-            const stagesRaw = [...new Set(playoffMatches.map(m => m.stage))];
-            let stages = stagesRaw.filter(s => !s.toLowerCase().includes('3-е') && !s.toLowerCase().includes('3 место'));
-            
-            if (stagesRaw.some(s => s.toLowerCase().includes('3-е') || s.toLowerCase().includes('3 место')) && !stages.includes('Финал')) {
-                stages.push('Финал');
-            }
+            // ИСПРАВЛЕНИЕ: Получаем массив общего зачета и вытаскиваем Топ-32 участников плей-офф
+            let overallStandings = getStandingsArray();
+            let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
 
-            const stageOrder = ['1/32', '1/16', '1/8', '1/4', '1/2', 'Финал'];
-            stages = stages.sort((a,b) => {
-                let ia = stageOrder.findIndex(x => a.toLowerCase().includes(x.toLowerCase()));
-                let ib = stageOrder.findIndex(x => b.toLowerCase().includes(x.toLowerCase()));
-                if(ia === -1) ia = 99; if(ib === -1) ib = 99;
-                return ia - ib;
-            });
+            groups.forEach(gName => {
+                const mInGroup = groupMatches.filter(m => m.group === gName);
+                const sortedTeams = calculateGroupStats(mInGroup);
 
-            if (!currentStage || !stages.includes(currentStage)) currentStage = stages[0];
+                let html = `<div class="group-card"><table><thead><tr><th>${gName}</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead><tbody>`;
+                sortedTeams.forEach((t) => {
+                    // ИСПРАВЛЕНИЕ: Прямая синхронизация цвета с общим сквозным зачетом
+                    let isTeamInPlayoffZone = playoffTeams2026.includes(t.name.trim().toUpperCase());
+                    let barColor = isTeamInPlayoffZone ? 'green-bar' : 'red-bar';
+                    
+                    html += `<tr><td class="${barColor} max-w-[130px] truncate"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">${t.name}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
+                });
+                html += `</tbody></table><div class="mt-4 border-t border-zinc-800/60 pt-2 space-y-2">`;
 
-            nav.innerHTML = stages.map(stage => 
-                `<button class="playoff-btn ${stage === currentStage ? 'active' : ''}" onclick="selectStage('${stage}')">${stage}</button>`
-            ).join('');
-
-            container.innerHTML = '';
-            
-            if (currentStage === 'Финал') {
-                const finals = playoffMatches.filter(m => m.stage === 'Финал');
-                const thirdPlace = playoffMatches.filter(m => m.stage.toLowerCase().includes('3-е') || m.stage.toLowerCase().includes('3 место'));
-                
-                const combined = [...finals, ...thirdPlace];
-                if (combined.length > 0) renderPlayoffMatches(combined);
-            } else {
-                renderPlayoffMatches(playoffMatches.filter(m => m.stage === currentStage));
-            }
-
-            if (currentTournament.toLowerCase().includes('суперкубок') && (currentStage === 'Финал' || currentStage === '1/2' || currentStage === 'Полуфинал')) {
-                container.insertAdjacentHTML('afterend', `
-                    <div id="supercup-banner" class="mt-8 p-6 rounded-3xl bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 border border-yellow-500/20 text-center relative overflow-hidden">
-                        <p class="text-sm text-gray-300 relative z-10">В этом турнире играют все чемпионы «Олотау йыйыны» прошлых лет.</p>
-                    </div>
-                `);
-            }
-
-            setTimeout(checkScrollIndicator, 50); 
-        }
-
-        window.addEventListener('resize', checkScrollIndicator);
-
-        function selectStage(stage) {
-            currentStage = stage;
-            renderPlayoffsNav();
-        }
-
-        function renderPlayoffMatches(matches) {
-            const container = document.getElementById('playoff-matches');
-
-            matches.forEach(m => {
-                let winner = 0;
-                if (m.s1 > m.s2) winner = 1;
-                else if (m.s2 > m.s1) winner = 2;
-                else if (m.p1 !== null && m.p2 !== null) {
-                    if (m.p1 > m.p2) winner = 1; else winner = 2;
-                }
-
-                let isDraw = (winner === 0);
-                let scoreClass = isDraw ? 'is-draw' : '';
-
-                let score1Display = m.p1 !== null ? `${m.s1} <span class="pen-score">${m.p1}</span>` : m.s1;
-                let score2Display = m.p2 !== null ? `${m.s2} <span class="pen-score">${m.p2}</span>` : m.s2;
-
-                let medal1 = '';
-                let medal2 = '';
-                if (m.stage.toLowerCase() === 'финал') {
-                    medal1 = winner === 1 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" title="1 место">🥇</span>' : (winner === 2 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(156,163,175,0.8)]" title="2 место">🥈</span>' : '');
-                    medal2 = winner === 2 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" title="1 место">🥇</span>' : (winner === 1 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(156,163,175,0.8)]" title="2 место">🥈</span>' : '');
-                } else if (m.stage.toLowerCase().includes('3-е') || m.stage.toLowerCase().includes('3 место')) {
-                    medal1 = winner === 1 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(180,83,9,0.8)]" title="3 место">🥉</span>' : '';
-                    medal2 = winner === 2 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(180,83,9,0.8)]" title="3 место">🥉</span>' : '';
-                }
-
-                const logo1 = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png`;
-                const logo2 = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png`;
-
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="match">
-                        <div class="team">
-                            <div class="team-name ${winner === 2 ? 'loser' : ''}">
-                                <div class="flex items-center">
-                                    <img src="${logo1}" class="team-logo" onerror="this.style.display='none'">
-                                    ${m.t1}
-                                </div>
-                                ${medal1}
-                            </div>
-                            <div class="team-score ${scoreClass}">${score1Display}</div>
-                        </div>
-                        <div class="team">
-                            <div class="team-name ${winner === 1 ? 'loser' : ''}">
-                                <div class="flex items-center">
-                                    <img src="${logo2}" class="team-logo" onerror="this.style.display='none'">
-                                    ${m.t2}
-                                </div>
-                                ${medal2}
-                            </div>
-                            <div class="team-score ${scoreClass}">${score2Display}</div>
-                        </div>
-                    </div>
-                `);
-            });
-        }
-
-        function renderResults() {
-            const container = document.getElementById('content-results');
-            container.innerHTML = '';
-            
-            const matches = allMatches.filter(m => m.year === currentYear && m.tournament === currentTournament);
-            
-            if (matches.length === 0) {
-                container.innerHTML = `<div class="text-gray-500 text-center py-10">Матчи не найдены</div>`;
-                return;
-            }
-
-            const stagesObj = {};
-            matches.forEach(m => {
-                if(!stagesObj[m.stage]) stagesObj[m.stage] = [];
-                stagesObj[m.stage].push(m);
-            });
-
-            const stageOrder = ['Группа A', 'Группа B', 'Группа C', 'Группа D', 'Группа E', 'Группа F', 'Группа G', 'Группа H', 'Группа I', 'Группа J', 'Группа K', 'Группа L', '1/32', '1/16', '1/8', '1/4', '1/2', 'Матч за 3-е место', '3 место', 'Финал'];
-            
-            Object.keys(stagesObj).sort((a,b) => {
-                let ia = stageOrder.findIndex(x => a.toLowerCase().trim() === x.toLowerCase());
-                let ib = stageOrder.findIndex(x => b.toLowerCase().trim() === x.toLowerCase());
-                if(ia === -1) ia = 99; if(ib === -1) ib = 99;
-                if(ia === ib) return a.localeCompare(b);
-                return ia - ib;
-            }).forEach(stage => {
-                let html = `
-                <div class="mb-8">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-1 h-6 bg-neon rounded-full"></div>
-                        <h3 class="text-lg font-black text-white uppercase tracking-widest">${stage}</h3>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                `;
-                
-                stagesObj[stage].forEach(m => {
-                    let winner = 0;
-                    if (m.s1 > m.s2) winner = 1;
-                    else if (m.s2 > m.s1) winner = 2;
-                    else if (m.p1 !== null && m.p2 !== null) {
-                        if (m.p1 > m.p2) winner = 1; else winner = 2;
-                    }
-
-                    let isDraw = (winner === 0);
-                    let scoreClass = isDraw ? 'is-draw' : '';
-
-                    let score1Display = m.p1 !== null ? `${m.s1} <span class="pen-score">${m.p1}</span>` : m.s1;
-                    let score2Display = m.p2 !== null ? `${m.s2} <span class="pen-score">${m.p2}</span>` : m.s2;
-
-                    let medal1 = ''; let medal2 = '';
-                    if (m.stage.toLowerCase() === 'финал') {
-                        medal1 = winner === 1 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" title="1 место">🥇</span>' : (winner === 2 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(156,163,175,0.8)]" title="2 место">🥈</span>' : '');
-                        medal2 = winner === 2 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" title="1 место">🥇</span>' : (winner === 1 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(156,163,175,0.8)]" title="2 место">🥈</span>' : '');
-                    } else if (m.stage.toLowerCase().includes('3-е') || m.stage.toLowerCase().includes('3 место')) {
-                        medal1 = winner === 1 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(180,83,9,0.8)]" title="3 место">🥉</span>' : '';
-                        medal2 = winner === 2 ? '<span class="text-xl ml-2 drop-shadow-[0_0_8px_rgba(180,83,9,0.8)]" title="3 место">🥉</span>' : '';
-                    }
-
-                    const logo1 = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png`;
-                    const logo2 = `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png`;
+                mInGroup.forEach(m => {
+                    const isPast = m.status === 'past';
+                    let scores = getScoreDisplay(m);
+                    
+                    let scoreBadge = isPast 
+                        ? `<div class="text-neon font-black text-[11px] bg-zinc-900/80 px-2 py-0.5 rounded flex items-center gap-1 shrink-0 select-none">${scores.s1} : ${scores.s2} <span class="text-[8px] text-zinc-500">▼</span></div>` 
+                        : `<div class="text-zinc-500 text-[11px] bg-zinc-900/30 px-2 py-0.5 rounded shrink-0 select-none">- : -</div>`;
 
                     html += `
-                        <div class="match !mb-0">
-                            <div class="team">
-                                <div class="team-name ${winner === 2 ? 'loser' : ''}">
-                                    <div class="flex items-center">
-                                        <img src="${logo1}" class="team-logo" onerror="this.style.display='none'">
-                                        ${m.t1}
-                                    </div>
-                                    ${medal1}
+                        <div class="match-row clickable-match" onclick="toggleDetails('det-2026-${m.id}')">
+                            <div class="flex justify-between items-center text-[11px] font-bold uppercase gap-2 w-full">
+                                <div class="flex-1 min-w-0 truncate flex items-center pr-1">
+                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">
+                                    <span class="truncate">${m.t1}</span>
                                 </div>
-                                <div class="team-score ${scoreClass}">${score1Display}</div>
+                                ${scoreBadge}
+                                <div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1">
+                                    <span class="truncate">${m.t2}</span>
+                                    <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo ml-2 mr-0" onerror="this.style.visibility='hidden'">
+                                </div>
                             </div>
-                            <div class="team">
-                                <div class="team-name ${winner === 1 ? 'loser' : ''}">
-                                    <div class="flex items-center">
-                                        <img src="${logo2}" class="team-logo" onerror="this.style.display='none'">
-                                        ${m.t2}
-                                    </div>
-                                    ${medal2}
+                            <div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400">
+                                <div class="pt-2 border-t border-zinc-900/60 space-y-2 mt-2">
+                                    ${renderEventsInline(m.id, isPast)}
                                 </div>
-                                <div class="team-score ${scoreClass}">${score2Display}</div>
+                            </div>
+                        </div>`;
+                });
+                container.innerHTML += html + `</div></div>`;
+            });
+
+            // ИСПРАВЛЕНИЕ: Добавление инфо-панели (информации о вылете как в архиве)
+            let legendHtml2026 = `
+                <div class="group-card col-span-1 lg:col-span-2 !bg-zinc-card/30 border border-zinc-800/80 p-4 space-y-2 text-[11px] text-zinc-400 mt-2">
+                    <div class="font-bold text-white uppercase tracking-wider text-[10px]">Легенда зон и правила сезона 2026:</div>
+                    <div class="flex flex-wrap gap-4 border-b border-zinc-800 pb-2 mb-2">
+                        <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#00E676] rounded-sm"></span> <span>Выход в Плей-офф (Топ-32 общего зачета)</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-2 h-3 bg-[#EF4444] rounded-sm"></span> <span>Выбывание из турнира</span></div>
+                    </div>
+                    <div class="text-[11px] text-zinc-400 leading-relaxed">
+                        При равенстве очков на групповом этапе:<br>
+                        1) Личные встречи;<br>
+                        2) Разница забитых и пропущенных мячей;<br>
+                        3) Количество забитых мячей.
+                    </div>
+                </div>`;
+            container.innerHTML += legendHtml2026;
+        }
+
+        function render2026StatList(type) {
+            const listContainer = document.getElementById(type === 'scorers' ? 'scorers-list' : 'assistants-list');
+            if(!listContainer) return;
+            listContainer.innerHTML = '';
+            
+            let statsMap = {};
+            db.goals2026.forEach(g => {
+                let pName = type === 'scorers' ? g.player : g.assistant;
+                if(!pName || pName.toLowerCase() === 'автогол' || pName === '') return;
+                let key = pName + '|||' + g.team;
+                if(!statsMap[key]) statsMap[key] = { name: pName, team: g.team, count: 0 };
+                statsMap[key].count++;
+            });
+
+            let sorted = Object.values(statsMap).sort((a,b) => b.count - a.count);
+            if(sorted.length === 0) {
+                listContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет зарегистрированных данных</div>`;
+                return;
+            }
+
+            listContainer.innerHTML = sorted.map((p, idx) => `
+                <div class="grid grid-cols-12 text-xs font-bold items-center p-3 text-center uppercase">
+                    <div class="col-span-1 text-left text-zinc-500">${idx+1}</div>
+                    <div class="col-span-5 text-left text-white truncate flex items-center"><img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${p.team}.png" class="team-logo" onerror="this.style.visibility='hidden'">${p.name}</div>
+                    <div class="col-span-4 text-zinc-400 text-[11px] truncate">${p.team}</div>
+                    <div class="col-span-2 text-right text-neon font-black">${p.count}</div>
+                </div>
+            `).join('');
+        }
+
+        function render2026Schedule() {
+            const container = document.getElementById('schedule-list');
+            if(!container) return;
+            const tFilter = document.getElementById('filter-teams').value;
+            const sFilter = document.getElementById('filter-stages').value;
+            const statusFilter = document.getElementById('filter-status').value;
+
+            let filtered = db.matches2026.filter(m => {
+                if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
+                if(sFilter !== 'all') {
+                    if(sFilter === 'Групповой этап' && (!m.group || !m.group.toLowerCase().includes('группа'))) return false;
+                    if(sFilter === 'Плей-офф' && m.group && m.group.toLowerCase().includes('группа')) return false;
+                }
+                if(statusFilter === 'future' && m.status !== 'future') return false;
+                if(statusFilter === 'past' && m.status !== 'past') return false;
+                return true;
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи не найдены</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(m => {
+                let labelHeader = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
+                
+                // ИСПРАВЛЕНИЕ: Если матч сыгран — пишем СЫГРАН и снижаем прозрачность (opacity-60)
+                const isPast = m.status === 'past';
+                const timeDisplay = isPast ? 'СЫГРАН' : m.time;
+                const opacityClass = isPast ? 'opacity-60' : '';
+
+                return `
+                    <div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center gap-4 ${opacityClass}">
+                        <div class="w-24 shrink-0 border-r border-zinc-800/80 pr-2 text-left">
+                            <div class="text-[10px] font-black text-neon truncate uppercase tracking-wider">${labelHeader}</div>
+                            <div class="text-[9px] text-zinc-500 font-bold uppercase mt-0.5">ПОЛЕ #${m.field}</div>
+                        </div>
+                        
+                        <div class="flex-grow flex flex-col gap-2 min-w-0">
+                            <div class="flex items-center text-xs font-bold text-white uppercase truncate">
+                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t1}.png" class="team-logo" onerror="this.style.visibility='hidden'">
+                                <span class="truncate">${m.t1}</span>
+                            </div>
+                            <div class="flex items-center text-xs font-bold text-white uppercase truncate">
+                                <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${m.t2}.png" class="team-logo" onerror="this.style.visibility='hidden'">
+                                <span class="truncate">${m.t2}</span>
                             </div>
                         </div>
-                    `;
+                        
+                        <div class="text-right shrink-0 pl-2 border-l border-zinc-800/80 min-w-[85px]">
+                            <div class="text-xs font-black text-white tracking-wide uppercase">${timeDisplay}</div>
+                            <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date}</div>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function getStandingsArray() {
+            const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
+            const groups = [...new Set(groupMatches.map(m => m.group))].sort();
+            let structuredMap = [];
+
+            groups.forEach(g => {
+                calculateGroupStats(groupMatches.filter(m => m.group === g)).forEach((tStats, rank) => {
+                    structuredMap.push({ ...tStats, groupRank: rank + 1 });
                 });
-                html += `</div></div>`;
-                container.innerHTML += html;
             });
+
+            structuredMap.sort((a,b) => a.groupRank !== b.groupRank ? a.groupRank - b.groupRank : b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
+            return structuredMap;
+        }
+
+        function render2026OverallStandings() {
+            const tbody = document.querySelector('#overall-table tbody');
+            if(!tbody) return; tbody.innerHTML = '';
+            
+            let structuredMap = getStandingsArray();
+            if(structuredMap.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-zinc-600 text-xs text-center py-10 italic">Нет данных</td></tr>`; return; }
+
+            tbody.innerHTML = structuredMap.map((t, i) => {
+                let isPlayoff = i < 32;
+                let barClass = isPlayoff ? 'green-bar' : 'red-bar';
+
+                return `
+                <tr class="hover:bg-zinc-900/30 transition-colors">
+                    <td class="text-left font-bold py-3 text-xs max-w-[150px] truncate ${barClass}">
+                        <span class="inline-block w-6 text-zinc-500 font-bold">${i+1}.</span>
+                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${t.name}.png" class="team-logo" onerror="this.style.visibility='hidden'">
+                        <span>${t.name}</span>
+                    </td>
+                    <td>${t.games}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function render2026Playoffs() {
+            const nav = document.getElementById('playoff-stages-nav-2026');
+            const container = document.getElementById('playoff-matches-2026');
+            if(!container || !nav) return; container.innerHTML = '';
+
+            const pMatches = db.matches2026.filter(m => !m.group || !m.group.toLowerCase().includes('группа'));
+            let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
+
+            if(!stages.includes(currentPlayoffStage2026)) currentPlayoffStage2026 = stages[0];
+            nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
+
+            let matchesHtml = '';
+            let standings = getStandingsArray().map(x => x.name);
+            while(standings.length < 32) { standings.push('Команда'); }
+
+            if (currentPlayoffStage2026 === '1/16') {
+                const pairs = [
+                    [1, 32], [13, 20], [5, 28], [9, 24], 
+                    [3, 30], [15, 18], [7, 26], [11, 22], 
+                    [2, 31], [14, 19], [6, 27], [10, 23], 
+                    [4, 29], [16, 17], [8, 25], [12, 21]
+                ];
+
+                pairs.forEach((p) => {
+                    let t1 = standings[p[0] - 1];
+                    let t2 = standings[p[1] - 1];
+                    
+                    let realMatch = pMatches.find(m => m.stage === '1/16' && (
+                        (m.t1.trim().toUpperCase() === t1.trim().toUpperCase() || m.t2.trim().toUpperCase() === t1.trim().toUpperCase())
+                    ));
+
+                    matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1]);
+                });
+            } else {
+                let stageMatches = pMatches.filter(m => m.stage === currentPlayoffStage2026);
+                
+                if (currentPlayoffStage2026.toLowerCase().includes('финал')) {
+                    const real3rd = pMatches.find(m => m.stage.toLowerCase().includes('3-е место'));
+                    if (real3rd) stageMatches.push(real3rd);
+                }
+
+                if (stageMatches.length === 0) {
+                    let count = currentPlayoffStage2026 === '1/8' ? 8 : currentPlayoffStage2026 === '1/4' ? 4 : currentPlayoffStage2026 === '1/2' ? 2 : 1;
+                    let prevStage = currentPlayoffStage2026 === '1/8' ? '1/16' : currentPlayoffStage2026 === '1/4' ? '1/8' : currentPlayoffStage2026 === '1/2' ? '1/4' : '1/4';
+                    
+                    for(let i = 1; i <= count; i++) {
+                        matchesHtml += `
+                            <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40">
+                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                                    <div class="flex items-center">
+                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Победитель ${prevStage} #${i * 2 - 1}
+                                    </div>
+                                    <div class="text-zinc-600 font-black">-</div>
+                                </div>
+                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                                    <div class="flex items-center">
+                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Победитель ${prevStage} #${i * 2}
+                                    </div>
+                                    <div class="text-zinc-600 font-black">-</div>
+                                </div>
+                            </div>`;
+                    }
+                    if (currentPlayoffStage2026.toLowerCase().includes('финал')) {
+                        matchesHtml += `
+                            <div class="match-row !cursor-default w-full flex flex-col gap-2 opacity-40 border border-zinc-800/50">
+                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full text-zinc-400">
+                                    <div class="flex items-center">
+                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Проигравший 1/2 #1
+                                    </div>
+                                    <div class="text-zinc-600 font-black">-</div>
+                                </div>
+                                <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full text-zinc-400">
+                                    <div class="flex items-center">
+                                        <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2">-</span>
+                                        <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png" class="team-logo">Проигравший 1/2 #2
+                                    </div>
+                                    <div class="text-zinc-600 font-black">-</div>
+                                </div>
+                            </div>`;
+                    }
+                } else {
+                    stageMatches.forEach(m => { matchesHtml += renderPlayoffCardLive(m, m.t1, m.t2, '-', '-'); });
+                }
+            }
+            container.innerHTML = matchesHtml;
+        }
+
+        function setPlayoffStage2026(stage) { 
+            currentPlayoffStage2026 = stage; 
+            render2026Playoffs(); 
+        }
+
+        function renderPlayoffCardLive(m, defaultT1, defaultT2, rank1, rank2) {
+            let s1Val = m ? m.s1 : 0; let s2Val = m ? m.s2 : 0;
+            let p1Val = (m && m.p1 !== null) ? m.p1 : null; let p2Val = (m && m.p2 !== null) ? m.p2 : null;
+            
+            let score1 = m ? `${s1Val}` : '-'; let score2 = m ? `${s2Val}` : '-';
+            if (p1Val !== null && p2Val !== null) {
+                score1 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p1Val}</span>`;
+                score2 += ` <span class="text-[10px] text-white font-normal ml-1 select-none">${p2Val}</span>`;
+            }
+
+            let logo1 = defaultT1 === 'Команда' ? 'standart.png' : `${defaultT1}.png`;
+            let logo2 = defaultT2 === 'Команда' ? 'standart.png' : `${defaultT2}.png`;
+
+            return `
+                <div class="match-row !cursor-default w-full flex flex-col gap-2">
+                    <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
+                            <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0 select-none">${rank1}</span>
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo1}" class="team-logo" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                            <span class="truncate">${defaultT1}</span>
+                        </div>
+                        <div class="text-neon font-black shrink-0 flex items-center">${score1}</div>
+                    </div>
+                    <div class="flex justify-between text-[11px] font-bold uppercase items-center w-full">
+                        <div class="flex items-center min-w-0 flex-1 truncate pr-2">
+                            <span class="inline-block w-5 h-5 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold text-center leading-5 mr-2 shrink-0 select-none">${rank2}</span>
+                            <img src="https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${logo2}" class="team-logo" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                            <span class="truncate">${defaultT2}</span>
+                        </div>
+                        <div class="text-neon font-black shrink-0 flex items-center">${score2}</div>
+                    </div>
+                </div>`;
+        }
+
+        function setGlobalMode(mode) {
+            currentGlobalMode = mode;
+            const view2026 = document.getElementById('view-2026');
+            const viewArch = document.getElementById('view-archive');
+            const tabs2026 = document.getElementById('nav-2026-tabs').parentElement;
+            const ctrlsArch = document.getElementById('archive-controls');
+            
+            const btn2026 = document.getElementById('mode-btn-2026');
+            const btnArch = document.getElementById('mode-btn-archive');
+
+            if(mode === '2026') {
+                view2026.classList.remove('hidden'); viewArch.classList.add('hidden');
+                tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden');
+                
+                btn2026.className = "flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer";
+                btnArch.className = "flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer";
+                
+                render2026Core();
+            } else {
+                viewArch.classList.remove('hidden'); view2026.classList.add('hidden');
+                tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden');
+                
+                btnArch.className = "flex flex-col items-center justify-center w-1/2 py-2 text-neon transition-colors outline-none cursor-pointer";
+                btn2026.className = "flex flex-col items-center justify-center w-1/2 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer";
+                
+                renderArchiveCore(); 
+            }
+        }
+
+        function switch2026Tab(tabName, btn) {
+            active2026Tab = tabName;
+            document.querySelectorAll('#nav-2026-tabs button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render2026Core();
+        }
+
+        function switchArchiveTab(tabName, btn) {
+            activeArchiveTab = tabName;
+            document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            renderArchiveCore();
+        }
+
+        function renderEventsInline(matchId, isPast) {
+            if (!isPast) return `<div class="text-center italic text-zinc-500 text-[11px] py-1.5 font-medium">Матч еще не сыгран</div>`;
+
+            const events = db.goals2026.filter(e => e.match_id == matchId);
+            if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Голы не зафиксированы</div>`;
+            
+            let s1Running = 0;
+            let s2Running = 0;
+            const matchObj = db.matches2026.find(m => m.id == matchId);
+            if(!matchObj) return '';
+
+            return events.map(e => {
+                if(e.team.trim().toUpperCase() === matchObj.t1.trim().toUpperCase()) {
+                    s1Running++;
+                } else {
+                    s2Running++;
+                }
+                return `
+                <div class="flex items-center gap-2 text-[11px] w-full text-left py-0.5">
+                    <span class="text-zinc-500 font-bold shrink-0">${e.minute}'</span>
+                    <span class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-neon font-black text-[10px] tracking-tighter border border-zinc-700/30 shrink-0">${s1Running}-${s2Running}</span>
+                    <span class="font-medium text-zinc-300 truncate">${shortenPlayerName(e.player)}${e.assistant ? ` (${shortenPlayerName(e.assistant)})` : ''}</span>
+                </div>`;
+            }).join('');
+        }
+
+        // Выпадающий блок деталей матча
+        function toggleDetails(containerId) {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            
+            if (el.classList.contains('open')) {
+                el.classList.remove('open');
+            } else {
+                document.querySelectorAll('.details-container.open').forEach(openEl => {
+                    openEl.classList.remove('open');
+                });
+                el.classList.add('open');
+            }
         }
 
         init();
-
-        const slider = document.getElementById('playoff-stages-nav');
-        let isDown = false; let startX; let scrollLeft;
-        slider.addEventListener('mousedown', (e) => { isDown = true; slider.classList.add('drag-active'); startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
-        slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('drag-active'); });
-        slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('drag-active'); });
-        slider.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
     </script>
 </body>
 </html>
