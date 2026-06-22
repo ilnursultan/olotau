@@ -1,6 +1,6 @@
 // Основной скрипт сайта
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwmS-KiyLx6P1KkccIdWBIQ5pbEJg_YsSl_dRdU2Js2xBSkEuVENSVFBBkjt977lCU/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6mozWlrzpn5FPKbumhi-KRjpYeCkQRsGIHAbHK9LETdIUkA7whdEabqZmyK530FE/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
@@ -113,7 +113,10 @@ function updateStatsTeamsList() {
     }
     const sortedTeams = [...allTeams].sort(); const teamSelect = document.getElementById('stats-team');
     if (sortedTeams.length > 0) {
-        teamSelect.innerHTML = sortedTeams.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
+teamSelect.innerHTML = sortedTeams.map(t => {
+    let isKutuevo = t.toUpperCase().includes('КУТУЕВО');
+    return `<option value="${t}" ${isKutuevo ? 'selected' : ''}>${t.toUpperCase()}</option>`;
+}).join('');
         document.getElementById('stats-content').classList.remove('hidden'); renderTeamStatistics();
     } else {
         teamSelect.innerHTML = '<option value="">Нет команд</option>'; document.getElementById('stats-content').classList.add('hidden');
@@ -152,8 +155,11 @@ function renderTeamStatistics() {
     let bestStagesMap = {};
 
 // ... внутри функции renderTeamStatistics ...
-    function processMatch(m, yearStr) {
-        let t1Norm = normalizeTeamName(m.t1); let t2Norm = normalizeTeamName(m.t2);
+ function processMatch(m, yearStr) {
+    // ЕСЛИ МАТЧ НЕ СЫГРАН, ПРЕРЫВАЕМ ВЫЧИСЛЕНИЕ И НЕ СЧИТАЕМ УЧАСТИЕ И НИЧЬЮ
+    if (yearStr === '2026' && m.status !== 'past') return; 
+    
+    let t1Norm = normalizeTeamName(m.t1); let t2Norm = normalizeTeamName(m.t2);
         if (t1Norm !== team && t2Norm !== team) return;
         if (!t1Norm || t1Norm === '-' || t1Norm === '' || !t2Norm || t2Norm === '-' || t2Norm === '') return;
         participations.add(yearStr); if (yearStr !== '2026') { activeArchiveYears.add(yearStr); } games++;
@@ -507,8 +513,8 @@ function render2026Core() {
 
 function getScoreDisplay(m) {
     if (m.status !== 'past' || m.s1 === null || m.s2 === null) return { s1: '-', s2: '-' };
-    let pen1Str = (m.p1 !== null) ? ` (${m.p1})` : '';
-    let pen2Str = (m.p2 !== null) ? ` (${m.p2})` : '';
+let pen1Str = (m.p1 !== null) ? ` <span class="text-white text-[9px] font-normal ml-1">${m.p1}</span>` : '';
+let pen2Str = (m.p2 !== null) ? ` <span class="text-white text-[9px] font-normal ml-1">${m.p2}</span>` : '';
     return { s1: m.s1 + pen1Str, s2: m.s2 + pen2Str };
 }
 
@@ -546,23 +552,44 @@ function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2) {
     let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
     let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
     let isPast = m && m.status === 'past';
+let medal1 = "";
+    let medal2 = "";
+    if (isPast && m && m.s1 !== null && m.s2 !== null) {
+        if (m.id === '601') {
+            if (m.s1 > m.s2 || (m.s1 === m.s2 && m.p1 > m.p2)) { medal1 = " 🥇"; medal2 = " 🥈"; }
+            else { medal1 = " 🥈"; medal2 = " 🥇"; }
+        } else if (m.id === '501') {
+            if (m.s1 > m.s2 || (m.s1 === m.s2 && m.p1 > m.p2)) { medal1 = " 🥉"; }
+            else { medal2 = " 🥉"; }
+        }
+    }
     
     let s1 = (isPast && m.s1 !== null) ? m.s1 : '-';
     let s2 = (isPast && m.s2 !== null) ? m.s2 : '-';
-    let p1 = (isPast && m.p1 !== null) ? `<span class="text-white text-[9px] ml-1.5">${m.p1}</span>` : '';
-    let p2 = (isPast && m.p2 !== null) ? `<span class="text-white text-[9px] ml-1.5">${m.p2}</span>` : '';
+    
+    // Вывод пенальти белым цветом, шрифтом меньше и без скобок (как в архиве)
+    let p1 = (isPast && m.p1 !== null) ? `<span class="text-white text-[10px] font-normal ml-1.5">${m.p1}</span>` : '';
+    let p2 = (isPast && m.p2 !== null) ? `<span class="text-white text-[10px] font-normal ml-1.5">${m.p2}</span>` : '';
 
     let gridBadge1 = gridPos1 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos1}</span>` : '';
     let gridBadge2 = gridPos2 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos2}</span>` : '';
-
-    return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden transition-all hover:border-zinc-800/80">
+// Определяем премиальное свечение для главных матчей сезона 2026
+    let inlineStyle = "";
+    if (m && m.id === '601') {
+        // Финал — золотое свечение
+        inlineStyle = `style="border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(255, 215, 0, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
+    } else if (m && m.id === '501') {
+        // Матч за 3-е место — бронзовое свечение
+        inlineStyle = `style="border-color: rgba(205, 127, 50, 0.35); box-shadow: 0 0 20px rgba(205, 127, 50, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(205, 127, 50, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
+    }
+    return `<div ${inlineStyle} class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden transition-all hover:border-zinc-800/80">
         <div class="flex-1 space-y-2 min-w-0 pr-2 z-10">
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-black text-white uppercase">${gridBadge1}<img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t1Name)}</span></div>
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-black text-white uppercase">${gridBadge2}<img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t2Name)}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">${gridBadge1}<img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t1Name)}${medal1}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">${gridBadge2}<img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t2Name)}${medal2}</span></div>
         </div>
-        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-[11px] sm:text-xs">
-            <div class="${isPast && m.s1 > m.s2 ? 'text-neon' : (isPast ? 'text-zinc-300' : 'text-zinc-600')} flex items-center">${s1}${p1}</div>
-            <div class="${isPast && m.s2 > m.s1 ? 'text-neon' : (isPast ? 'text-zinc-300' : 'text-zinc-600')} flex items-center">${s2}${p2}</div>
+        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm text-neon">
+            <div class="flex items-center">${s1}${p1}</div>
+            <div class="flex items-center">${s2}${p2}</div>
         </div>
     </div>`;
 }
@@ -578,14 +605,36 @@ function renderPlayoffCard(m, t1, t2) {
     let p1 = m.p1 !== null ? `<span class="text-white text-[9px] ml-1.5">${m.p1}</span>` : '';
     let p2 = m.p2 !== null ? `<span class="text-white text-[9px] ml-1.5">${m.p2}</span>` : '';
 
-    return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden">
+    let isPast = m.status === 'past';
+    let inlineStyle = "";
+    let medal1 = "";
+    let medal2 = "";
+    
+    let stageLower = (m.stage || "").toLowerCase();
+
+    // Свечение и расчет медалей для Архива
+    if (stageLower.includes('финал') && !stageLower.includes('3')) {
+        inlineStyle = `style="border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(255, 215, 0, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
+        if (isPast) {
+            if (m.s1 > m.s2 || (m.s1 === m.s2 && m.p1 > m.p2)) { medal1 = " 🥇"; medal2 = " 🥈"; }
+            else { medal1 = " 🥈"; medal2 = " 🥇"; }
+        }
+    } else if (stageLower.includes('3-е место') || stageLower.includes('3 место')) {
+        inlineStyle = `style="border-color: rgba(205, 127, 50, 0.35); box-shadow: 0 0 20px rgba(205, 127, 50, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(205, 127, 50, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
+        if (isPast) {
+            if (m.s1 > m.s2 || (m.s1 === m.s2 && m.p1 > m.p2)) { medal1 = " 🥉"; }
+            else { medal2 = " 🥉"; }
+        }
+    }
+
+    return `<div ${inlineStyle} class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden">
         <div class="flex-1 space-y-2 min-w-0 pr-2 z-10">
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}</span></div>
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}${medal1}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}${medal2}</span></div>
         </div>
-        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-[11px] sm:text-xs">
-            <div class="text-neon flex items-center">${s1}${p1}</div>
-            <div class="text-neon flex items-center">${s2}${p2}</div>
+        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-[11px] sm:text-xs text-neon">
+            <div class="flex items-center">${s1}${p1}</div>
+            <div class="flex items-center">${s2}${p2}</div>
         </div>
     </div>`;
 }

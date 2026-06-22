@@ -1,6 +1,6 @@
 // Логика телефонной админки
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwmS-KiyLx6P1KkccIdWBIQ5pbEJg_YsSl_dRdU2Js2xBSkEuVENSVFBBkjt977lCU/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6mozWlrzpn5FPKbumhi-KRjpYeCkQRsGIHAbHK9LETdIUkA7whdEabqZmyK530FE/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], loats: {} };
 let activeAdminTab = 'group';
@@ -200,13 +200,42 @@ async function triggerBuildGrid() {
     if (!confirm("Сгенерировать сетку 1/16 плей-офф на базе Общего зачета?")) return;
     let standings = getStandingsArray().map(x => x.name);
     const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
-    let gridMatches = pairs.map((p, idx) => ({ id: (101 + idx), t1: standings[p[0] - 1] || "---", t2: standings[p[1] - 1] || "---" }));
+    let gridMatches = pairs.map((p, idx) => ({ id: (101 + idx), team1: standings[p[0] - 1] || "---", team2: standings[p[1] - 1] || "---" }));
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({action: 'buildPlayoff', grid: gridMatches}) }).then(r => r.json());
         if (res.status === 'success') { alert("Сетка построена!"); location.reload(); }
     } catch(e) { alert("Ошибка."); }
 }
-
+function getStandingsArray() {
+    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
+    let ranksMap = {};
+    groups.forEach(g => {
+        calculateGroupStats(groupMatches.filter(m => m.group === g), g).forEach((tStats, rankIdx) => {
+            let currentRank = rankIdx + 1; 
+            if (!ranksMap[currentRank]) ranksMap[currentRank] = []; 
+            ranksMap[currentRank].push(tStats);
+        });
+    });
+    let finalStandings = [];
+    Object.keys(ranksMap).sort((a,b) => a - b).forEach(rank => {
+        let layer = ranksMap[rank];
+        layer.sort((a, b) => {
+            if (b.pts !== a.pts) return b.pts - a.pts;
+            if ((b.gf - b.ga) !== (a.gf - a.ga)) return (b.gf - b.ga) - (a.gf - a.ga);
+            if (b.gf !== a.gf) return b.gf - a.gf;
+            if (db.loats && db.loats['overall']) {
+                let order = db.loats['overall'].map(x => x.toUpperCase()); 
+                let idxA = order.indexOf(a.name.toUpperCase()); 
+                let idxB = order.indexOf(b.name.toUpperCase());
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            }
+            return 0;
+        });
+        finalStandings = finalStandings.concat(layer);
+    });
+    return finalStandings;
+}
 async function triggerClearAllData() {
     if (!confirm("Очистить всю базу результатов?")) return;
     try {
@@ -215,4 +244,5 @@ async function triggerClearAllData() {
     } catch(e) {}
 }
 
+// Запуск инициализации админки
 initAdmin();

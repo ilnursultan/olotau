@@ -77,27 +77,19 @@ function mapServerData(data) {
         }
     });
 
-db.archive = (data.archive || []).map(m => {
-        let stageStr = m.stage ? m.stage.toString().trim() : "";
-        let groupStr = m.group ? m.group.toString().trim() : "";
-        if (!groupStr && stageStr.toLowerCase().includes('группа')) {
-            groupStr = stageStr;
-            stageStr = 'Групповой этап';
-        }
-        return {
-            year: m.year ? m.year.toString() : "2025", 
-            tournament: m.tournament || "Мужчины", 
-            stage: stageStr, 
-            group: groupStr, 
-            t1: normalizeTeamName(m.team1), 
-            t2: normalizeTeamName(m.team2),
-            s1: m.score1 !== "" && m.score1 !== undefined ? parseInt(m.score1) : null, 
-            s2: m.score2 !== "" && m.score2 !== undefined ? parseInt(m.score2) : null,
-            p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
-            p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null, 
-            status: 'past'
-        };
-    });
+db.archive = (data.archive || []).map(m => ({
+        year: m.year ? m.year.toString() : "2025", 
+        tournament: m.tournament || "Мужчины", 
+        stage: m.stage ? m.stage.toString().trim() : "", 
+        group: m.group ? m.group.toString().trim() : "", // Добавили чтение группы
+        t1: normalizeTeamName(m.team1), 
+        t2: normalizeTeamName(m.team2),
+        s1: m.score1 !== "" && m.score1 !== undefined ? parseInt(m.score1) : 0, 
+        s2: m.score2 !== "" && m.score2 !== undefined ? parseInt(m.score2) : 0,
+        p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
+        p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null, 
+        status: 'past'
+    }));
 
     db.bestPlayers = (data.bestPlayers || []).map(b => ({
         year: b.year ? b.year.toString() : "", 
