@@ -440,4 +440,117 @@ function setGlobalMode(mode) {
     }
 }
 
+// ==================== ВОССТАНОВЛЕННЫЕ ФУНКЦИИ И ВЫВОД ====================
+
+function switch2026Tab(tab, btn) {
+    active2026Tab = tab;
+    document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    const sections = ['tables', 'schedule', 'standings', 'playoffs', 'scorers', 'assistants'];
+    sections.forEach(t => {
+        const el = document.getElementById('sub-2026-' + t);
+        if (el) el.classList.add('hidden');
+    });
+    
+    const activeEl = document.getElementById('sub-2026-' + tab);
+    if (activeEl) activeEl.classList.remove('hidden');
+    
+    render2026Core();
+}
+
+function switchArchiveTab(tab, btn) {
+    activeArchiveTab = tab;
+    document.querySelectorAll('#archive-tabs-nav .tab-btn-top').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderArchiveCore();
+}
+
+function render2026Core() {
+    if (active2026Tab === 'tables') render2026Tables();
+    if (active2026Tab === 'schedule') render2026Schedule();
+    if (active2026Tab === 'standings') render2026OverallStandings();
+    if (active2026Tab === 'playoffs') render2026Playoffs();
+    if (active2026Tab === 'scorers') render2026StatList('scorers');
+    if (active2026Tab === 'assistants') render2026StatList('assistants');
+}
+
+function getScoreDisplay(m) {
+    if (m.status !== 'past' || m.s1 === null || m.s2 === null) return { s1: '-', s2: '-' };
+    let pen1Str = (m.p1 !== null) ? ` (${m.p1})` : '';
+    let pen2Str = (m.p2 !== null) ? ` (${m.p2})` : '';
+    return { s1: m.s1 + pen1Str, s2: m.s2 + pen2Str };
+}
+
+function renderEventsInline(matchId, isPast) {
+    if (!isPast) return '<div class="text-center italic py-1">Матч еще не сыгран</div>';
+    const events = db.goals2026.filter(g => g.match_id == matchId);
+    if (events.length === 0) return '<div class="text-center italic py-1">Нет данных о голах</div>';
+    return events.map(e => `<div class="flex items-center gap-1.5"><span class="text-neon">⚽</span> <span class="text-white font-bold">${e.player}</span> ${e.assistant ? `<span class="text-zinc-500 text-[9px]">(Асс: ${e.assistant})</span>` : ''} <span class="text-zinc-600 text-[9px] ml-auto">${e.minute}'</span></div>`).join('');
+}
+
+function toggleDetails(id, el) {
+    const det = document.getElementById(id);
+    if(det) det.classList.toggle('open');
+    if(el) el.classList.toggle('open');
+}
+
+function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2) {
+    let t1Name = (m && m.t1 && m.t1 !== '---') ? m.t1 : t1Fallback;
+    let t2Name = (m && m.t2 && m.t2 !== '---') ? m.t2 : t2Fallback;
+    let isMock1 = t1Name.includes('ПАРА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
+    let isMock2 = t2Name.includes('ПАРА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
+    let isPast = m && m.status === 'past';
+    let scores = m ? getScoreDisplay(m) : { s1: '-', s2: '-' };
+
+    let gridBadge1 = gridPos1 !== '-' ? `<span class="bg-zinc-800 text-zinc-400 text-[8px] px-1 rounded mr-1">${gridPos1}</span>` : '';
+    let gridBadge2 = gridPos2 !== '-' ? `<span class="bg-zinc-800 text-zinc-400 text-[8px] px-1 rounded mr-1">${gridPos2}</span>` : '';
+
+    return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden transition-all hover:border-zinc-800/80">
+        <div class="flex-1 space-y-1.5 min-w-0 pr-2 z-10">
+            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">${gridBadge1}<span class="truncate ${isMock1 ? 'text-zinc-600 font-medium' : ''}">${smartTeamName(t1Name)}</span></div>
+            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">${gridBadge2}<span class="truncate ${isMock2 ? 'text-zinc-600 font-medium' : ''}">${smartTeamName(t2Name)}</span></div>
+        </div>
+        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm">
+            <div class="${isPast && m.s1 > m.s2 ? 'text-neon' : (isPast ? 'text-zinc-500' : 'text-zinc-600')}">${scores.s1}</div>
+            <div class="${isPast && m.s2 > m.s1 ? 'text-neon' : (isPast ? 'text-zinc-500' : 'text-zinc-600')}">${scores.s2}</div>
+        </div>
+    </div>`;
+}
+
+function setPlayoffStageArchive(stage) {
+    currentPlayoffStageArchive = stage;
+    renderArchiveCore();
+}
+
+function renderPlayoffCard(m, t1, t2) {
+    let scores = getScoreDisplay(m);
+    return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden">
+        <div class="flex-1 space-y-1.5 min-w-0 pr-2 z-10">
+            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}</span></div>
+            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}</span></div>
+        </div>
+        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm">
+            <div class="${m.s1 > m.s2 ? 'text-neon' : 'text-zinc-500'}">${scores.s1}</div>
+            <div class="${m.s2 > m.s1 ? 'text-neon' : 'text-zinc-500'}">${scores.s2}</div>
+        </div>
+    </div>`;
+}
+
+function loadFilteredBestPlayers() {
+    const bContainer = document.getElementById('best-players-list');
+    if(!bContainer) return;
+    let best = db.bestPlayers.filter(b => b.year === archiveYear && b.sex.toLowerCase() === archiveTournament.toLowerCase());
+    if(best.length === 0) { bContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет данных о лучших игроках</div>`; return; }
+    bContainer.innerHTML = best.map(b => `
+        <div class="bg-zinc-900/30 border border-zinc-800/60 rounded-xl p-3 flex items-center justify-between mb-2 hover:bg-zinc-900/60 transition-colors">
+            <div class="flex flex-col gap-0.5">
+                <span class="text-[9px] font-black uppercase text-neon tracking-wider">${b.nomination}</span>
+                <span class="text-white font-bold text-xs uppercase">${b.name}</span>
+                <span class="text-zinc-500 text-[10px] font-medium uppercase">${b.team}</span>
+            </div>
+            <img src="${getGitHubLogoUrl(b.team)}" class="w-10 h-10 object-contain opacity-80">
+        </div>
+    `).join('');
+}
 init();

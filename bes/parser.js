@@ -44,27 +44,31 @@ function parseBestPlayersCSV(text) {}
 function parseLoatsCSV(text) {}
 
 function mapServerData(data) {
-    db.matches2026 = (data.matches2026 || []).map(m => ({
-        id: m.id ? m.id.toString() : "", 
-        stage: m.stage ? m.stage.toString() : "", 
-        group: m.group ? m.group.toString() : "", 
-        t1: normalizeTeamName(m.team1), 
-        t2: normalizeTeamName(m.team2),
-        s1: m.score1 !== "" && m.score1 !== "-" && m.score1 !== undefined ? parseInt(m.score1) : null,
-        s2: m.score2 !== "" && m.score2 !== "-" && m.score2 !== undefined ? parseInt(m.score2) : null,
-        p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
-        p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null,
-        time: m.time || "00:00", date: m.date || "", field: m.field || "1", 
-        status: m.status ? m.status.toLowerCase().trim() : 'future'
-    }));
+    db.matches2026 = (data.matches2026 || []).map(m => {
+        let stageStr = m.stage ? m.stage.toString().trim() : "";
+        let groupStr = m.group ? m.group.toString().trim() : "";
+        
+        // Исправление: если отдельного столбца group нет, ищем слово "Группа" в столбце stage
+        if (!groupStr && stageStr.toLowerCase().includes('группа')) {
+            groupStr = stageStr;
+        }
 
-    db.goals2026 = (data.goals2026 || []).map(g => ({
-        match_id: g.match_id ? g.match_id.toString() : "", 
-        team: normalizeTeamName(g.team), 
-        player: g.player || "", 
-        assistant: g.assistant || "", 
-        minute: parseInt(g.minute || 1)
-    }));
+        return {
+            id: m.id ? m.id.toString() : "", 
+            stage: stageStr, 
+            group: groupStr, 
+            t1: normalizeTeamName(m.team1), 
+            t2: normalizeTeamName(m.team2),
+            s1: m.score1 !== "" && m.score1 !== "-" && m.score1 !== undefined ? parseInt(m.score1) : null,
+            s2: m.score2 !== "" && m.score2 !== "-" && m.score2 !== undefined ? parseInt(m.score2) : null,
+            p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
+            p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null,
+            time: m.time || "00:00", date: m.date || "", field: m.field || "1", 
+            status: m.status ? m.status.toLowerCase().trim() : 'future'
+        };
+    });
+
+    // ... остальной код в mapServerData остается без изменений
 
     db.players2026 = (data.players2026 || []).map(p => ({ team: normalizeTeamName(p.team), name: p.player_name || "" }));
     db.groups2026 = (data.groups2026 || []).map(g => ({ group: g.group || "", team: normalizeTeamName(g.team) }));
