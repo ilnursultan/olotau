@@ -127,9 +127,13 @@ function showRosterModal(teamName) {
     if (roster.length === 0) {
         listEl.innerHTML = `<div class="text-center italic text-zinc-600 py-4">Состав команды не внесен</div>`;
     } else {
-        roster.forEach((p, idx) => {
-            listEl.innerHTML += `<div class="flex items-center gap-3 py-1.5 border-b border-white/5 last:border-0"><span class="text-neon font-black text-[10px] w-4">${idx+1}.</span><span class="text-zinc-200 font-bold uppercase tracking-wide text-xs">${p.name}</span></div>`;
-        });
+roster.forEach((p, idx) => {
+    listEl.innerHTML += `
+        <div class="flex items-center gap-3 p-2.5 bg-zinc-900/50 border border-zinc-800/80 rounded-xl mb-1.5 hover:bg-zinc-800/50 transition-colors">
+            <div class="w-6 h-6 rounded-full bg-neon/10 border border-neon/20 flex items-center justify-center text-neon font-black text-[10px] shrink-0">${idx+1}</div>
+            <span class="text-zinc-100 font-bold uppercase tracking-wide text-xs">${p.name}</span>
+        </div>`;
+});
     }
     document.getElementById('roster-modal').classList.remove('hidden');
 }
@@ -402,11 +406,11 @@ function renderArchiveCore() {
         gContainer.classList.remove('hidden'); gContainer.innerHTML = ''; rInfo.classList.remove('hidden');
         rInfo.innerHTML = `<h4 class="text-[10px] font-black text-neon uppercase tracking-wider mb-2 select-none">Расшифровка зон таблицы</h4><div class="flex flex-wrap gap-4 items-center mb-3 text-[10px] font-bold uppercase tracking-tight"><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#00E676] rounded-sm shadow-[0_0_8px_rgba(0,230,118,0.4)]"></span> Плей-офф</div><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#EAB308] rounded-sm shadow-[0_0_8px_rgba(234,179,8,0.4)]"></span> Плей-ин</div><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#EF4444] rounded-sm shadow-[0_0_8px_rgba(239,68,68,0.4)]"></span> Вылет</div></div><div class="text-[9px] text-zinc-500 font-semibold leading-relaxed border-t border-zinc-800/60 pt-2">ПРАВИЛА ПРИ РАВЕНСТВЕ ОЧКОВ: 1. ЛИЧНЫЕ ВСТРЕЧИ; 2. РАЗНИЦА МЯЧЕЙ; 3. ЗАБИТЫЕ ГОЛЫ.</div>`;
         if (isSupercup) { gContainer.innerHTML = `<div class="text-zinc-500 text-xs text-center py-12 italic">Групповой этап не проводился</div>`; return; }
-        const groupM = mArch.filter(m => m.stage.toLowerCase().includes('группа')); const groups = [...new Set(groupM.map(m => m.stage))].sort();
+        const groupM = mArch.filter(m => m.stage === 'Групповой этап');const groups = [...new Set(groupM.map(m => m.stage))].sort();
         if(groups.length === 0) { gContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Групповой этап не найден.</div>`; return; }
         const playoffTeams = new Set(mArch.filter(m => !m.stage.toLowerCase().includes('группа')).flatMap(m => [m.t1, m.t2]).filter(Boolean));
         groups.forEach(g => {
-            const sorted = calculateGroupStats(groupM.filter(m => m.stage === g));
+            const sorted = calculateGroupStats(groupM.filter(m => m.group === g), g);
             let html = `<div class="group-card"><table><thead><tr><th>${g}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
             sorted.forEach((t, idx) => {
                 let bar = playoffTeams.has(t.name) ? 'green-bar' : 'red-bar'; if (archiveYear === '2023') bar = idx === 0 ? 'green-bar' : (idx === 1 || idx === 2 ? 'lime-bar' : 'red-bar');
@@ -416,7 +420,7 @@ function renderArchiveCore() {
         });
     }
     if(activeArchiveTab === 'playoffs') {
-        pContainer.classList.remove('hidden'); const playM = mArch.filter(m => !m.stage.toLowerCase().includes('группа'));
+        pContainer.classList.remove('hidden'); const playM = mArch.filter(m => m.stage !== 'Групповой этап');
         let stages = [...new Set(playM.map(m => m.stage))].filter(s => s && !s.toLowerCase().includes('3-е место'));
         const order = ['1/32', '1/16', '1/8', '1/4', '1/2', 'Финал']; stages.sort((a, b) => order.findIndex(o => a.toLowerCase().includes(o.toLowerCase())) - order.findIndex(o => b.toLowerCase().includes(o.toLowerCase())));
         if(stages.length === 0) { document.getElementById('archive-playoff-matches').innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Плей-офф отсутствует</div>`; return; }
@@ -571,8 +575,8 @@ function renderPlayoffCard(m, t1, t2) {
 
     return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden">
         <div class="flex-1 space-y-2 min-w-0 pr-2 z-10">
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-black text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}</span></div>
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-black text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}</span></div>
         </div>
         <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-[11px] sm:text-xs">
             <div class="text-neon flex items-center">${s1}${p1}</div>
