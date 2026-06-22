@@ -34,6 +34,10 @@
         <div id="main-site-view" class="max-w-5xl mx-auto px-4 pt-6">
             <div id="mode-container" class="hidden flex flex-col gap-4">
                 <div class="relative w-full border-b border-zinc-900 mb-2">
+                    <div id="scroll-indicator-top" class="absolute right-0 -top-5 flex items-center gap-1 text-gray-500 md:hidden pointer-events-none z-10">
+                        <span class="text-[8px] uppercase tracking-widest font-black">Листайте</span>
+                        <svg class="w-3 h-3 animate-slide-right text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
                     <div id="nav-2026-tabs" class="flex overflow-x-auto hide-scrollbar gap-2 pb-3 pt-1 draggable">
                         <button class="tab-btn-top active" onclick="switch2026Tab('tables', this)">Таблицы и результаты</button>
                         <button class="tab-btn-top" onclick="switch2026Tab('schedule', this)">Расписание</button>
