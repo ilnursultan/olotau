@@ -43,8 +43,16 @@ async function init() {
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
         mapServerData(res);
+        
+        // Перехватываем группы с GitHub API
+        try {
+            let ghGroups = await fetch('https://raw.githubusercontent.com/ilnursultan/team-logos/main/groups.json').then(r => r.json());
+            db.groups2026 = ghGroups;
+        } catch(e) { console.log('GitHub fallback', e); }
+
         if (animId) clearInterval(animId); 
-        document.getElementById('loader').style.display = 'none'; document.getElementById('mode-container').classList.remove('hidden');
+        document.getElementById('loader').style.display = 'none'; 
+        document.getElementById('mode-container').classList.remove('hidden');
         setupFiltersAndSelectors(); setupStatsSelectors(); setGlobalMode('2026');
     } catch (err) {
         if (animId) clearInterval(animId); 
