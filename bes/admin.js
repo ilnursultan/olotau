@@ -1,6 +1,6 @@
-// Логика телефонной админки со всеми функциями
+// Логика телефонной админки
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwTGvRqQL3oIShhSwoar47rlrDxujjDTiPWOmuIJCBLiJK4auBymMKByt50uE2_lIgS/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUL_F_2aLAE_LCFgO4-Z25TVwwceSloceTVtksiiE-PjOMO4DdhFggygoFOI5s1nbk/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], loats: {} };
 let activeAdminTab = 'group';
@@ -26,16 +26,16 @@ function switchAdminTab(type) {
 
 function renderAdminPanel() {
     const container = document.getElementById('admin-matches-container'); container.innerHTML = '';
-    const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
+    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
     const anyGroupFuture = groupMatches.some(m => m.status === 'future');
     checkAndRenderAdminLoats(anyGroupFuture);
 
-    let targetMatches = (activeAdminTab === 'group') ? groupMatches : db.matches2026.filter(m => !m.group || !m.group.toLowerCase().includes('группа'));
+    let targetMatches = (activeAdminTab === 'group') ? groupMatches : db.matches2026.filter(m => m.stage !== 'Групповой этап');
     if (targetMatches.length === 0) { container.innerHTML = `<div class="text-center italic text-zinc-600 py-10 text-xs">Матчи отсутствуют</div>`; return; }
 
     targetMatches.forEach(m => {
         let isPast = m.status === 'past';
-        let stageLabel = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
+        let stageLabel = m.stage === 'Групповой этап' ? m.group : m.stage;
         let html = `
             <div id="admin-card-${m.id}" class="bg-zinc-card border border-zinc-800 rounded-3xl p-3 flex flex-col gap-3">
                 <div class="flex justify-between items-center text-[9px] font-black uppercase text-zinc-500 border-b border-zinc-900 pb-1.5">
@@ -129,8 +129,8 @@ function generateGoalRowHtml(matchId, teamName, side, idx, savedEvent) {
 function checkAndRenderAdminLoats(anyGroupFuture) {
     const loatNotif = document.getElementById('admin-loat-notification'); const loatList = document.getElementById('admin-loat-list');
     loatNotif.classList.add('hidden'); loatList.innerHTML = '';
-    const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
-    const groups = [...new Set(groupMatches.map(m => m.group))].sort();
+    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
     groups.forEach(gName => {
         const mInGroup = groupMatches.filter(m => m.group === gName);
         if (mInGroup.length > 0 && mInGroup.every(m => m.status === 'past')) {

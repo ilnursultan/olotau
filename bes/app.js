@@ -1,6 +1,6 @@
-// Основной скрипт сайта с исправленными ссылками
+// Основной скрипт сайта
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwTGvRqQL3oIShhSwoar47rlrDxujjDTiPWOmuIJCBLiJK4auBymMKByt50uE2_lIgS/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUL_F_2aLAE_LCFgO4-Z25TVwwceSloceTVtksiiE-PjOMO4DdhFggygoFOI5s1nbk/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
@@ -43,6 +43,12 @@ async function init() {
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
         mapServerData(res);
+
+        try {
+            let ghGroups = await fetch('https://raw.githubusercontent.com/ilnursultan/team-logos/main/groups.json').then(r => r.json());
+            db.groups2026 = ghGroups;
+        } catch(e) { console.log('GitHub fallback', e); }
+
         if (animId) clearInterval(animId); 
         document.getElementById('loader').style.display = 'none'; document.getElementById('mode-container').classList.remove('hidden');
         setupFiltersAndSelectors(); setupStatsSelectors(); setGlobalMode('2026');
@@ -77,11 +83,6 @@ function updateArchiveYears() {
 function toggleSupercupBanner(tournamentName) {
     const banner = document.getElementById('supercup-banner');
     if(banner) tournamentName?.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
-}
-
-function shortenPlayerName(fullName) {
-    if (!fullName) return ''; let parts = fullName.trim().split(/\s+/);
-    return parts.length >= 2 ? `${parts[0]} ${parts[1].substring(0, 1).toUpperCase()}.` : fullName;
 }
 
 function setupStatsSelectors() {
@@ -158,13 +159,12 @@ function renderTeamStatistics() {
         else if (teamPen !== null && oppPen !== null) { if (teamPen > oppPen) isWin = true; else isLoss = true; }
         if (isWin) w++; else if (isLoss) l++; else d++;
         let currentStage = m.stage || 'Групповой этап';
-        if (m.group && m.group.toLowerCase().includes('группа')) currentStage = 'Групповой этап';
         let label = currentStage.toUpperCase();
         if (currentStage.toLowerCase().includes('финал') && !currentStage.toLowerCase().includes('3-е')) { label = isWin ? '1 МЕСТО 🏆' : '2 МЕСТО 🥈'; } 
         else if (currentStage.toLowerCase().includes('3-е место')) { label = isWin ? '3 МЕСТО 🥉' : '4 МЕСТО'; }
         if(!bestStagesMap[label]) bestStagesMap[label] = [];
         if(!bestStagesMap[label].includes(yearStr)) bestStagesMap[label].push(yearStr);
-        historyMatches.push({ year: yearStr, stage: currentStage.toLowerCase().includes('группа') ? 'Групповой этап' : currentStage, opponent: isT1 ? t2Norm : t1Norm, scoreText: (teamScore !== null ? `${teamScore}:${oppScore}` : '-:-') + (teamPen !== null ? ` (${teamPen}:${oppPen} пен)` : ''), isWin: isWin, isLoss: isLoss });
+        historyMatches.push({ year: yearStr, stage: currentStage, opponent: isT1 ? t2Norm : t1Norm, scoreText: (teamScore !== null ? `${teamScore}:${oppScore}` : '-:-') + (teamPen !== null ? ` (${teamPen}:${oppPen} пен)` : ''), isWin: isWin, isLoss: isLoss });
     }
     db.archive.forEach(m => { if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) processMatch(m, m.year); });
     if (gender === 'Мужчины' || gender === 'Женщины') { db.matches2026.forEach(m => { if (m.status === 'past') processMatch(m, '2026'); }); }
@@ -184,7 +184,6 @@ function renderTeamStatistics() {
     const badgesContainer = document.getElementById('stats-team-badges'); const mainCardEl = document.getElementById('stats-team-card');
     badgesContainer.innerHTML = ''; let badgesHtml = '';
     
-    // ПУНКТ 1: Исправлено отображение Хозяев и Ветеранов на основе корректного текстового мэтчинга стадий
     if (bestStagesMap['1 МЕСТО 🏆']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full text-amber-400 text-[10px] font-black">🥇 <span class="opacity-70 font-bold">х</span>${bestStagesMap['1 МЕСТО 🏆'].length}</div>`; }
     if (bestStagesMap['2 МЕСТО 🥈']) { badgesHtml += `<div class="flex items-center gap-1 bg-slate-400/10 border border-slate-400/30 px-2.5 py-1 rounded-full text-slate-300 text-[10px] font-black">🥈 <span class="opacity-70 font-bold">х</span>${bestStagesMap['2 МЕСТО 🥈'].length}</div>`; }
     if (bestStagesMap['3 МЕСТО 🥉']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-700/10 border border-amber-700/30 px-2.5 py-1 rounded-full text-amber-600 text-[10px] font-black">🥉 <span class="opacity-70 font-bold">х</span>${bestStagesMap['3 МЕСТО 🥉'].length}</div>`; }
@@ -216,8 +215,8 @@ function renderTeamStatistics() {
 
 function render2026Tables() {
     const container = document.getElementById('sub-2026-tables'); container.innerHTML = '';
-    const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
-    const groups = [...new Set(groupMatches.map(m => m.group))].sort();
+    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
     if(groups.length === 0) { container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа 2026 не найдены.</div>`; return; }
     let overallStandings = getStandingsArray(); let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
     groups.forEach(gName => {
@@ -266,20 +265,18 @@ function render2026Schedule() {
     const tFilter = document.getElementById('filter-teams').value; const sFilter = document.getElementById('filter-stages').value; const statusFilter = document.getElementById('filter-status').value;
     let filtered = db.matches2026.filter(m => {
         if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
-        if(sFilter !== 'all') {
-            if(sFilter === 'Групповой этап' && (!m.group || !m.group.toLowerCase().includes('группа'))) return false;
-            if(sFilter === 'Плей-офф' && m.group && m.group.toLowerCase().includes('группа')) return false;
-        }
+        if(sFilter === 'Групповой этап' && m.stage !== 'Групповой этап') return false;
+        if(sFilter === 'Плей-офф' && m.stage === 'Групповой этап') return false;
         if(statusFilter === 'future' && m.status !== 'future') return false;
         if(statusFilter === 'past' && m.status !== 'past') return false;
         return true;
     });
     if(filtered.length === 0) { container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи не найдены</div>`; return; }
     container.innerHTML = filtered.map((m) => {
-        let stageLabel = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
+        let stageLabel = m.stage === 'Групповой этап' ? m.group : m.stage;
         let isPast = m.status === 'past';
         let t1Name = m.t1; let t2Name = m.t2;
-        if (!m.group && (t1Name === 'КОМАНДА' || t1Name === '---' || !t1Name)) { t1Name = getPlayoffFallbackLabel(m.id, 't1'); t2Name = getPlayoffFallbackLabel(m.id, 't2'); }
+        if (m.stage !== 'Групповой этап' && (t1Name === 'КОМАНДА' || t1Name === '---' || !t1Name)) { t1Name = getPlayoffFallbackLabel(m.id, 't1'); t2Name = getPlayoffFallbackLabel(m.id, 't2'); }
         let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ПАРА') || t1Name.includes('ФИНАЛИСТ');
         let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ПАРА') || t2Name.includes('ФИНАЛИСТ');
         let rightSideContent = isPast ? `<div class="text-right shrink-0 select-none"><div class="text-[9px] font-bold tracking-widest text-zinc-500">СЫГРАН</div><div class="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>` : `<div class="text-right shrink-0 select-none"><div class="text-sm font-black tracking-wide text-white">${m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>`;
@@ -302,8 +299,8 @@ function getPlayoffFallbackLabel(matchId, side) {
 }
 
 function getStandingsArray() {
-    const groupMatches = db.matches2026.filter(m => m.group && m.group.toLowerCase().includes('группа'));
-    const groups = [...new Set(groupMatches.map(m => m.group))].sort();
+    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
     let ranksMap = {};
     groups.forEach(g => {
         calculateGroupStats(groupMatches.filter(m => m.group === g), g).forEach((tStats, rankIdx) => {
@@ -339,7 +336,7 @@ function setPlayoffStage2026(stage) { currentPlayoffStage2026 = stage; render202
 function render2026Playoffs() {
     const nav = document.getElementById('playoff-stages-nav-2026'); const container = document.getElementById('playoff-matches-2026');
     if(!container || !nav) return; container.innerHTML = '';
-    const pMatches = db.matches2026.filter(m => !m.group || !m.group.toLowerCase().includes('группа')); let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
+    const pMatches = db.matches2026.filter(m => m.stage !== 'Групповой этап'); let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
     if(!stages.includes(currentPlayoffStage2026)) currentPlayoffStage2026 = stages[0];
     nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
 
@@ -440,8 +437,7 @@ function setGlobalMode(mode) {
     }
 }
 
-// ==================== ВОССТАНОВЛЕННЫЕ ФУНКЦИИ И ВЫВОД ====================
-
+// Вспомогательные функции вкладок и рендера
 function switch2026Tab(tab, btn) {
     active2026Tab = tab;
     document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
@@ -553,4 +549,5 @@ function loadFilteredBestPlayers() {
         </div>
     `).join('');
 }
+
 init();
