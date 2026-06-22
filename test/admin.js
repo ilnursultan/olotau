@@ -1,6 +1,6 @@
 // Логика телефонной админки со всеми функциями
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUL_F_2aLAE_LCFgO4-Z25TVwwceSloceTVtksiiE-PjOMO4DdhFggygoFOI5s1nbk/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwTGvRqQL3oIShhSwoar47rlrDxujjDTiPWOmuIJCBLiJK4auBymMKByt50uE2_lIgS/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], loats: {} };
 let activeAdminTab = 'group';
