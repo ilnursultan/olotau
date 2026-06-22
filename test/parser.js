@@ -1,4 +1,4 @@
-// Логика вычислений и парсинга данных
+// Вычислительный слой обработки табличных спортивных результатов
 
 function normalizeTeamName(name) {
     if (!name) return '';
@@ -119,7 +119,6 @@ function calculateGroupStats(matches, groupName = "") {
     let teamList = Object.values(stats);
     teamList.sort((a, b) => {
         if (b.pts !== a.pts) return b.pts - a.pts;
-
         let directMatches = matches.filter(m => m.status === 'past' && m.s1 !== null && m.s2 !== null &&
             ((normalizeTeamName(m.t1) === a.name && normalizeTeamName(m.t2) === b.name) ||
              (normalizeTeamName(m.t1) === b.name && normalizeTeamName(m.t2) === a.name)));
@@ -139,9 +138,7 @@ function calculateGroupStats(matches, groupName = "") {
         if (b.gf !== a.gf) return b.gf - a.gf;
 
         if (groupName && db.loats && db.loats[groupName]) {
-            let order = db.loats[groupName];
-            let idxA = order.indexOf(a.name.toUpperCase());
-            let idxB = order.indexOf(b.name.toUpperCase());
+            let order = db.loats[groupName]; let idxA = order.indexOf(a.name.toUpperCase()); let idxB = order.indexOf(b.name.toUpperCase());
             if (idxA !== -1 && idxB !== -1) return idxA - idxB;
         }
         return 0;
