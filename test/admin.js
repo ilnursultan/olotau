@@ -1,11 +1,11 @@
-// Логика управления базой данных админки
+// Логика управления административной панелью организатора
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/ВАШ_ID_СКРИПТА/exec"; // Укажи свой URL!
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxBzGlyyqMKlqNwW3-8LaQMQswAgBBXeehO0rXRS1rWOyI5cTxOJG6ca9XdhV4t05LT/exec";
 
 const ADMIN_URLS = {
     matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
     goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
-    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv',
+    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2Theme559105845&single=true&output=csv',
     loats: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=987261895&single=true&output=csv'
 };
 
@@ -26,7 +26,7 @@ async function initAdmin() {
         document.getElementById('admin-content').classList.remove('hidden');
         renderAdminPanel();
     } catch(e) {
-        document.getElementById('admin-loader').innerText = "Ошибка загрузки таблиц";
+        document.getElementById('admin-loader').innerText = "Ошибка соединения с Google Sheets";
     }
 }
 
@@ -51,7 +51,7 @@ function renderAdminPanel() {
         let isPast = m.status === 'past';
         let stageLabel = m.group && m.group.toLowerCase().includes('группа') ? m.group : m.stage;
 
-        html = `
+        let html = `
             <div id="admin-card-${m.id}" class="bg-zinc-card border border-zinc-800 rounded-3xl p-3 flex flex-col gap-3">
                 <div class="flex justify-between items-center text-[9px] font-black uppercase text-zinc-500 border-b border-zinc-900 pb-1.5">
                     <span>ID: ${m.id} — ${stageLabel}</span>
@@ -141,7 +141,6 @@ function generateGoalRowHtml(matchId, teamName, side, idx, savedEvent) {
     return `<div class="bg-black/20 border border-zinc-900 p-2 rounded-xl flex flex-col gap-1.5 text-left text-[10px]"><select id="goal-p-${side}-${matchId}-${idx}" class="bg-zinc-900 text-white rounded p-1 text-[10px] font-bold outline-none">${pOptions}</select><select id="goal-a-${side}-${matchId}-${idx}" class="bg-zinc-900 text-zinc-500 rounded p-1 text-[10px] font-bold outline-none">${aOptions}</select><select id="goal-m-${side}-${matchId}-${idx}" class="bg-zinc-900 text-neon rounded p-1 text-[10px] font-bold outline-none">${mOptions}</select></div>`;
 }
 
-// Авто-генерация селекторов жребия на базе равных команд в группе
 function checkAndRenderAdminLoats(anyGroupFuture) {
     const loatNotif = document.getElementById('admin-loat-notification'); const loatList = document.getElementById('admin-loat-list');
     loatNotif.classList.add('hidden'); loatList.innerHTML = '';
@@ -150,9 +149,8 @@ function checkAndRenderAdminLoats(anyGroupFuture) {
 
     groups.forEach(gName => {
         const mInGroup = groupMatches.filter(m => m.group === gName);
-        if (mInGroup.every(m => m.status === 'past')) {
-            let sorted = calculateGroupStats(mInGroup, "");
-            let equalTeams = [];
+        if (mInGroup.length > 0 && mInGroup.every(m => m.status === 'past')) {
+            let sorted = calculateGroupStats(mInGroup, ""); let equalTeams = [];
             for(let i=0; i<sorted.length-1; i++) {
                 if (sorted[i].pts === sorted[i+1].pts && (sorted[i].gf - sorted[i].ga) === (sorted[i+1].gf - sorted[i+1].ga) && sorted[i].gf === sorted[i+1].gf) {
                     if(!equalTeams.includes(sorted[i].name)) equalTeams.push(sorted[i].name);
@@ -167,16 +165,15 @@ function checkAndRenderAdminLoats(anyGroupFuture) {
 function renderLoatSelectorMarkup(container, targetName, equalTeams) {
     let saved = (db.loats && db.loats[targetName]) ? db.loats[targetName].join(', ') : 'НЕ ВЫБРАН';
     let options = equalTeams.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
-    
     container.innerHTML += `
-        <div class="bg-black/30 p-3 rounded-xl border border-zinc-800 text-[10px] font-bold">
+        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-[10px] font-bold">
             <div class="text-white uppercase mb-1">Группа: <span class="text-neon">${targetName}</span></div>
             <div class="text-zinc-500 uppercase mb-2 text-[9px]">Фиксация: <span class="text-yellow-500">${saved}</span></div>
             <div class="flex items-center gap-2">
                 <select id="loat-sel-1-${targetName}" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-lg text-white text-[10px]">${options}</select>
                 <span class="text-zinc-500">выше чем</span>
                 <select id="loat-sel-2-${targetName}" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-lg text-white text-[10px]">${options}</select>
-                <button onclick="saveAdminSelectLoat('${targetName}')" class="px-3 py-1.5 bg-yellow-500 text-black uppercase font-black rounded-lg text-[9px] ml-auto">ОК</button>
+                <button onclick="saveAdminSelectLoat('${targetName}')" class="px-3 py-1.5 bg-yellow-500 text-black uppercase font-black rounded-lg text-[9px] ml-auto cursor-pointer">ОК</button>
             </div>
         </div>`;
 }
@@ -186,11 +183,14 @@ async function saveAdminSelectLoat(targetName) {
     let t2 = document.getElementById(`loat-sel-2-${targetName}`).value;
     if(t1 === t2) { alert("Выберите разные команды!"); return; }
     
+    // ПУНКТ 5: Строка склеивается в плоский текстовый формат, исключая сбои парсера в Google Sheets
     let orderVal = `${t1},${t2}`;
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'saveLoat', target: targetName, resolvedOrder: orderVal }) }).then(r => r.json());
-        if (res.status === 'success') { alert("Жребий зафиксирован!"); location.reload(); }
-    } catch(e) { alert("Ошибка соединения"); }
+        if (res.status === 'success') { 
+            alert("Жребий успешно зафиксирован!"); db.loats[targetName] = [t1.toUpperCase(), t2.toUpperCase()]; renderAdminPanel();
+        } else { alert("Ошибка записи жребия в ячейки"); }
+    } catch(e) { alert("Ошибка соединения. Проверьте Apps Script."); }
 }
 
 async function saveAdminMatch(matchId, t1, t2) {
@@ -198,8 +198,7 @@ async function saveAdminMatch(matchId, t1, t2) {
     if (s1 === '-' || s2 === '-') { alert("Выберите счет!"); return; }
     if (s1 === '10+') s1 = parseInt(document.getElementById(`inp-score1-${matchId}`).value) || 0;
     if (s2 === '10+') s2 = parseInt(document.getElementById(`inp-score2-${matchId}`).value) || 0;
-    let pen1 = null, pen2 = null;
-    let pBlock = document.getElementById(`playoff-penalties-${matchId}`);
+    let pen1 = null, pen2 = null; let pBlock = document.getElementById(`playoff-penalties-${matchId}`);
     if (pBlock && !pBlock.classList.contains('hidden')) {
         let p1Val = document.getElementById(`pen1-${matchId}`).value; let p2Val = document.getElementById(`pen2-${matchId}`).value;
         if (p1Val === '' || p2Val === '') { alert("Введите серию пенальти!"); return; }
