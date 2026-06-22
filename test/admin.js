@@ -1,13 +1,6 @@
 // Логика телефонной админки со всеми функциями
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw3ZFpu3v52mQswK2Ztg_MWk2mP6lsDLElZ8ZmHDzugUNdJlosgdBVvO8YVP5k2j6H8/exec";
-
-const ADMIN_URLS = {
-    matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
-    goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
-    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2Theme559105845&single=true&output=csv',
-    loats: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=987261895&single=true&output=csv'
-};
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUL_F_2aLAE_LCFgO4-Z25TVwwceSloceTVtksiiE-PjOMO4DdhFggygoFOI5s1nbk/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], loats: {} };
 let activeAdminTab = 'group';
