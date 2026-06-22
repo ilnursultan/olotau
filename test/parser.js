@@ -1,4 +1,4 @@
-// Настройки логики и вычислений
+// Логика вычислений и парсинга данных
 
 function normalizeTeamName(name) {
     if (!name) return '';
@@ -22,6 +22,7 @@ function smartTeamName(name) {
 
 function parseGeoCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+    db.geo = {};
     for(let i = 1; i < lines.length; i++) {
         const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
         if (p[0]) {
@@ -29,6 +30,21 @@ function parseGeoCSV(text) {
             db.geo[normKey] = { district: p[1] || '', subject: p[2] || '', distance: p[3] || '' };
         }
     }
+}
+
+function getTeamGeoHtml(teamName, isMen = true) {
+    const key = normalizeTeamName(teamName).toUpperCase();
+    if (db.geo && db.geo[key]) {
+        const item = db.geo[key]; let dist = item.district;
+        if (isMen && dist && !dist.toLowerCase().includes('район') && !dist.toLowerCase().includes('р-н')) { dist += ' район'; }
+        let baseGeo = `<span class="font-extrabold text-white">${dist}${dist && item.subject ? ', ' : ''}${item.subject}</span>`.toUpperCase();
+        let distanceHtml = '';
+        if (item.distance && parseInt(item.distance) > 0 && !key.includes('КУТУЕВО')) {
+            distanceHtml = `<div class="text-zinc-500 font-light text-[10px] tracking-wider mt-0.5">ДО КУТУЕВО ${item.distance} КМ</div>`;
+        }
+        return `<span>${baseGeo}</span>${distanceHtml}`;
+    }
+    return '';
 }
 
 function parseBestPlayersCSV(text) {
@@ -70,7 +86,7 @@ function parseArchiveCSV(text) {
     for(let i = 1; i < lines.length; i++) {
         const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
         if (!p || p.length < 5 || !p[3] || !p[4]) continue;
-        result.push({ year: p[0] || '2025', tournament: p[1] || 'Мужчины', stage: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(p[4]), s1: p[5] !== "" ? parseInt(p[5]) : 0, s2: p[6] !== "" ? parseInt(p[6]) : 0, p1: p[7] && p[7] !== "" ? parseInt(p[7]) : null, p2: p[8] && p[8] !== "" ? parseInt(p[8]) : null, status: 'past' });
+        result.push({ year: p[0] || '2025', tournament: p[1] || 'Мужчины', stage: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(p[4]), s1: p[5] !== "" && p[5] !== "-" ? parseInt(p[5]) : 0, s2: p[6] !== "" && p[6] !== "-" ? parseInt(p[6]) : 0, p1: p[7] && p[7] !== "" ? parseInt(p[7]) : null, p2: p[8] && p[8] !== "" ? parseInt(p[8]) : null, status: 'past' });
     }
     return result;
 }
@@ -83,7 +99,6 @@ function parseGroups2026CSV(text) {
     }
 }
 
-// Умный расчет круговой таблицы с учетом личных встреч и ручного жребия
 function calculateGroupStats(matches, groupName = "") {
     let stats = {};
     matches.forEach(m => {
@@ -96,18 +111,15 @@ function calculateGroupStats(matches, groupName = "") {
             stats[t1Norm].gf += m.s1; stats[t1Norm].ga += m.s2;
             stats[t2Norm].gf += m.s2; stats[t2Norm].ga += m.s1;
             if (m.s1 > m.s2) { stats[t1Norm].w++; stats[t1Norm].pts += 3; stats[t2Norm].l++; }
-            else if (m.s1 < m.s2) { stats[t2Norm].w++; stats[t2Norm].pts += 3; stats[t2Norm].l++; }
+            else if (m.s1 < m.s2) { stats[t2Norm].w++; stats[t2Norm].pts += 3; stats[t1Norm].l++; }
             else { stats[t1Norm].d++; stats[t1Norm].pts += 1; stats[t2Norm].d++; stats[t2Norm].pts += 1; }
         }
     });
 
     let teamList = Object.values(stats);
-
-    // Сортировка по регламенту турнира
     teamList.sort((a, b) => {
         if (b.pts !== a.pts) return b.pts - a.pts;
 
-        // Поиск личных встреч при равных очках
         let directMatches = matches.filter(m => m.status === 'past' && m.s1 !== null && m.s2 !== null &&
             ((normalizeTeamName(m.t1) === a.name && normalizeTeamName(m.t2) === b.name) ||
              (normalizeTeamName(m.t1) === b.name && normalizeTeamName(m.t2) === a.name)));
@@ -126,7 +138,6 @@ function calculateGroupStats(matches, groupName = "") {
         if ((b.gf - b.ga) !== (a.gf - a.ga)) return (b.gf - b.ga) - (a.gf - a.ga);
         if (b.gf !== a.gf) return b.gf - a.gf;
 
-        // Принудительный жребий из листа loats
         if (groupName && db.loats && db.loats[groupName]) {
             let order = db.loats[groupName];
             let idxA = order.indexOf(a.name.toUpperCase());
@@ -135,6 +146,5 @@ function calculateGroupStats(matches, groupName = "") {
         }
         return 0;
     });
-
     return teamList;
 }
