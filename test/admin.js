@@ -1,11 +1,11 @@
-// Логика выделенной панели управления организатора
+// Логика телефонной админки с исправленными ссылками
 
 const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxBzGlyyqMKlqNwW3-8LaQMQswAgBBXeehO0rXRS1rWOyI5cTxOJG6ca9XdhV4t05LT/exec";
 
 const ADMIN_URLS = {
     matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
     goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
-    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv',
+    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2Theme559105845&single=true&output=csv',
     loats: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=987261895&single=true&output=csv'
 };
 
