@@ -1,4 +1,4 @@
-// Основной скрипт сайта с исправленными ссылками
+// Логика фронтенда сайта с исправленными ссылками
 
 const URLS_2026 = {
     archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
@@ -233,8 +233,6 @@ function renderTeamStatistics() {
     if (bestStagesMap['1 МЕСТО 🏆']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full text-amber-400 text-[10px] font-black">🥇 <span class="opacity-70 font-bold">х</span>${bestStagesMap['1 МЕСТО 🏆'].length}</div>`; }
     if (bestStagesMap['2 МЕСТО 🥈']) { badgesHtml += `<div class="flex items-center gap-1 bg-slate-400/10 border border-slate-400/30 px-2.5 py-1 rounded-full text-slate-300 text-[10px] font-black">🥈 <span class="opacity-70 font-bold">х</span>${bestStagesMap['2 МЕСТО 🥈'].length}</div>`; }
     if (bestStagesMap['3 МЕСТО 🥉']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-700/10 border border-amber-700/30 px-2.5 py-1 rounded-full text-amber-600 text-[10px] font-black">🥉 <span class="opacity-70 font-bold">х</span>${bestStagesMap['3 МЕСТО 🥉'].length}</div>`; }
-    if (isVeteran) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-neon/40 bg-neon/10 text-neon">💎 ВЕТЕРАН</span>`; }
-    if (isHost) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-white/20 bg-white/5 text-white">🏠 ХОЗЯЕВА</span>`; }
     badgesContainer.innerHTML = badgesHtml;
 
     mainCardEl.className = mainCardEl.className.replace(/\s(before:bg-[^\s]+|border-[^\s]+|shadow-[^\s]+)/g, '');
@@ -302,7 +300,6 @@ function render2026StatList(type) {
     let sorted = Object.values(statsMap).sort((a,b) => b.count - a.count);
     if(sorted.length === 0) { listContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет данных результатов</div>`; return; }
     
-    // ПУНКТ 5: Идеально ровный левый край бомбардиров и тонкий шрифт команд
     listContainer.innerHTML = sorted.map((p, idx) => `
         <div class="grid grid-cols-12 text-xs font-bold items-center p-2.5 text-left uppercase hover:bg-zinc-900/10 transition-colors">
             <div class="col-span-1 text-left text-zinc-500 font-extrabold text-[10px] pl-1">${idx+1}</div>
@@ -346,7 +343,6 @@ function render2026Schedule() {
         let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ПАРА') || t1Name.includes('ФИНАЛИСТ');
         let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ПАРА') || t2Name.includes('ФИНАЛИСТ');
 
-        // ПУНКТ 3: Компактный шрифт для текста "СЫГРАН"
         let rightSideContent = isPast ? 
             `<div class="text-right shrink-0 select-none"><div class="text-[9px] font-bold tracking-widest text-zinc-500">СЫГРАН</div><div class="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>` : 
             `<div class="text-right shrink-0 select-none"><div class="text-sm font-black tracking-wide text-white">${m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>`;
@@ -396,14 +392,12 @@ function getStandingsArray() {
     return finalStandings;
 }
 
-// ПУНКТ 7: Тонкие полупрозрачные границы линий общего зачета
 function render2026OverallStandings() {
     const tbody = document.querySelector('#overall-table tbody'); if(!tbody) return; tbody.innerHTML = '';
     let sm = getStandingsArray(); if(sm.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-zinc-600 text-xs text-center py-10 italic">Нет данных</td></tr>`; return; }
     tbody.innerHTML = sm.map((t, i) => `<tr class="hover:bg-zinc-900/30 transition-colors border-b border-zinc-900/20 last:border-none"><td class="text-left font-bold py-3 text-[10px] sm:text-xs max-w-[150px] truncate ${i < 32 ? 'green-bar' : 'red-bar'}"><span class="inline-block text-zinc-500 font-bold mr-1 w-4 shrink-0">${i+1}.</span><img src="${getGitHubLogoUrl(t.name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span>${smartTeamName(t.name)}</span></td><td>${t.games}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`).join('');
 }
 
-// ПУНКТ 4: Рабочие табы и кубковые заглушки
 function setPlayoffStage2026(stage) { currentPlayoffStage2026 = stage; render2026Playoffs(); }
 
 function render2026Playoffs() {
@@ -471,19 +465,6 @@ function setGlobalMode(mode) {
         viewStats.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.add('hidden');
         document.getElementById('mode-btn-stats').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         renderTeamStatistics();
-    }
-}
-
-function switch2026Tab(tabName, btn) { active2026Tab = tabName; document.querySelectorAll('#nav-2026-tabs button').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render2026Core(); }
-function switchArchiveTab(tabName, btn) { activeArchiveTab = tabName; document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); renderArchiveCore(); }
-
-function toggleDetails(containerId, matchRowElement) {
-    const el = document.getElementById(containerId); if (!el) return;
-    if (el.classList.contains('open')) { el.classList.remove('open'); matchRowElement.classList.remove('open'); } 
-    else { 
-        document.querySelectorAll('.details-container.open').forEach(o => o.classList.remove('open')); 
-        document.querySelectorAll('.match-row.open').forEach(r => r.classList.remove('open')); 
-        el.classList.add('open'); matchRowElement.classList.add('open');
     }
 }
 
