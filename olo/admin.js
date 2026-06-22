@@ -243,4 +243,6 @@ async function triggerClearAllData() {
         if (res.status === 'success') location.reload();
     } catch(e) {}
 }
+
+// Запуск инициализации админки
 initAdmin();
