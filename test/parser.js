@@ -1,4 +1,4 @@
-// Вычислительный слой обработки табличных спортивных результатов
+// Вычислительный слой обработки данных
 
 function normalizeTeamName(name) {
     if (!name) return '';
@@ -86,7 +86,7 @@ function parseArchiveCSV(text) {
     for(let i = 1; i < lines.length; i++) {
         const sep = lines[i].includes(';') ? ';' : ','; const p = lines[i].split(sep).map(x => x.trim());
         if (!p || p.length < 5 || !p[3] || !p[4]) continue;
-        result.push({ year: p[0] || '2025', tournament: p[1] || 'Мужчины', stage: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(p[4]), s1: p[5] !== "" && p[5] !== "-" ? parseInt(p[5]) : 0, s2: p[6] !== "" && p[6] !== "-" ? parseInt(p[6]) : 0, p1: p[7] && p[7] !== "" ? parseInt(p[7]) : null, p2: p[8] && p[8] !== "" ? parseInt(p[8]) : null, status: 'past' });
+        result.push({ year: p[0] || '2025', tournament: p[1] || 'Мужчины', stage: p[2] || '', t1: normalizeTeamName(p[3]), t2: normalizeTeamName(m.t2 || p[4]), s1: p[5] !== "" && p[5] !== "-" ? parseInt(p[5]) : 0, s2: p[6] !== "" && p[6] !== "-" ? parseInt(p[6]) : 0, p1: p[7] && p[7] !== "" ? parseInt(p[7]) : null, p2: p[8] && p[8] !== "" ? parseInt(p[8]) : null, status: 'past' });
     }
     return result;
 }

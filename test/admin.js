@@ -1,11 +1,11 @@
-// Логика телефонной админки с исправленными ссылками
+// Логика телефонной панели организатора
 
 const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxBzGlyyqMKlqNwW3-8LaQMQswAgBBXeehO0rXRS1rWOyI5cTxOJG6ca9XdhV4t05LT/exec";
 
 const ADMIN_URLS = {
     matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
     goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
-    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2Theme559105845&single=true&output=csv',
+    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv',
     loats: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=987261895&single=true&output=csv'
 };
 
@@ -166,7 +166,7 @@ function renderLoatSelectorMarkup(container, targetName, equalTeams) {
     let saved = (db.loats && db.loats[targetName]) ? db.loats[targetName].join(', ') : 'НЕ ВЫБРАН';
     let options = equalTeams.map(t => `<option value="${t}">${t.toUpperCase()}</option>`).join('');
     container.innerHTML += `
-        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-[10px] font-bold">
+        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-[10px] font-bold text-left">
             <div class="text-white uppercase mb-1">Группа: <span class="text-neon">${targetName}</span></div>
             <div class="text-zinc-500 uppercase mb-2 text-[9px]">Фиксация: <span class="text-yellow-500">${saved}</span></div>
             <div class="flex items-center gap-2">
@@ -183,7 +183,6 @@ async function saveAdminSelectLoat(targetName) {
     let t2 = document.getElementById(`loat-sel-2-${targetName}`).value;
     if(t1 === t2) { alert("Выберите разные команды!"); return; }
     
-    // ПУНКТ 5: Преобразование данных жребия в строковый формат перед POST-запросом
     let orderVal = `${t1},${t2}`;
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'saveLoat', target: targetName, resolvedOrder: orderVal }) }).then(r => r.json());
