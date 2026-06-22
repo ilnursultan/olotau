@@ -46,8 +46,8 @@ function parseLoatsCSV(text) {}
 function mapServerData(data) {
     db.matches2026 = (data.matches2026 || []).map(m => ({
         id: m.id ? m.id.toString() : "", 
-        stage: m.stage ? m.stage.toString() : "", 
-        group: m.group ? m.group.toString() : "", 
+        stage: m.stage ? m.stage.toString().trim() : "", 
+        group: m.group ? m.group.toString().trim() : "", 
         t1: normalizeTeamName(m.team1), 
         t2: normalizeTeamName(m.team2),
         s1: m.score1 !== "" && m.score1 !== "-" && m.score1 !== undefined ? parseInt(m.score1) : null,
@@ -77,10 +77,11 @@ function mapServerData(data) {
         }
     });
 
-    db.archive = (data.archive || []).map(m => ({
+db.archive = (data.archive || []).map(m => ({
         year: m.year ? m.year.toString() : "2025", 
         tournament: m.tournament || "Мужчины", 
-        stage: m.stage ? m.stage.toString() : "", 
+        stage: m.stage ? m.stage.toString().trim() : "", 
+        group: m.group ? m.group.toString().trim() : "", // Добавили чтение группы
         t1: normalizeTeamName(m.team1), 
         t2: normalizeTeamName(m.team2),
         s1: m.score1 !== "" && m.score1 !== undefined ? parseInt(m.score1) : 0, 
