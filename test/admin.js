@@ -1,6 +1,13 @@
-// Логика телефонной админки с единой точкой входа данных пакета
+// Логика телефонной админки со всеми функциями
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxBzGlyyqMKlqNwW3-8LaQMQswAgBBXeehO0rXRS1rWOyI5cTxOJG6ca9XdhV4t05LT/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw3ZFpu3v52mQswK2Ztg_MWk2mP6lsDLElZ8ZmHDzugUNdJlosgdBVvO8YVP5k2j6H8/exec";
+
+const ADMIN_URLS = {
+    matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
+    goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
+    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2Theme559105845&single=true&output=csv',
+    loats: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=987261895&single=true&output=csv'
+};
 
 let db = { matches2026: [], goals2026: [], players2026: [], loats: {} };
 let activeAdminTab = 'group';
@@ -98,7 +105,7 @@ function handleScoreSelectChange(matchId, t1, t2) {
 }
 
 function checkPlayoffPenaltyField(matchId) {
-    let pBlock = document.getElementById(`playoff-penalties-${matchId}`); if(!pBlock) return;
+    let pBlock = document.getElementById('playoff-penalties-' + matchId); if(!pBlock) return;
     let s1 = document.getElementById(`score1-${matchId}`).value; let s2 = document.getElementById(`score2-${matchId}`).value;
     if (s1 === '10+') s1 = parseInt(document.getElementById(`inp-score1-${matchId}`).value) || 0;
     if (s2 === '10+') s2 = parseInt(document.getElementById(`inp-score2-${matchId}`).value) || 0;
