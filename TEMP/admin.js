@@ -206,7 +206,36 @@ async function triggerBuildGrid() {
         if (res.status === 'success') { alert("Сетка построена!"); location.reload(); }
     } catch(e) { alert("Ошибка."); }
 }
-
+function getStandingsArray() {
+    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
+    let ranksMap = {};
+    groups.forEach(g => {
+        calculateGroupStats(groupMatches.filter(m => m.group === g), g).forEach((tStats, rankIdx) => {
+            let currentRank = rankIdx + 1; 
+            if (!ranksMap[currentRank]) ranksMap[currentRank] = []; 
+            ranksMap[currentRank].push(tStats);
+        });
+    });
+    let finalStandings = [];
+    Object.keys(ranksMap).sort((a,b) => a - b).forEach(rank => {
+        let layer = ranksMap[rank];
+        layer.sort((a, b) => {
+            if (b.pts !== a.pts) return b.pts - a.pts;
+            if ((b.gf - b.ga) !== (a.gf - a.ga)) return (b.gf - b.ga) - (a.gf - a.ga);
+            if (b.gf !== a.gf) return b.gf - a.gf;
+            if (db.loats && db.loats['overall']) {
+                let order = db.loats['overall'].map(x => x.toUpperCase()); 
+                let idxA = order.indexOf(a.name.toUpperCase()); 
+                let idxB = order.indexOf(b.name.toUpperCase());
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            }
+            return 0;
+        });
+        finalStandings = finalStandings.concat(layer);
+    });
+    return finalStandings;
+}
 async function triggerClearAllData() {
     if (!confirm("Очистить всю базу результатов?")) return;
     try {
