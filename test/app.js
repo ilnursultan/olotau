@@ -1,10 +1,10 @@
-// Логика отображения пользовательского интерфейса сайта
+// Логика фронтенда сайта с исправленными ссылками
 
 const URLS_2026 = {
     archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
     matches: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1442464542&single=true&output=csv',
     goals: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1335071059&single=true&output=csv',
-    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2Theme559105845&single=true&output=csv',
+    players: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=559105845&single=true&output=csv',
     geo: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=603732331&single=true&output=csv',
     best: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=1220926923&single=true&output=csv',
     groups2026: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=174826189&single=true&output=csv',
@@ -22,8 +22,7 @@ function handleAdminSecretClick() {
     adminClicksTimeout = setTimeout(() => { adminSecretClicks = 0; }, 2000);
     if (adminSecretClicks >= 5) {
         adminSecretClicks = 0;
-        // ПУНКТ 4: Мгновенный переход на полностью изолированную вкладку admin.html без лагов
-        window.location.href = 'admin.html';
+        window.location.href = 'admin.html'; // Открытие новой физической страницы без задержек!
     }
 }
 
@@ -165,7 +164,6 @@ function renderTeamStatistics() {
     document.getElementById('stats-team-logo').src = getGitHubLogoUrl(team);
     document.getElementById('stats-team-geo').innerHTML = getTeamGeoHtml(team, isMen);
 
-    // ПУНКТ 1: Кнопка состава вынесена под блоки забитых и пропущенных
     const btnContainer = document.getElementById('roster-btn-container');
     const hasRoster = db.players2026.some(p => p.team.toUpperCase() === team.toUpperCase());
     if (hasRoster) {
@@ -486,7 +484,7 @@ function render2026Playoffs() {
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
         pairs.forEach((p, idx) => {
             let currentId = (101 + idx).toString(); let realMatch = stageMatches.find(m => m.id === currentId);
-            // ПУНКТ 2: Строгие дефолтные кубковые заглушки. Авторасчет вырезан полностью!
+            // ПУНКТ 2: Чистые текстовые заглушки в Плей-офф сетке. Авторасчет вырезан полностью!
             let t1 = (realMatch && realMatch.t1 && realMatch.t1 !== 'КОМАНДА' && realMatch.t1 !== '---') ? realMatch.t1 : `ПАРА СЕТКИ #${p[0]}`;
             let t2 = (realMatch && realMatch.t2 && realMatch.t2 !== 'КОМАНДА' && realMatch.t2 !== '---') ? realMatch.t2 : `ПАРА СЕТКИ #${p[1]}`;
             matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1]);
@@ -533,23 +531,14 @@ function setGlobalMode(mode) {
 function switch2026Tab(tabName, btn) { active2026Tab = tabName; document.querySelectorAll('#nav-2026-tabs button').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render2026Core(); }
 function switchArchiveTab(tabName, btn) { activeArchiveTab = tabName; document.querySelectorAll('#archive-tabs-nav button').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); renderArchiveCore(); }
 
-function renderEventsInline(matchId, isPast) {
-    if (!isPast) return `<div class="text-center italic text-zinc-500 text-[11px] py-1.5 font-medium">Матч еще не сыгран</div>`;
-    const events = db.goals2026.filter(e => e.match_id == matchId); if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Голы не зафиксированы</div>`;
-    events.sort((a, b) => a.minute - b.minute); let s1 = 0, s2 = 0; const mo = db.matches2026.find(m => m.id == matchId); if(!mo) return '';
-    return events.map(e => {
-        if(e.team.trim().toUpperCase() === mo.t1.trim().toUpperCase()) { s1++; } else { s2++; }
-        return `<div class="flex items-center gap-2 text-[11px] w-full text-left py-0.5"><span class="text-zinc-500 font-bold shrink-0">${e.minute}'</span><span class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-neon font-black text-[10px] tracking-tighter border border-zinc-700/30 shrink-0">${s1}-${s2}</span><span class="font-medium text-zinc-300 truncate">${shortenPlayerName(e.player)}${e.assistant ? ` (${shortenPlayerName(e.assistant)})` : ''}</span></div>`;
-    }).join('');
+function toggleDetails(containerId, matchRowElement) {
+    const el = document.getElementById(containerId); if (!el) return;
+    if (el.classList.contains('open')) { el.classList.remove('open'); matchRowElement.classList.remove('open'); } 
+    else { 
+        document.querySelectorAll('.details-container.open').forEach(o => o.classList.remove('open')); 
+        document.querySelectorAll('.match-row.open').forEach(r => r.classList.remove('open')); 
+        el.classList.add('open'); matchRowElement.classList.add('open');
+    }
 }
-
-// Слайдер табов
-const sliders = document.querySelectorAll('.draggable'); let isDown = false; let startX; let scrollLeft;
-sliders.forEach(slider => {
-    slider.addEventListener('mousedown', (e) => { isDown = true; slider.classList.add('drag-active'); startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
-    slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('drag-active'); });
-    slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('drag-active'); });
-    slider.addEventListener('mousemove', (e) => { if (!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
-});
 
 init();
