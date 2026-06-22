@@ -1,6 +1,6 @@
 // Основной скрипт сайта
 
-const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUL_F_2aLAE_LCFgO4-Z25TVwwceSloceTVtksiiE-PjOMO4DdhFggygoFOI5s1nbk/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzOvbAp3g-vYP1xz1qMJ3UbX1wGUhQ6VMj3AKjR7_BgZ_rLAFV2J2pWPLS1-yCSeht9/exec";
 
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
@@ -85,6 +85,11 @@ function toggleSupercupBanner(tournamentName) {
     if(banner) tournamentName?.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
 }
 
+function shortenPlayerName(fullName) {
+    if (!fullName) return ''; let parts = fullName.trim().split(/\s+/);
+    return parts.length >= 2 ? `${parts[0]} ${parts[1].substring(0, 1).toUpperCase()}.` : fullName;
+}
+
 function setupStatsSelectors() {
     document.getElementById('stats-gender').innerHTML = `<option value="Мужчины">МУЖЧИНЫ</option><option value="Женщины">ЖЕНЩИНЫ</option>`;
     document.getElementById('stats-gender').addEventListener('change', updateStatsTeamsList);
@@ -123,7 +128,7 @@ function showRosterModal(teamName) {
         listEl.innerHTML = `<div class="text-center italic text-zinc-600 py-4">Состав команды не внесен</div>`;
     } else {
         roster.forEach((p, idx) => {
-            listEl.innerHTML += `<div class="flex items-center gap-3 py-1"><span class="text-zinc-600 font-bold text-[10px] w-4">${idx+1}.</span><span class="text-zinc-200 font-semibold uppercase tracking-wide">${p.name}</span></div>`;
+            listEl.innerHTML += `<div class="flex items-center gap-3 py-1.5 border-b border-white/5 last:border-0"><span class="text-neon font-black text-[10px] w-4">${idx+1}.</span><span class="text-zinc-200 font-bold uppercase tracking-wide text-xs">${p.name}</span></div>`;
         });
     }
     document.getElementById('roster-modal').classList.remove('hidden');
@@ -191,13 +196,27 @@ function renderTeamStatistics() {
     let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
     let requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
     let isVeteran = requiredYears.every(y => activeArchiveYears.has(y));
-    if (isVeteran) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-neon/40 bg-neon/10 text-neon">💎 ВЕТЕРАН</span>`; }
-    if (isHost) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-white/20 bg-white/5 text-white">🏠 ХОЗЯЕВА</span>`; }
+    
+    if (isVeteran) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-neon/40 bg-neon/10 text-neon">💎 ВЕТЕРАН ТУРНИРА</span>`; }
+    if (isHost) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-white/20 bg-white/5 text-white">🏠 ХОЗЯЕВА ТУРНИРА</span>`; }
     badgesContainer.innerHTML = badgesHtml;
 
+    // Золотое свечение чемпионов и зеленое для ветеранов
     mainCardEl.className = mainCardEl.className.replace(/\s(before:bg-[^\s]+|border-[^\s]+|shadow-[^\s]+)/g, '');
-    if (bestStagesMap['1 МЕСТО 🏆']) { mainCardEl.style.borderColor = 'rgba(234, 179, 8, 0.25)'; mainCardEl.style.boxShadow = '0 30px 60px -15px rgba(234, 179, 8, 0.12)'; mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(234, 179, 8, 0.12) 0%, rgba(0, 0, 0, 0) 100%)'; }
-    else { mainCardEl.style.borderColor = 'rgba(63, 63, 70, 0.4)'; mainCardEl.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.5)'; mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0) 100%)'; }
+    if (bestStagesMap['1 МЕСТО 🏆']) { 
+        mainCardEl.style.borderColor = 'rgba(255, 215, 0, 0.4)'; 
+        mainCardEl.style.boxShadow = '0 30px 60px -15px rgba(255, 215, 0, 0.25)'; 
+        mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(255, 215, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)'; 
+    } else if (isVeteran) {
+        mainCardEl.style.borderColor = 'rgba(0, 230, 118, 0.4)'; 
+        mainCardEl.style.boxShadow = '0 25px 50px -12px rgba(0, 230, 118, 0.2)'; 
+        mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(0, 230, 118, 0.1) 0%, rgba(0, 0, 0, 0) 100%)'; 
+    } else { 
+        mainCardEl.style.borderColor = 'rgba(63, 63, 70, 0.4)'; 
+        mainCardEl.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.5)'; 
+        mainCardEl.style.backgroundImage = 'radial-gradient(ellipse 70% 70% at 0% 0%, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0) 100%)'; 
+    }
+
     historyMatches.sort((a, b) => b.year - a.year); let matchesByYear = {};
     historyMatches.forEach(m => { if (!matchesByYear[m.year]) matchesByYear[m.year] = []; matchesByYear[m.year].push(m); });
     const yearsContainer = document.getElementById('stats-years-container');
@@ -231,7 +250,7 @@ function render2026Tables() {
             const isPast = m.status === 'past'; let scores = getScoreDisplay(m);
             let arrowIcon = isPast ? `<span class="arrow-indicator text-neon text-[9px] ml-2 select-none">▼</span>` : '';
             let scoreBadge = isPast ? `<div class="text-neon font-black text-[11px] bg-zinc-900/80 px-2 py-0.5 rounded flex items-center shrink-0 select-none">${scores.s1} : ${scores.s2} ${arrowIcon}</div>` : `<div class="text-zinc-500 text-[11px] bg-zinc-900/30 px-2 py-0.5 rounded shrink-0 select-none">- : -</div>`;
-            html += `<div class="match-row clickable-match" onclick="toggleDetails('det-2026-${m.id}', this)"><div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase gap-2 w-full"><div class="flex-1 min-w-0 truncate flex items-center pr-1"><img src="${getGitHubLogoUrl(m.t1)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(m.t1)}</span></div>${scoreBadge}<div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1"><span class="truncate">${smartTeamName(m.t2)}</span><img src="${getGitHubLogoUrl(m.t2)}" class="team-logo ml-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"></div></div><div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400"><div class="pt-2 border-t border-zinc-900/60 space-y-2 mt-2">${renderEventsInline(m.id, isPast)}</div></div></div>`;
+            html += `<div class="match-row clickable-match" onclick="toggleDetails('det-2026-${m.id}', this)"><div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase gap-2 w-full"><div class="flex-1 min-w-0 truncate flex items-center pr-1"><img src="${getGitHubLogoUrl(m.t1)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(m.t1)}</span></div>${scoreBadge}<div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1"><span class="truncate">${smartTeamName(m.t2)}</span><img src="${getGitHubLogoUrl(m.t2)}" class="team-logo ml-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"></div></div><div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400"><div class="pt-2 border-t border-zinc-900/60 space-y-1 mt-2">${renderEventsInline(m, isPast)}</div></div></div>`;
         });
         container.innerHTML += html + `</div></div>`;
     });
@@ -277,8 +296,8 @@ function render2026Schedule() {
         let isPast = m.status === 'past';
         let t1Name = m.t1; let t2Name = m.t2;
         if (m.stage !== 'Групповой этап' && (t1Name === 'КОМАНДА' || t1Name === '---' || !t1Name)) { t1Name = getPlayoffFallbackLabel(m.id, 't1'); t2Name = getPlayoffFallbackLabel(m.id, 't2'); }
-        let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ПАРА') || t1Name.includes('ФИНАЛИСТ');
-        let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ПАРА') || t2Name.includes('ФИНАЛИСТ');
+        let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
+        let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
         let rightSideContent = isPast ? `<div class="text-right shrink-0 select-none"><div class="text-[9px] font-bold tracking-widest text-zinc-500">СЫГРАН</div><div class="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>` : `<div class="text-right shrink-0 select-none"><div class="text-sm font-black tracking-wide text-white">${m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>`;
         return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center gap-4 transition-all hover:border-zinc-800/80 ${isPast ? 'opacity-60' : ''}"><div class="w-24 shrink-0 border-r border-zinc-800/60 pr-2 text-left"><div class="text-[10px] font-black text-neon truncate uppercase tracking-wider">${stageLabel}</div><div class="text-[9px] text-zinc-500 font-bold uppercase mt-0.5">ПОЛЕ #${m.field || '1'}</div></div><div class="flex-grow flex flex-col gap-2.5 min-w-0"><div class="flex items-center text-[11px] sm:text-xs font-bold text-white uppercase truncate gap-2"><img src="${getGitHubLogoUrl(t1Name)}" class="w-4 h-4 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-600 font-semibold' : ''}">${smartTeamName(t1Name)}</span></div><div class="flex items-center text-[11px] sm:text-xs font-bold text-white uppercase truncate gap-2"><img src="${getGitHubLogoUrl(t2Name)}" class="w-4 h-4 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-600 font-semibold' : ''}">${smartTeamName(t2Name)}</span></div></div>${rightSideContent}</div>`;
     }).join('');
@@ -288,13 +307,13 @@ function getPlayoffFallbackLabel(matchId, side) {
     let id = parseInt(matchId);
     if (id >= 101 && id <= 116) {
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
-        let p = pairs[id - 101]; return side === 't1' ? `ПАРА СЕТКИ #${p[0]}` : `ПАРА СЕТКИ #${p[1]}`;
+        let p = pairs[id - 101]; return side === 't1' ? `КОМАНДА #${p[0]}` : `КОМАНДА #${p[1]}`;
     }
     if (id >= 201 && id <= 208) { let base = (id - 201) * 2; return side === 't1' ? `ПОБЕДИТЕЛЬ 1/16 #${base + 1}` : `ПОБЕДИТЕЛЬ 1/16 #${base + 2}`; }
     if (id >= 301 && id <= 304) { let base = (id - 301) * 2; return side === 't1' ? `ПОБЕДИТЕЛЬ 1/8 #${base + 1}` : `ПОБЕДИТЕЛЬ 1/8 #${base + 2}`; }
     if (id === 401 || id === 402) { let base = (id - 401) * 2; return side === 't1' ? `ПОБЕДИТЕЛЬ 1/4 #${base + 1}` : `ПОБЕДИТЕЛЬ 1/4 #${base + 2}`; }
-    if (id === 501) return side === 't1' ? 'ФИНАЛИСТ #1' : 'ФИНАЛИСТ #2';
-    if (id === 502) return side === 't1' ? 'ПРОИГРАВШИЙ 1/2 #1' : 'ПРОИГРАВШИЙ 1/2 #2';
+    if (id === 501) return side === 't1' ? 'ПРОИГРАВШИЙ 1/2 #1' : 'ПРОИГРАВШИЙ 1/2 #2';
+    if (id === 601) return side === 't1' ? 'ФИНАЛИСТ #1' : 'ФИНАЛИСТ #2';
     return 'КОМАНДА';
 }
 
@@ -346,13 +365,13 @@ function render2026Playoffs() {
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
         pairs.forEach((p, idx) => {
             let currentId = (101 + idx).toString(); let realMatch = stageMatches.find(m => m.id === currentId);
-            let t1 = (realMatch && realMatch.t1 && realMatch.t1 !== 'КОМАНДА' && realMatch.t1 !== '---') ? realMatch.t1 : `ПАРА СЕТКИ #${p[0]}`;
-            let t2 = (realMatch && realMatch.t2 && realMatch.t2 !== 'КОМАНДА' && realMatch.t2 !== '---') ? realMatch.t2 : `ПАРА СЕТКИ #${p[1]}`;
+            let t1 = (realMatch && realMatch.t1 && realMatch.t1 !== 'КОМАНДА' && realMatch.t1 !== '---') ? realMatch.t1 : `КОМАНДА #${p[0]}`;
+            let t2 = (realMatch && realMatch.t2 && realMatch.t2 !== 'КОМАНДА' && realMatch.t2 !== '---') ? realMatch.t2 : `КОМАНДА #${p[1]}`;
             matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1]);
         });
     } else if (currentPlayoffStage2026 === 'Финал') {
-        const realFinal = stageMatches.find(m => m.id === '501'); matchesHtml += renderPlayoffCardLive(realFinal, 'ФИНАЛИСТ #1', 'ФИНАЛИСТ #2', '-', '-');
-        const real3rd = pMatches.find(m => m.id === '502'); matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rd, 'ПРОИГРАВШИЙ 1/2 #1', 'ПРОИГРАВШИЙ 1/2 #2', '-', '-');
+        const realFinal = stageMatches.find(m => m.id === '601'); matchesHtml += renderPlayoffCardLive(realFinal, 'ФИНАЛИСТ #1', 'ФИНАЛИСТ #2', '-', '-');
+        const real3rd = pMatches.find(m => m.id === '501'); matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rd, 'ПРОИГРАВШИЙ 1/2 #1', 'ПРОИГРАВШИЙ 1/2 #2', '-', '-');
     } else {
         let slots = currentPlayoffStage2026 === '1/8' ? 8 : (currentPlayoffStage2026 === '1/4' ? 4 : 2);
         let startId = currentPlayoffStage2026 === '1/8' ? 201 : (currentPlayoffStage2026 === '1/4' ? 301 : 401);
@@ -478,11 +497,26 @@ function getScoreDisplay(m) {
     return { s1: m.s1 + pen1Str, s2: m.s2 + pen2Str };
 }
 
-function renderEventsInline(matchId, isPast) {
-    if (!isPast) return '<div class="text-center italic py-1">Матч еще не сыгран</div>';
-    const events = db.goals2026.filter(g => g.match_id == matchId);
-    if (events.length === 0) return '<div class="text-center italic py-1">Нет данных о голах</div>';
-    return events.map(e => `<div class="flex items-center gap-1.5"><span class="text-neon">⚽</span> <span class="text-white font-bold">${e.player}</span> ${e.assistant ? `<span class="text-zinc-500 text-[9px]">(Асс: ${e.assistant})</span>` : ''} <span class="text-zinc-600 text-[9px] ml-auto">${e.minute}'</span></div>`).join('');
+function renderEventsInline(m, isPast) {
+    if (!isPast) return '<div class="text-center italic py-1 text-zinc-600">Матч еще не сыгран</div>';
+    let events = db.goals2026.filter(g => g.match_id == m.id);
+    if (events.length === 0) return '<div class="text-center italic py-1 text-zinc-600">Нет данных о голах</div>';
+    
+    events.sort((a, b) => a.minute - b.minute);
+    
+    let s1 = 0; let s2 = 0;
+    return events.map(e => {
+        if (e.team.toUpperCase() === m.t1.toUpperCase()) s1++;
+        else if (e.team.toUpperCase() === m.t2.toUpperCase()) s2++;
+        
+        let pName = shortenPlayerName(e.player);
+        let aStr = e.assistant ? `<span class="text-zinc-500 text-[9px] ml-1">(${shortenPlayerName(e.assistant)})</span>` : '';
+        return `<div class="flex items-center py-0.5">
+            <span class="text-zinc-500 font-black text-[10px] w-6 shrink-0 text-left">${e.minute}'</span>
+            <span class="text-neon font-black text-[10px] bg-zinc-900/80 px-1.5 rounded mr-2 shrink-0">${s1}:${s2}</span>
+            <span class="text-white font-bold text-[10px] truncate">${pName}</span>${aStr}
+        </div>`;
+    }).join('');
 }
 
 function toggleDetails(id, el) {
@@ -494,22 +528,26 @@ function toggleDetails(id, el) {
 function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2) {
     let t1Name = (m && m.t1 && m.t1 !== '---') ? m.t1 : t1Fallback;
     let t2Name = (m && m.t2 && m.t2 !== '---') ? m.t2 : t2Fallback;
-    let isMock1 = t1Name.includes('ПАРА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
-    let isMock2 = t2Name.includes('ПАРА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
+    let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
+    let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
     let isPast = m && m.status === 'past';
-    let scores = m ? getScoreDisplay(m) : { s1: '-', s2: '-' };
+    
+    let s1 = (isPast && m.s1 !== null) ? m.s1 : '-';
+    let s2 = (isPast && m.s2 !== null) ? m.s2 : '-';
+    let p1 = (isPast && m.p1 !== null) ? `<span class="text-white text-[9px] ml-1">${m.p1}</span>` : '';
+    let p2 = (isPast && m.p2 !== null) ? `<span class="text-white text-[9px] ml-1">${m.p2}</span>` : '';
 
-    let gridBadge1 = gridPos1 !== '-' ? `<span class="bg-zinc-800 text-zinc-400 text-[8px] px-1 rounded mr-1">${gridPos1}</span>` : '';
-    let gridBadge2 = gridPos2 !== '-' ? `<span class="bg-zinc-800 text-zinc-400 text-[8px] px-1 rounded mr-1">${gridPos2}</span>` : '';
+    let gridBadge1 = gridPos1 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos1}</span>` : '';
+    let gridBadge2 = gridPos2 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos2}</span>` : '';
 
     return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden transition-all hover:border-zinc-800/80">
-        <div class="flex-1 space-y-1.5 min-w-0 pr-2 z-10">
-            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">${gridBadge1}<span class="truncate ${isMock1 ? 'text-zinc-600 font-medium' : ''}">${smartTeamName(t1Name)}</span></div>
-            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">${gridBadge2}<span class="truncate ${isMock2 ? 'text-zinc-600 font-medium' : ''}">${smartTeamName(t2Name)}</span></div>
+        <div class="flex-1 space-y-2 min-w-0 pr-2 z-10">
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">${gridBadge1}<img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-600 font-medium' : ''}">${smartTeamName(t1Name)}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">${gridBadge2}<img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-600 font-medium' : ''}">${smartTeamName(t2Name)}</span></div>
         </div>
         <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm">
-            <div class="${isPast && m.s1 > m.s2 ? 'text-neon' : (isPast ? 'text-zinc-500' : 'text-zinc-600')}">${scores.s1}</div>
-            <div class="${isPast && m.s2 > m.s1 ? 'text-neon' : (isPast ? 'text-zinc-500' : 'text-zinc-600')}">${scores.s2}</div>
+            <div class="${isPast && m.s1 > m.s2 ? 'text-neon' : (isPast ? 'text-zinc-300' : 'text-zinc-600')} flex items-center">${s1}${p1}</div>
+            <div class="${isPast && m.s2 > m.s1 ? 'text-neon' : (isPast ? 'text-zinc-300' : 'text-zinc-600')} flex items-center">${s2}${p2}</div>
         </div>
     </div>`;
 }
@@ -520,15 +558,19 @@ function setPlayoffStageArchive(stage) {
 }
 
 function renderPlayoffCard(m, t1, t2) {
-    let scores = getScoreDisplay(m);
+    let s1 = m.s1 !== null ? m.s1 : '-';
+    let s2 = m.s2 !== null ? m.s2 : '-';
+    let p1 = m.p1 !== null ? `<span class="text-white text-[9px] ml-1">${m.p1}</span>` : '';
+    let p2 = m.p2 !== null ? `<span class="text-white text-[9px] ml-1">${m.p2}</span>` : '';
+
     return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden">
-        <div class="flex-1 space-y-1.5 min-w-0 pr-2 z-10">
-            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}</span></div>
-            <div class="flex items-center truncate text-[11px] font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}</span></div>
+        <div class="flex-1 space-y-2 min-w-0 pr-2 z-10">
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t1)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t1)}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase"><img src="${getGitHubLogoUrl(t2)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(t2)}</span></div>
         </div>
         <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm">
-            <div class="${m.s1 > m.s2 ? 'text-neon' : 'text-zinc-500'}">${scores.s1}</div>
-            <div class="${m.s2 > m.s1 ? 'text-neon' : 'text-zinc-500'}">${scores.s2}</div>
+            <div class="${m.s1 > m.s2 ? 'text-neon' : 'text-zinc-300'} flex items-center">${s1}${p1}</div>
+            <div class="${m.s2 > m.s1 ? 'text-neon' : 'text-zinc-300'} flex items-center">${s2}${p2}</div>
         </div>
     </div>`;
 }
@@ -540,12 +582,16 @@ function loadFilteredBestPlayers() {
     if(best.length === 0) { bContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет данных о лучших игроках</div>`; return; }
     bContainer.innerHTML = best.map(b => `
         <div class="bg-zinc-900/30 border border-zinc-800/60 rounded-xl p-3 flex items-center justify-between mb-2 hover:bg-zinc-900/60 transition-colors">
-            <div class="flex flex-col gap-0.5">
-                <span class="text-[9px] font-black uppercase text-neon tracking-wider">${b.nomination}</span>
-                <span class="text-white font-bold text-xs uppercase">${b.name}</span>
-                <span class="text-zinc-500 text-[10px] font-medium uppercase">${b.team}</span>
+            <div class="flex items-center gap-3">
+                <img src="${getGitHubLogoUrl(b.team)}" class="w-10 h-10 object-contain drop-shadow-md">
+                <div class="flex flex-col gap-0.5">
+                    <span class="text-white font-black text-xs uppercase">${b.name}</span>
+                    <span class="text-zinc-500 text-[10px] font-medium uppercase">${b.team}</span>
+                </div>
             </div>
-            <img src="${getGitHubLogoUrl(b.team)}" class="w-10 h-10 object-contain opacity-80">
+            <div class="text-right">
+                <span class="text-[9px] font-black uppercase text-neon tracking-wider bg-neon/10 px-2 py-1 rounded-lg border border-neon/20">${b.nomination}</span>
+            </div>
         </div>
     `).join('');
 }
