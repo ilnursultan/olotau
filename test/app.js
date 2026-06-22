@@ -413,7 +413,7 @@ function renderArchiveCore() {
         const groupM = mArch.filter(m => m.stage === 'Групповой этап');
 	const groups = [...new Set(groupM.map(m => m.group))].filter(Boolean).sort();
         if(groups.length === 0) { gContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Групповой этап не найден.</div>`; return; }
-        const playoffTeams = new Set(mArch.filter(m => m.stage !== 'Групповой этап').flatMap(m => [m.t1, m.t2]).filter(Boolean));lean));
+        const playoffTeams = new Set(mArch.filter(m => m.stage !== 'Групповой этап').flatMap(m => [m.t1, m.t2]).filter(Boolean));
         groups.forEach(g => {
             const sorted = calculateGroupStats(groupM.filter(m => m.group === g), g);
             let html = `<div class="group-card"><table><thead><tr><th>${g}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
