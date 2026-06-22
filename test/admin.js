@@ -1,4 +1,4 @@
-// Логика телефонной панели организатора
+// Логика выделенной панели управления организатора
 
 const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxBzGlyyqMKlqNwW3-8LaQMQswAgBBXeehO0rXRS1rWOyI5cTxOJG6ca9XdhV4t05LT/exec";
 

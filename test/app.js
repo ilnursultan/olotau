@@ -1,4 +1,4 @@
-// Логика фронтенда сайта
+// Основной скрипт сайта с исправленными ссылками
 
 const URLS_2026 = {
     archive: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm1C8ix_HjpSlkuU3D9GdOaZy2hs8CeKdQM11SAlwseAn9X6o9Q7vw-KlOJIjTjcn_bmFidY6gQBqB/pub?gid=0&single=true&output=csv',
@@ -164,7 +164,6 @@ function renderTeamStatistics() {
     document.getElementById('stats-team-logo').src = getGitHubLogoUrl(team);
     document.getElementById('stats-team-geo').innerHTML = getTeamGeoHtml(team, isMen);
 
-    // ПУНКТ 1: Кнопка состава вынесена под разделы забитых/пропущенных мячей
     const btnContainer = document.getElementById('roster-btn-container');
     const hasRoster = db.players2026.some(p => p.team.toUpperCase() === team.toUpperCase());
     if (hasRoster) {
@@ -172,10 +171,7 @@ function renderTeamStatistics() {
     } else { btnContainer.innerHTML = ''; }
 
     let participations = new Set(); let games = 0, w = 0, d = 0, l = 0, gf = 0, ga = 0;
-    let historyMatches = [];
-    let activeArchiveYears = new Set();
-
-    // ПУНКТ 1: Сбор истории наград с поддержкой кратности титулов (группировка одинаковых результатов)
+    let historyMatches = []; let activeArchiveYears = new Set();
     let bestStagesMap = {};
 
     function processMatch(m, yearStr) {
@@ -216,7 +212,6 @@ function renderTeamStatistics() {
     db.archive.forEach(m => { if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) processMatch(m, m.year); });
     if (gender === 'Мужчины' || gender === 'Женщины') { db.matches2026.forEach(m => { if (m.status === 'past') processMatch(m, '2026'); }); }
 
-    // Расчет лучшего результата с выводом кратности лет
     const stageWeight = { '1 МЕСТО 🏆': 10, '2 МЕСТО 🥈': 9, '3 МЕСТО 🥉': 8, '4 МЕСТО': 7, '1/2': 6, '1/4': 5, '1/8': 4, '1/16': 3, '1/32': 2, 'ГРУППОВОЙ ЭТАП': 1 };
     let bestLabel = '--'; let bestWeight = -1;
     Object.keys(bestStagesMap).forEach(lbl => {
@@ -225,8 +220,6 @@ function renderTeamStatistics() {
     });
 
     document.getElementById('stat-box-participations').innerText = participations.size;
-    
-    // ПУНКТ 1: Запрет переноса строк для моб. версии и вывод кратных лет через запятую
     document.getElementById('stat-box-result').className = "text-[10px] font-black text-white uppercase tracking-tight whitespace-nowrap";
     document.getElementById('stat-box-result').innerHTML = bestLabel;
     document.getElementById('stat-box-result-year').innerText = bestLabel !== '--' ? bestStagesMap[bestLabel].sort((a,b)=>b-a).join(', ') : '';
@@ -237,10 +230,6 @@ function renderTeamStatistics() {
 
     const badgesContainer = document.getElementById('stats-team-badges'); const mainCardEl = document.getElementById('stats-team-card');
     badgesContainer.innerHTML = ''; let badgesHtml = '';
-    const requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
-    let isVeteran = requiredYears.every(y => activeArchiveYears.has(y)); let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
-
-    let golds = bestStagesMap['1/2'] || []; // условный пример, сбор реальных лет идет выше
     if (bestStagesMap['1 МЕСТО 🏆']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full text-amber-400 text-[10px] font-black">🥇 <span class="opacity-70 font-bold">х</span>${bestStagesMap['1 МЕСТО 🏆'].length}</div>`; }
     if (bestStagesMap['2 МЕСТО 🥈']) { badgesHtml += `<div class="flex items-center gap-1 bg-slate-400/10 border border-slate-400/30 px-2.5 py-1 rounded-full text-slate-300 text-[10px] font-black">🥈 <span class="opacity-70 font-bold">х</span>${bestStagesMap['2 МЕСТО 🥈'].length}</div>`; }
     if (bestStagesMap['3 МЕСТО 🥉']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-700/10 border border-amber-700/30 px-2.5 py-1 rounded-full text-amber-600 text-[10px] font-black">🥉 <span class="opacity-70 font-bold">х</span>${bestStagesMap['3 МЕСТО 🥉'].length}</div>`; }
@@ -268,7 +257,6 @@ function renderTeamStatistics() {
     }
 }
 
-// ПУНКТ 2: Функция рендеринга инлайновых событий (голов) успешно возвращена в код!
 function renderEventsInline(matchId, isPast) {
     if (!isPast) return `<div class="text-center italic text-zinc-500 text-[11px] py-1.5 font-medium">Матч еще не сыгран</div>`;
     const events = db.goals2026.filter(e => e.match_id == matchId); if(events.length === 0) return `<div class="text-center italic text-zinc-600 text-[10px]">Голы не зафиксированы</div>`;
@@ -314,7 +302,7 @@ function render2026StatList(type) {
     let sorted = Object.values(statsMap).sort((a,b) => b.count - a.count);
     if(sorted.length === 0) { listContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-4 italic">Нет данных результатов</div>`; return; }
     
-    // ПУНКТ 5: Все элементы выравнены влево (убран text-center), название команды сделано тонким шрифтом font-normal
+    // ПУНКТ 5: Идеально ровный левый край бомбардиров и тонкий шрифт команд
     listContainer.innerHTML = sorted.map((p, idx) => `
         <div class="grid grid-cols-12 text-xs font-bold items-center p-2.5 text-left uppercase hover:bg-zinc-900/10 transition-colors">
             <div class="col-span-1 text-left text-zinc-500 font-extrabold text-[10px] pl-1">${idx+1}</div>
@@ -358,7 +346,7 @@ function render2026Schedule() {
         let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ПАРА') || t1Name.includes('ФИНАЛИСТ');
         let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ПАРА') || t2Name.includes('ФИНАЛИСТ');
 
-        // ПУНКТ 3: Текст "СЫГРАН" уменьшен (text-[9px] font-bold вместо text-xs font-black)
+        // ПУНКТ 3: Компактный шрифт для текста "СЫГРАН"
         let rightSideContent = isPast ? 
             `<div class="text-right shrink-0 select-none"><div class="text-[9px] font-bold tracking-widest text-zinc-500">СЫГРАН</div><div class="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>` : 
             `<div class="text-right shrink-0 select-none"><div class="text-sm font-black tracking-wide text-white">${m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>`;
@@ -408,22 +396,14 @@ function getStandingsArray() {
     return finalStandings;
 }
 
-// ПУНКТ 7: Цвет таблицы общего зачета изменен на оригинальный, как в обычных таблицах
+// ПУНКТ 7: Тонкие полупрозрачные границы линий общего зачета
 function render2026OverallStandings() {
     const tbody = document.querySelector('#overall-table tbody'); if(!tbody) return; tbody.innerHTML = '';
     let sm = getStandingsArray(); if(sm.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-zinc-600 text-xs text-center py-10 italic">Нет данных</td></tr>`; return; }
-    tbody.innerHTML = sm.map((t, i) => `
-        <tr class="hover:bg-zinc-900/30 transition-colors border-b border-zinc-900/20 last:border-none">
-            <td class="text-left font-bold py-3 text-[10px] sm:text-xs max-w-[150px] truncate ${i < 32 ? 'green-bar' : 'red-bar'}">
-                <span class="inline-block text-zinc-500 font-bold mr-1 w-4 shrink-0">${i+1}.</span>
-                <img src="${getGitHubLogoUrl(t.name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
-                <span>${smartTeamName(t.name)}</span>
-            </td>
-            <td>${t.games}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td>
-        </tr>`).join('');
+    tbody.innerHTML = sm.map((t, i) => `<tr class="hover:bg-zinc-900/30 transition-colors border-b border-zinc-900/20 last:border-none"><td class="text-left font-bold py-3 text-[10px] sm:text-xs max-w-[150px] truncate ${i < 32 ? 'green-bar' : 'red-bar'}"><span class="inline-block text-zinc-500 font-bold mr-1 w-4 shrink-0">${i+1}.</span><img src="${getGitHubLogoUrl(t.name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span>${smartTeamName(t.name)}</span></td><td>${t.games}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`).join('');
 }
 
-// ПУНКТ 4: Восстановлена функция переключения кубковых стадий плей-офф
+// ПУНКТ 4: Рабочие табы и кубковые заглушки
 function setPlayoffStage2026(stage) { currentPlayoffStage2026 = stage; render2026Playoffs(); }
 
 function render2026Playoffs() {
@@ -431,8 +411,6 @@ function render2026Playoffs() {
     if(!container || !nav) return; container.innerHTML = '';
     const pMatches = db.matches2026.filter(m => !m.group || !m.group.toLowerCase().includes('группа')); let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
     if(!stages.includes(currentPlayoffStage2026)) currentPlayoffStage2026 = stages[0];
-    
-    // Вкладки плей-офф теперь кликабельны и работают корректно!
     nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
 
     let matchesHtml = ''; let stageMatches = pMatches.filter(m => m.stage === currentPlayoffStage2026);
