@@ -47,35 +47,17 @@ function mapServerData(data) {
     db.matches2026 = (data.matches2026 || []).map(m => ({
         id: m.id ? m.id.toString() : "", 
         stage: m.stage ? m.stage.toString().trim() : "", 
-        // Ищем поле group, даже если оно называется 'Group' или 'group '
-        group: (m.group || m.Group || "").toString().trim(), 
+        group: m.group ? m.group.toString().trim() : "", 
         t1: normalizeTeamName(m.team1), 
         t2: normalizeTeamName(m.team2),
-        s1: (m.score1 !== "" && m.score1 !== undefined) ? parseInt(m.score1) : null,
-        s2: (m.score2 !== "" && m.score2 !== undefined) ? parseInt(m.score2) : null,
+        s1: m.score1 !== "" && m.score1 !== "-" && m.score1 !== undefined ? parseInt(m.score1) : null,
+        s2: m.score2 !== "" && m.score2 !== "-" && m.score2 !== undefined ? parseInt(m.score2) : null,
+        p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
+        p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null,
+        time: m.time || "00:00", date: m.date || "", field: m.field || "1", 
         status: m.status ? m.status.toLowerCase().trim() : 'future'
     }));
 
-    db.archive = (data.archive || []).map(m => {
-        let stageStr = m.stage ? m.stage.toString().trim() : "";
-        // Пытаемся взять группу из нового столбца, если пусто — ищем в stage
-        let groupStr = (m.group || "").toString().trim();
-        if (!groupStr && stageStr.toLowerCase().includes('группа')) {
-            groupStr = stageStr;
-            stageStr = 'Групповой этап';
-        }
-        return {
-            year: m.year ? m.year.toString() : "", 
-            tournament: m.tournament || "", 
-            stage: stageStr, 
-            group: groupStr, 
-            t1: normalizeTeamName(m.team1), 
-            t2: normalizeTeamName(m.team2),
-            s1: parseInt(m.score1) || 0, 
-            s2: parseInt(m.score2) || 0,
-            status: 'past'
-        };
-    });
     db.goals2026 = (data.goals2026 || []).map(g => ({
         match_id: g.match_id ? g.match_id.toString() : "", 
         team: normalizeTeamName(g.team), 
@@ -163,13 +145,11 @@ function calculateGroupStats(matches, groupName = "") {
         if ((b.gf - b.ga) !== (a.gf - a.ga)) return (b.gf - b.ga) - (a.gf - a.ga);
         if (b.gf !== a.gf) return b.gf - a.gf;
 
-if (groupName && db.loats && db.loats[groupName]) {
-    let o = db.loats[groupName].map(x => x.toUpperCase()); // Жестко переводим в ВЕРХНИЙ регистр
-    let iA = o.indexOf(a.name.toUpperCase()); 
-    let iB = o.indexOf(b.name.toUpperCase());
-    if (iA !== -1 && iB !== -1) return iA - iB;
-}
-return 0;
+        if (groupName && db.loats && db.loats[groupName]) {
+            let o = db.loats[groupName]; let iA = o.indexOf(a.name.toUpperCase()); let iB = o.indexOf(b.name.toUpperCase());
+            if (iA !== -1 && iB !== -1) return iA - iB;
+        }
+        return 0;
     });
     return teamList;
 }
