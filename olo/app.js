@@ -552,8 +552,10 @@ function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2) {
     
     let s1 = (isPast && m.s1 !== null) ? m.s1 : '-';
     let s2 = (isPast && m.s2 !== null) ? m.s2 : '-';
-    let p1 = (isPast && m.p1 !== null) ? `<span class="text-white text-[9px] ml-1.5">${m.p1}</span>` : '';
-    let p2 = (isPast && m.p2 !== null) ? `<span class="text-white text-[9px] ml-1.5">${m.p2}</span>` : '';
+    
+    // Вывод пенальти белым цветом, шрифтом меньше и без скобок (как в архиве)
+    let p1 = (isPast && m.p1 !== null) ? `<span class="text-white text-[10px] font-normal ml-1.5">${m.p1}</span>` : '';
+    let p2 = (isPast && m.p2 !== null) ? `<span class="text-white text-[10px] font-normal ml-1.5">${m.p2}</span>` : '';
 
     let gridBadge1 = gridPos1 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos1}</span>` : '';
     let gridBadge2 = gridPos2 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos2}</span>` : '';
@@ -563,9 +565,9 @@ function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2) {
             <div class="flex items-center truncate text-[11px] sm:text-xs font-black text-white uppercase">${gridBadge1}<img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t1Name)}</span></div>
             <div class="flex items-center truncate text-[11px] sm:text-xs font-black text-white uppercase">${gridBadge2}<img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t2Name)}</span></div>
         </div>
-        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-[11px] sm:text-xs">
-            <div class="${isPast && m.s1 > m.s2 ? 'text-neon' : (isPast ? 'text-zinc-300' : 'text-zinc-600')} flex items-center">${s1}${p1}</div>
-            <div class="${isPast && m.s2 > m.s1 ? 'text-neon' : (isPast ? 'text-zinc-300' : 'text-zinc-600')} flex items-center">${s2}${p2}</div>
+        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm text-neon">
+            <div class="flex items-center">${s1}${p1}</div>
+            <div class="flex items-center">${s2}${p2}</div>
         </div>
     </div>`;
 }
