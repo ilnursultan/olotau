@@ -4,6 +4,7 @@ const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6mozW
 
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
+let current2026Gender = 'men'; 
 let archiveYear = ''; let archiveTournament = ''; let currentPlayoffStage2026 = '1/16'; let currentPlayoffStageArchive = '';
 let animId = null; let adminSecretClicks = 0; let adminClicksTimeout = null;
 
@@ -15,10 +16,130 @@ function handleAdminSecretClick() {
 
 function getGitHubLogoUrl(teamName) {
     let clean = normalizeTeamName(teamName).trim();
-    if (!clean || clean === '' || clean === '---' || clean.toUpperCase() === 'КОМАНДА' || clean.toUpperCase().includes('ПОБЕДИТЕЛЬ') || clean.toUpperCase().includes('ФИНАЛИСТ') || clean.toUpperCase().includes('ПРОИГРАВШИЙ') || clean.toUpperCase().includes('ПАРА')) {
+    if (!clean || clean === '' || clean === '---' || clean.toUpperCase() === 'КОМАНДА' || clean.toUpperCase().includes('ПОБЕДИТЕЛЬ') || clean.toUpperCase().includes('ФИНАЛИСТ') || clean.toUpperCase().includes('ПРОИГРАВШ') || clean.toUpperCase().includes('ПАРА') || clean.toUpperCase().includes('МЕСТО') || clean.toUpperCase().includes('ГРУПП')) {
         return 'https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png';
     }
     return `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${clean}.png`;
+}
+
+function set2026Category(category) {
+    current2026Gender = category;
+    const overallTabBtn = document.getElementById('tab-btn-overall');
+    
+    if (category === 'women') {
+        if(overallTabBtn) overallTabBtn.classList.add('hidden');
+        if (active2026Tab === 'standings') active2026Tab = 'tables';
+        currentPlayoffStage2026 = '1/4';
+    } else if (category === 'supercup') {
+        if(overallTabBtn) overallTabBtn.classList.add('hidden');
+        // Принудительно переключаем вкладку на Плей-офф, так как у Суперкубка нет таблиц
+        active2026Tab = 'playoffs';
+        currentPlayoffStage2026 = '1/2';
+    } else {
+        if(overallTabBtn) overallTabBtn.classList.remove('hidden');
+        if (currentPlayoffStage2026 === '1/4' && active2026Tab === 'playoffs') currentPlayoffStage2026 = '1/16';
+    }
+    
+    // Перерисовываем табы с правильной подсветкой активной кнопки
+    let activeBtn = document.querySelector(`#nav-2026-tabs button[onclick*="${active2026Tab}"]`);
+    if (activeBtn) {
+        document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
+        activeBtn.classList.add('active');
+    }
+
+    setupFiltersAndSelectors();
+    switch2026Tab(active2026Tab, activeBtn); // Исправлено: жесткий принудительный рендер выбранного таба
+}
+
+// Старый метод оставляем для подстраховки, чтобы сайт не падал, если где-то остался его вызов
+function set2026Gender(gender) { set2026Category(gender); }
+
+function openPlayoffModal(matchId, t1Fallback, t2Fallback, stageLabel) {
+    let m = db.matches2026.find(x => x.id === matchId);
+    let t1Name = (m && m.t1 && m.t1 !== '---') ? m.t1 : t1Fallback;
+    let t2Name = (m && m.t2 && m.t2 !== '---') ? m.t2 : t2Fallback;
+    let isPast = m && m.status === 'past';
+
+    let cleanStage = stageLabel ? stageLabel.replace('Женщины: ', '') : 'Плей-офф';
+    document.getElementById('playoff-modal-title-node').innerText = `Детали матча: ${cleanStage.toUpperCase()}`;
+
+    document.getElementById('playoff-modal-t1').innerText = smartTeamName(t1Name);
+    document.getElementById('playoff-modal-t2').innerText = smartTeamName(t2Name);
+    document.getElementById('playoff-modal-logo1').src = getGitHubLogoUrl(t1Name);
+    document.getElementById('playoff-modal-logo2').src = getGitHubLogoUrl(t2Name);
+
+    let s1Text = isPast ? m.s1 : '-';
+    let s2Text = isPast ? m.s2 : '-';
+    
+if (isPast && m.p1 !== null && m.p2 !== null) {
+        document.getElementById('playoff-modal-score').innerHTML = `
+            ${m.s1}<sup class="text-white font-normal text-sm ml-0.5">${m.p1}</sup> 
+            : 
+            ${m.s2}<sup class="text-white font-normal text-sm ml-0.5">${m.p2}</sup>
+        `;
+    } else {
+        document.getElementById('playoff-modal-score').innerText = `${s1Text} : ${s2Text}`;
+    }
+    
+    // Выводим информацию о дате, времени и поле строго текстом без эмодзи
+    let penaltyNode = document.getElementById('playoff-modal-penalty');
+    if (penaltyNode) {
+if (m && (m.date || m.time)) {
+    penaltyNode.innerHTML = `${m.date || '---'} | ${m.time || '00:00'}`;
+    penaltyNode.classList.remove('hidden');
+    penaltyNode.className = "text-[9px] font-medium text-zinc-500 uppercase tracking-widest mt-1.5";
+} else {
+            penaltyNode.classList.add('hidden');
+        }
+    }
+
+    let eventsContainer = document.getElementById('playoff-modal-events');
+    eventsContainer.innerHTML = '';
+
+    if (m && isPast) {
+        let mGoals = db.goals2026.filter(g => g.match_id === m.id);
+        mGoals.sort((a, b) => parseInt(a.minute || 0) - parseInt(b.minute || 0));
+
+        if (mGoals.length > 0) {
+            let c1 = 0, c2 = 0;
+            let html = '';
+
+            mGoals.forEach(g => {
+                let isT1 = normalizeTeamName(g.team) === normalizeTeamName(m.t1);
+                if (isT1) c1++; else c2++;
+
+                let pName = shortenPlayerName(g.player || '');
+                let aStr = g.assistant ? `<span class="text-zinc-500 text-[9px] ml-1">(${shortenPlayerName(g.assistant)})</span>` : '';
+
+                if (isT1) {
+                    html += `
+                    <div class="flex items-center py-1 border-b border-zinc-900/20 last:border-0 justify-start w-full">
+                        <span class="text-zinc-500 font-black text-[10px] w-6 shrink-0 text-left">${g.minute}'</span>
+                        <span class="text-neon font-black text-[10px] bg-zinc-900/80 px-1.5 rounded mr-2 shrink-0">${c1}:${c2}</span>
+                        <span class="text-white font-bold text-[10px] truncate">${pName}</span>${aStr}
+                    </div>`;
+                } else {
+                    html += `
+                    <div class="flex items-center py-1 border-b border-zinc-900/20 last:border-0 justify-end w-full text-right">
+                        <span class="text-white font-bold text-[10px] truncate mr-1">${pName}</span>${aStr}
+                        <span class="text-neon font-black text-[10px] bg-zinc-900/80 px-1.5 rounded mx-2 shrink-0">${c1}:${c2}</span>
+                        <span class="text-zinc-500 font-black text-[10px] w-6 shrink-0 text-right">${g.minute}'</span>
+                    </div>`;
+                }
+            });
+            eventsContainer.innerHTML = html;
+        } else {
+            eventsContainer.innerHTML = `<div class="text-center italic py-4 text-zinc-600 text-xs font-bold uppercase">Нет данных о забитых голах</div>`;
+        }
+    } else {
+        eventsContainer.innerHTML = `<div class="text-center italic py-4 text-zinc-600 text-xs font-bold uppercase">Матч еще не сыгран</div>`;
+    }
+
+    document.getElementById('playoff-modal').classList.remove('hidden');
+}
+
+function closePlayoffModal() {
+    document.getElementById('playoff-modal').classList.add('hidden');
 }
 
 function updateLiveDateStrings() {
@@ -65,10 +186,18 @@ function setupFiltersAndSelectors() {
     document.getElementById('archive-tournament').addEventListener('change', (e) => { archiveTournament = e.target.value; toggleSupercupBanner(archiveTournament); currentPlayoffStageArchive = ''; updateArchiveYears(); });
     document.getElementById('archive-year').addEventListener('change', (e) => { archiveYear = e.target.value; currentPlayoffStageArchive = ''; renderArchiveCore(); });
 
-    const teams = [...new Set(db.matches2026.flatMap(m => [m.t1, m.t2]))].filter(t => t && !t.includes('КОМАНДА') && !t.includes('ПОБЕДИТЕЛЬ') && !t.includes('ПАРА')).sort();
+    let isWomen = (current2026Gender === 'women');
+    let filteredMatches = db.matches2026.filter(m => isWomen ? (parseInt(m.id) >= 1000) : (parseInt(m.id) < 1000));
+    
+    const teams = [...new Set(filteredMatches.flatMap(m => [m.t1, m.t2]))].filter(t => t && !t.includes('КОМАНДА') && !t.includes('ПОБЕДИТЕЛЬ') && !t.includes('ПАРА')).sort();
     document.getElementById('filter-teams').innerHTML = '<option value="all">Все команды</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
     document.getElementById('filter-stages').innerHTML = '<option value="all">Все стадии</option><option value="Групповой этап">Групповой этап</option><option value="Плей-офф">Плей-офф</option>';
-    ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => { document.getElementById(id).addEventListener('change', render2026Schedule); });
+    
+    ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => {
+        let el = document.getElementById(id);
+        el.removeEventListener('change', render2026Schedule);
+        el.addEventListener('change', render2026Schedule);
+    });
     updateArchiveYears();
 }
 
@@ -83,6 +212,31 @@ function updateArchiveYears() {
 function toggleSupercupBanner(tournamentName) {
     const banner = document.getElementById('supercup-banner');
     if(banner) tournamentName?.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
+}
+
+// Функции переключения вкладок (Исправление Uncaught ReferenceError)
+function switch2026Tab(tab, btn) {
+    active2026Tab = tab;
+    document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    const sections = ['tables', 'schedule', 'standings', 'playoffs', 'scorers', 'assistants'];
+    sections.forEach(t => {
+        const el = document.getElementById('sub-2026-' + t);
+        if (el) el.classList.add('hidden');
+    });
+    
+    const activeEl = document.getElementById('sub-2026-' + tab);
+    if (activeEl) activeEl.classList.remove('hidden');
+    
+    render2026Core();
+}
+
+function switchArchiveTab(tab, btn) {
+    activeArchiveTab = tab;
+    document.querySelectorAll('#archive-tabs-nav .tab-btn-top').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderArchiveCore();
 }
 
 function shortenPlayerName(fullName) {
@@ -105,18 +259,23 @@ function updateStatsTeamsList() {
             if(m.t2 && m.t2 !== '-' && m.t2 !== '') allTeams.add(normalizeTeamName(m.t2));
         }
     });
-    if (gender === 'Мужчины') {
+    if (gender === 'Мужчины' || gender === 'Женщины') {
+        let isWomen = (gender === 'Женщины');
         db.matches2026.forEach(m => {
-            if(m.t1 && m.t1 !== '-' && m.t1 !== '' && !m.t1.includes('КОМАНДА') && !m.t1.includes('ПАРА')) allTeams.add(normalizeTeamName(m.t1));
-            if(m.t2 && m.t2 !== '-' && m.t2 !== '' && !m.t2.includes('КОМАНДА') && !m.t2.includes('ПАРА')) allTeams.add(normalizeTeamName(m.t2));
+            let matchIsWomen = (parseInt(m.id) >= 1000);
+            if (isWomen === matchIsWomen) {
+                if(m.t1 && m.t1 !== '-' && m.t1 !== '' && !m.t1.includes('КОМАНДА') && !m.t1.includes('ПАРА')) allTeams.add(normalizeTeamName(m.t1));
+                if(m.t2 && m.t2 !== '-' && m.t2 !== '' && !m.t2.includes('КОМАНДА') && !m.t2.includes('ПАРА')) allTeams.add(normalizeTeamName(m.t2));
+            }
         });
     }
     const sortedTeams = [...allTeams].sort(); const teamSelect = document.getElementById('stats-team');
     if (sortedTeams.length > 0) {
 teamSelect.innerHTML = sortedTeams.map(t => {
-    let isKutuevo = t.toUpperCase().includes('КУТУЕВО');
-    return `<option value="${t}" ${isKutuevo ? 'selected' : ''}>${t.toUpperCase()}</option>`;
-}).join('');
+        // Проверяем, чтобы имя было именно "КУТУЕВО" без лишних цифр и дефисов на конце
+        let isKutuevo = t.toUpperCase().trim() === 'КУТУЕВО';
+        return `<option value="${t}" ${isKutuevo ? 'selected' : ''}>${t.toUpperCase()}</option>`;
+    }).join('');
         document.getElementById('stats-content').classList.remove('hidden'); renderTeamStatistics();
     } else {
         teamSelect.innerHTML = '<option value="">Нет команд</option>'; document.getElementById('stats-content').classList.add('hidden');
@@ -130,9 +289,9 @@ function showRosterModal(teamName) {
     if (roster.length === 0) {
         listEl.innerHTML = `<div class="text-center italic text-zinc-600 py-4">Состав команды не внесен</div>`;
     } else {
-roster.forEach((p, idx) => {
-listEl.innerHTML += `<div class="flex items-center gap-2 py-1.5 border-b border-zinc-800/50 last:border-0"><span class="text-neon font-black text-[10px] w-4 text-right">${idx+1}.</span><span class="text-zinc-200 font-bold uppercase tracking-wide text-[11px]">${p.name}</span></div>`;
-});
+        roster.forEach((p, idx) => {
+            listEl.innerHTML += `<div class="flex items-center gap-2 py-1.5 border-b border-zinc-800/50 last:border-0"><span class="text-neon font-black text-[10px] w-4 text-right">${idx+1}.</span><span class="text-zinc-200 font-bold uppercase tracking-wide text-[11px]">${p.name}</span></div>`;
+        });
     }
     document.getElementById('roster-modal').classList.remove('hidden');
 }
@@ -154,12 +313,10 @@ function renderTeamStatistics() {
     let historyMatches = []; let activeArchiveYears = new Set();
     let bestStagesMap = {};
 
-// ... внутри функции renderTeamStatistics ...
- function processMatch(m, yearStr) {
-    // ЕСЛИ МАТЧ НЕ СЫГРАН, ПРЕРЫВАЕМ ВЫЧИСЛЕНИЕ И НЕ СЧИТАЕМ УЧАСТИЕ И НИЧЬЮ
-    if (yearStr === '2026' && m.status !== 'past') return; 
-    
-    let t1Norm = normalizeTeamName(m.t1); let t2Norm = normalizeTeamName(m.t2);
+    function processMatch(m, yearStr) {
+        if (yearStr === '2026' && m.status !== 'past') return; 
+        
+        let t1Norm = normalizeTeamName(m.t1); let t2Norm = normalizeTeamName(m.t2);
         if (t1Norm !== team && t2Norm !== team) return;
         if (!t1Norm || t1Norm === '-' || t1Norm === '' || !t2Norm || t2Norm === '-' || t2Norm === '') return;
         participations.add(yearStr); if (yearStr !== '2026') { activeArchiveYears.add(yearStr); } games++;
@@ -171,17 +328,16 @@ function renderTeamStatistics() {
         else if (teamPen !== null && oppPen !== null) { if (teamPen > oppPen) isWin = true; else isLoss = true; }
         if (isWin) w++; else if (isLoss) l++; else d++;
         
-        // Исправленное чтение стадии
         let currentStage = m.stage || 'Групповой этап';
         if (m.group && m.group.trim() !== '') currentStage = 'Групповой этап';
         
-        let label = currentStage.toUpperCase();
+        let label = currentStage.toUpperCase().replace('ЖЕНЩИНЫ: ', '');
         if (currentStage.toLowerCase().includes('финал') && !currentStage.toLowerCase().includes('3-е')) { label = isWin ? 'ЧЕМПИОН 🏆' : '2 МЕСТО 🥈'; } 
         else if (currentStage.toLowerCase().includes('3-е место')) { label = isWin ? '3 МЕСТО 🥉' : '4 МЕСТО'; }
         
         if(!bestStagesMap[label]) bestStagesMap[label] = [];
         if(!bestStagesMap[label].includes(yearStr)) bestStagesMap[label].push(yearStr);
-        historyMatches.push({ year: yearStr, stage: currentStage, opponent: isT1 ? t2Norm : t1Norm, scoreText: (teamScore !== null ? `${teamScore}:${oppScore}` : '-:-') + (teamPen !== null ? ` (${teamPen}:${oppPen} пен)` : ''), isWin: isWin, isLoss: isLoss });
+        historyMatches.push({ year: yearStr, stage: currentStage.replace('Женщины: ', ''), opponent: isT1 ? t2Norm : t1Norm, scoreText: (teamScore !== null ? `${teamScore}:${oppScore}` : '-:-') + (teamPen !== null ? ` (${teamPen}:${oppPen} пен)` : ''), isWin: isWin, isLoss: isLoss });
     }
     db.archive.forEach(m => { if (m.tournament.trim().toLowerCase() === gender.trim().toLowerCase()) processMatch(m, m.year); });
     if (gender === 'Мужчины' || gender === 'Женщины') { db.matches2026.forEach(m => { if (m.status === 'past') processMatch(m, '2026'); }); }
@@ -201,25 +357,22 @@ function renderTeamStatistics() {
     const badgesContainer = document.getElementById('stats-team-badges'); const mainCardEl = document.getElementById('stats-team-card');
     badgesContainer.innerHTML = ''; let badgesHtml = '';
     
-// Собираем стандартные бейджики под надписью "До Кутуево..."
-if (bestStagesMap['ЧЕМПИОН 🏆']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full text-amber-400 text-[10px] font-black">🥇 <span class="opacity-70 font-bold ml-0.5">x</span>${bestStagesMap['ЧЕМПИОН 🏆'].length}</div>`; }
-if (bestStagesMap['2 МЕСТО 🥈']) { badgesHtml += `<div class="flex items-center gap-1 bg-slate-400/10 border border-slate-400/30 px-2.5 py-1 rounded-full text-slate-300 text-[10px] font-black">🥈 <span class="opacity-70 font-bold ml-0.5">x</span>${bestStagesMap['2 МЕСТО 🥈'].length}</div>`; }
-if (bestStagesMap['3 МЕСТО 🥉']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-700/10 border border-amber-700/30 px-2.5 py-1 rounded-full text-amber-600 text-[10px] font-black">🥉 <span class="opacity-70 font-bold ml-0.5">x</span>${bestStagesMap['3 МЕСТО 🥉'].length}</div>`; }
+    if (bestStagesMap['ЧЕМПИОН 🏆']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full text-amber-400 text-[10px] font-black">🥇 <span class="opacity-70 font-bold ml-0.5">x</span>${bestStagesMap['ЧЕМПИОН 🏆'].length}</div>`; }
+    if (bestStagesMap['2 МЕСТО 🥈']) { badgesHtml += `<div class="flex items-center gap-1 bg-slate-400/10 border border-slate-400/30 px-2.5 py-1 rounded-full text-slate-300 text-[10px] font-black">🥈 <span class="opacity-70 font-bold ml-0.5">x</span>${bestStagesMap['2 МЕСТО 🥈'].length}</div>`; }
+    if (bestStagesMap['3 МЕСТО 🥉']) { badgesHtml += `<div class="flex items-center gap-1 bg-amber-700/10 border border-amber-700/30 px-2.5 py-1 rounded-full text-amber-600 text-[10px] font-black">🥉 <span class="opacity-70 font-bold ml-0.5">x</span>${bestStagesMap['3 МЕСТО 🥉'].length}</div>`; }
 
-let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
-let requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
-let isVeteran = requiredYears.every(y => activeArchiveYears.has(y));
+    let isHost = team.trim().toUpperCase().includes('КУТУЕВО');
+    let requiredYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025'];
+    let isVeteran = requiredYears.every(y => activeArchiveYears.has(y));
 
-if (isVeteran) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-neon/40 bg-neon/10 text-neon">💎 ВЕТЕРАН ТУРНИРА</span>`; }
-if (isHost) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-white/20 bg-white/5 text-white">🏠 ХОЗЯЕВА ТУРНИРА</span>`; }
-badgesContainer.innerHTML = badgesHtml;
+    if (isVeteran) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-neon/40 bg-neon/10 text-neon">💎 ВЕТЕРАН ТУРНИРА</span>`; }
+    if (isHost) { badgesHtml += `<span class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide border border-white/20 bg-white/5 text-white">🏠 ХОЗЯЕВА ТУРНИРА</span>`; }
+    badgesContainer.innerHTML = badgesHtml;
 
-// Красим блок лучшего результата
-let resultBox = document.getElementById('stat-box-result');
-resultBox.className = "text-[10px] font-black uppercase tracking-tight whitespace-nowrap " + (bestLabel === 'ЧЕМПИОН 🏆' ? 'text-[#FFD700]' : 'text-white');
-resultBox.innerHTML = bestLabel;
+    let resultBox = document.getElementById('stat-box-result');
+    resultBox.className = "text-[10px] font-black uppercase tracking-tight whitespace-nowrap " + (bestLabel === 'ЧЕМПИОН 🏆' ? 'text-[#FFD700]' : 'text-white');
+    resultBox.innerHTML = bestLabel;
 
-    // Золотое свечение чемпионов и зеленое для ветеранов
     mainCardEl.className = mainCardEl.className.replace(/\s(before:bg-[^\s]+|border-[^\s]+|shadow-[^\s]+)/g, '');
     if (bestStagesMap['ЧЕМПИОН 🏆']) { 
         mainCardEl.style.borderColor = 'rgba(255, 215, 0, 0.4)'; 
@@ -252,15 +405,37 @@ resultBox.innerHTML = bestLabel;
 
 function render2026Tables() {
     const container = document.getElementById('sub-2026-tables'); container.innerHTML = '';
-    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    
+    // Определяем текущую категорию
+    let filteredMatches = db.matches2026.filter(m => {
+        let idInt = parseInt(m.id);
+        if (current2026Gender === 'women') return idInt >= 1000 && idInt < 10000;
+        if (current2026Gender === 'supercup') return idInt >= 10000;
+        return idInt < 1000; // men
+    });
+
+    const groupMatches = filteredMatches.filter(m => m.stage.includes('Групповой этап'));
     const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
-    if(groups.length === 0) { container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа 2026 не найдены.</div>`; return; }
-    let overallStandings = getStandingsArray(); let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
+    
+    if(groups.length === 0) { 
+        container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа не найдены.</div>`; 
+        return; 
+    }
+    
+    let overallStandings = getStandingsArray(); 
+    let playoffTeams2026 = overallStandings.slice(0, 32).map(x => x.name.trim().toUpperCase());
+    
     groups.forEach(gName => {
-        const mInGroup = groupMatches.filter(m => m.group === gName); const sortedTeams = calculateGroupStats(mInGroup, gName);
-        let html = `<div class="group-card"><table><thead><tr><th>${gName}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
-        sortedTeams.forEach((t) => {
-            let barColor = playoffTeams2026.includes(t.name.trim().toUpperCase()) ? 'green-bar' : 'red-bar';
+        const mInGroup = groupMatches.filter(m => m.group === gName); 
+        const sortedTeams = calculateGroupStats(mInGroup, gName);
+        
+        // ИСПРАВЛЕНО: Убрано дублирование слова "Группа", если оно уже есть в gName
+        let headerLabel = gName.toUpperCase().includes('ГРУППА') ? gName : `Группа ${gName}`;
+        
+        let html = `<div class="group-card"><table><thead><tr><th>${headerLabel}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
+        sortedTeams.forEach((t, idx) => {
+            let isWomen = (current2026Gender === 'women');
+            let barColor = isWomen ? (idx < 2 ? 'green-bar' : 'red-bar') : (playoffTeams2026.includes(t.name.trim().toUpperCase()) ? 'green-bar' : 'red-bar');
             html += `<tr><td class="${barColor} max-w-[130px] truncate"><img src="${getGitHubLogoUrl(t.name)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">${smartTeamName(t.name)}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gf}-${t.ga}</td><td class="text-neon font-black">${t.pts}</td></tr>`;
         });
         html += `</tbody></table><div class="mt-3 border-t border-zinc-800/60 pt-1.5 space-y-1.5">`;
@@ -277,7 +452,19 @@ function render2026Tables() {
 function render2026StatList(type) {
     const listContainer = document.getElementById(type === 'scorers' ? 'scorers-list' : 'assistants-list'); if(!listContainer) return; listContainer.innerHTML = '';
     let statsMap = {};
-    db.goals2026.forEach(g => {
+    let isWomen = (current2026Gender === 'women');
+
+db.goals2026.forEach(g => {
+    let mRef = db.matches2026.find(x => x.id === g.match_id);
+    if (!mRef) return;
+    
+    let idInt = parseInt(mRef.id);
+    if (current2026Gender === 'women' && (idInt < 1000 || idInt >= 10000)) return false;
+    if (current2026Gender === 'supercup' && idInt < 10000) return false;
+    if (current2026Gender === 'men' && idInt >= 1000) return false;
+        let matchIsWomen = (parseInt(mRef.id) >= 1000);
+        if (isWomen !== matchIsWomen) return;
+
         let pName = type === 'scorers' ? g.player : g.assistant; if(!pName || pName.toLowerCase() === 'автогол' || pName === '') return;
         let key = pName + '|||' + g.team; if(!statsMap[key]) statsMap[key] = { name: pName, team: g.team, count: 0 }; statsMap[key].count++;
     });
@@ -300,20 +487,31 @@ function render2026StatList(type) {
 function render2026Schedule() {
     const container = document.getElementById('schedule-list'); if(!container) return;
     const tFilter = document.getElementById('filter-teams').value; const sFilter = document.getElementById('filter-stages').value; const statusFilter = document.getElementById('filter-status').value;
-    let filtered = db.matches2026.filter(m => {
-        if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
-        if(sFilter === 'Групповой этап' && m.stage !== 'Групповой этап') return false;
-        if(sFilter === 'Плей-офф' && m.stage === 'Групповой этап') return false;
+    
+    let isWomen = (current2026Gender === 'women');
+
+let filtered = db.matches2026.filter(m => {
+    let idInt = parseInt(m.id);
+    if (current2026Gender === 'women' && (idInt < 1000 || idInt >= 10000)) return false;
+    if (current2026Gender === 'supercup' && idInt < 10000) return false;
+    if (current2026Gender === 'men' && idInt >= 1000) return false;
+
+    if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
+        if(sFilter === 'Групповой этап' && !m.stage.includes('Групповой этап')) return false;
+        if(sFilter === 'Плей-офф' && m.stage.includes('Групповой этап')) return false;
         if(statusFilter === 'future' && m.status !== 'future') return false;
         if(statusFilter === 'past' && m.status !== 'past') return false;
         return true;
     });
     if(filtered.length === 0) { container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Матчи не найдены</div>`; return; }
     container.innerHTML = filtered.map((m) => {
-        let stageLabel = m.stage === 'Групповой этап' ? m.group : m.stage;
+        let stageLabel = m.stage.replace('Женщины: ', '');
+        if (m.stage.includes('Групповой этап')) {
+    stageLabel = m.group.toUpperCase().includes('ГРУППА') ? m.group : `Группа ${m.group}`;
+}
         let isPast = m.status === 'past';
         let t1Name = m.t1; let t2Name = m.t2;
-        if (m.stage !== 'Групповой этап' && (t1Name === 'КОМАНДА' || t1Name === '---' || !t1Name)) { t1Name = getPlayoffFallbackLabel(m.id, 't1'); t2Name = getPlayoffFallbackLabel(m.id, 't2'); }
+        if (!m.stage.includes('Групповой этап') && (t1Name === 'КОМАНДА' || t1Name === '---' || !t1Name)) { t1Name = getPlayoffFallbackLabel(m.id, 't1'); t2Name = getPlayoffFallbackLabel(m.id, 't2'); }
         let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
         let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
         let rightSideContent = isPast ? `<div class="text-right shrink-0 select-none"><div class="text-[9px] font-bold tracking-widest text-zinc-500">СЫГРАН</div><div class="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>` : `<div class="text-right shrink-0 select-none"><div class="text-sm font-black tracking-wide text-white">${m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>`;
@@ -323,6 +521,27 @@ function render2026Schedule() {
 
 function getPlayoffFallbackLabel(matchId, side) {
     let id = parseInt(matchId);
+    if (id >= 10000) {
+        if (id === 10001 || id === 10002) return 'ПОЛУФИНАЛИСТ СУПЕРКУБКА';
+        return 'ФИНАЛИСТ СУПЕРКУБКА';
+    }
+    // НОВЫЕ ID ИЗ СКРИНШОТА БАЗЫ ДАННЫХ ДЛЯ ЖЕНЩИН
+    if (id >= 1101 && id <= 1500) {
+        if (id >= 1101 && id <= 1104) {
+            let pairsInfo = { 
+                1101: "1 МЕСТО ГРУППЫ А vs 2 МЕСТО ГРУППЫ Г", 
+                1102: "1 МЕСТО ГРУППЫ Б vs 2 МЕСТО ГРУППЫ В", 
+                1103: "1 МЕСТО ГРУППЫ В vs 2 МЕСТО ГРУППЫ Б", 
+                1104: "1 МЕСТО ГРУППЫ Г vs 2 МЕСТО ГРУППЫ А" 
+            };
+            let p = pairsInfo[id].split(" vs ");
+            return side === 't1' ? p[0] : p[1];
+        }
+        if (id === 1201 || id === 1202) return 'ПОБЕДИТЕЛЬ 1/4 ФИНАЛА';
+        if (id === 1301) return 'ПРОИГРАВШАЯ 1/2 ФИНАЛА';
+        if (id === 1401) return 'ФИНАЛИСТ';
+    }
+    // Оставшаяся мужская часть без изменений...
     if (id >= 101 && id <= 116) {
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
         let p = pairs[id - 101]; return side === 't1' ? `КОМАНДА #${p[0]}` : `КОМАНДА #${p[1]}`;
@@ -336,14 +555,26 @@ function getPlayoffFallbackLabel(matchId, side) {
 }
 
 function getStandingsArray() {
-    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    // ИСПРАВЛЕНО: Фильтрация строго по выбранной категории (обычно Мужчины, т.к. Общий зачет только у них)
+    const filteredMatches = db.matches2026.filter(m => {
+        let idInt = parseInt(m.id);
+        if (current2026Gender === 'women') return idInt >= 1000 && idInt < 10000;
+        if (current2026Gender === 'supercup') return idInt >= 10000;
+        return idInt < 1000;
+    });
+
+    const groupMatches = filteredMatches.filter(m => m.stage.includes('Групповой этап'));
     const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
     let ranksMap = {};
+    
     groups.forEach(g => {
         calculateGroupStats(groupMatches.filter(m => m.group === g), g).forEach((tStats, rankIdx) => {
-            let currentRank = rankIdx + 1; if (!ranksMap[currentRank]) ranksMap[currentRank] = []; ranksMap[currentRank].push(tStats);
+            let currentRank = rankIdx + 1; 
+            if (!ranksMap[currentRank]) ranksMap[currentRank] = []; 
+            ranksMap[currentRank].push(tStats);
         });
     });
+    
     let finalStandings = [];
     Object.keys(ranksMap).sort((a,b) => a - b).forEach(rank => {
         let layer = ranksMap[rank];
@@ -352,12 +583,12 @@ function getStandingsArray() {
             if ((b.gf - b.ga) !== (a.gf - a.ga)) return (b.gf - b.ga) - (a.gf - a.ga);
             if (b.gf !== a.gf) return b.gf - a.gf;
             if (db.loats && db.loats['overall']) {
-    let order = db.loats['overall'].map(x => x.toUpperCase()); 
-    let idxA = order.indexOf(a.name.toUpperCase()); 
-    let idxB = order.indexOf(b.name.toUpperCase());
-    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-}
-return 0;
+                let order = db.loats['overall'].map(x => x.toUpperCase()); 
+                let idxA = order.indexOf(a.name.toUpperCase()); 
+                let idxB = order.indexOf(b.name.toUpperCase());
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            }
+            return 0;
         });
         finalStandings = finalStandings.concat(layer);
     });
@@ -375,32 +606,118 @@ function setPlayoffStage2026(stage) { currentPlayoffStage2026 = stage; render202
 function render2026Playoffs() {
     const nav = document.getElementById('playoff-stages-nav-2026'); const container = document.getElementById('playoff-matches-2026');
     if(!container || !nav) return; container.innerHTML = '';
-    const pMatches = db.matches2026.filter(m => m.stage !== 'Групповой этап'); let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
+    
+    let isWomen = (current2026Gender === 'women');
+    let isSupercup = (current2026Gender === 'supercup');
+
+    const pMatches = db.matches2026.filter(m => {
+        let idInt = parseInt(m.id);
+        if (isWomen) return idInt >= 1000 && idInt < 10000;
+        if (isSupercup) return idInt >= 10000;
+        return idInt < 1000 && !m.stage.includes('Групповой этап');
+    });
+    
+    let stages = ['1/16', '1/8', '1/4', '1/2', 'Финал'];
+    if (isWomen) stages = ['1/4', '1/2', 'Финал'];
+    if (isSupercup) stages = ['1/2', 'Финал'];
+
     if(!stages.includes(currentPlayoffStage2026)) currentPlayoffStage2026 = stages[0];
     nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
 
-    let matchesHtml = ''; let stageMatches = pMatches.filter(m => m.stage === currentPlayoffStage2026);
+    let matchesHtml = ''; 
+    let stageMatches = pMatches.filter(m => m.stage.includes(currentPlayoffStage2026));
 
-    if (currentPlayoffStage2026 === '1/16') {
+    if (isSupercup) {
+        if (currentPlayoffStage2026 === '1/2') {
+            const m1 = stageMatches.find(m => m.id === '10001');
+            const m2 = stageMatches.find(m => m.id === '10002');
+            matchesHtml += renderPlayoffCardLive(m1, 'Полуфиналист 1', 'Полуфиналист 2', '-', '-', 'Суперкубок: 1/2');
+            matchesHtml += renderPlayoffCardLive(m2, 'Полуфиналист 3', 'Полуфиналист 4', '-', '-', 'Суперкубок: 1/2');
+        } else if (currentPlayoffStage2026 === 'Финал') {
+            const mf = stageMatches.find(m => m.id === '100010');
+            matchesHtml += renderPlayoffCardLive(mf, 'Финалист 1', 'Финалист 2', '-', '-', 'Суперкубок: Финал');
+        }
+    } else if (!isWomen && currentPlayoffStage2026 === '1/16') {
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
         pairs.forEach((p, idx) => {
             let currentId = (101 + idx).toString(); let realMatch = stageMatches.find(m => m.id === currentId);
             let t1 = (realMatch && realMatch.t1 && realMatch.t1 !== 'КОМАНДА' && realMatch.t1 !== '---') ? realMatch.t1 : `КОМАНДА #${p[0]}`;
             let t2 = (realMatch && realMatch.t2 && realMatch.t2 !== 'КОМАНДА' && realMatch.t2 !== '---') ? realMatch.t2 : `КОМАНДА #${p[1]}`;
-            matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1]);
+            matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1], currentPlayoffStage2026);
+        });
+} else if (currentPlayoffStage2026 === '1/4' && isWomen) {
+        let pairsConfigWomen = [
+            { id: "1101", g1: "А", r1: 1, g2: "Г", r2: 2, label1: "1 МЕСТО ГРУППЫ А", label2: "2 МЕСТО ГРУППЫ Г", short1: "1А", short2: "2Г" },
+            { id: "1102", g1: "Б", r1: 1, g2: "В", r2: 2, label1: "1 МЕСТО ГРУППЫ Б", label2: "2 МЕСТО ГРУППЫ В", short1: "1Б", short2: "2В" },
+            { id: "1103", g1: "В", r1: 1, g2: "Б", r2: 2, label1: "1 МЕСТО ГРУППЫ В", label2: "2 МЕСТО ГРУППЫ Б", short1: "1В", short2: "2Б" },
+            { id: "1104", g1: "Г", r1: 1, g2: "А", r2: 2, label1: "1 МЕСТО ГРУППЫ Г", label2: "2 МЕСТО ГРУППЫ А", short1: "1Г", short2: "2А" }
+        ];
+
+        // Фильтруем строго матчи группового этапа (ID от 1000 до 1100)
+        let allWomenGroupMatches = db.matches2026.filter(m => {
+            let idInt = parseInt(m.id);
+            return idInt >= 1000 && idInt < 1100;
+        });
+
+        pairsConfigWomen.forEach(cfg => {
+            let realMatch = stageMatches.find(m => m.id === cfg.id);
+            
+            // ИСПРАВЛЕНО: Строжайшая очистка имени группы от лишних слов "Группа" для точного сравнения
+            let cleanGroupName = (gValue) => {
+                if (!gValue) return '';
+                return gValue.toString().toUpperCase().replace('ГРУППА', '').trim();
+            };
+
+            // Собираем матчи ТОЛЬКО для конкретной буквы группы
+            let matchesG1 = allWomenGroupMatches.filter(m => cleanGroupName(m.group) === cfg.g1.toUpperCase());
+            let matchesG2 = allWomenGroupMatches.filter(m => cleanGroupName(m.group) === cfg.g2.toUpperCase());
+
+            let gTop1 = calculateGroupStats(matchesG1, cfg.g1);
+            let gTop2 = calculateGroupStats(matchesG2, cfg.g2);
+
+            // Проверяем сыгранность: матчи должны быть в базе и все со статусом 'past'
+            let isG1Finished = matchesG1.length > 0 && matchesG1.every(m => m.status === 'past');
+            let isG2Finished = matchesG2.length > 0 && matchesG2.every(m => m.status === 'past');
+
+            let isT1MockInDb = !realMatch || !realMatch.t1 || realMatch.t1 === '---' || realMatch.t1.includes('МЕСТО') || realMatch.t1.includes('КОМАНДА') || realMatch.t1.length <= 4;
+            let isT2MockInDb = !realMatch || !realMatch.t2 || realMatch.t2 === '---' || realMatch.t2.includes('МЕСТО') || realMatch.t2.includes('КОМАНДА') || realMatch.t2.length <= 4;
+
+            let t1 = (!isT1MockInDb) ? realMatch.t1 : ((isG1Finished && gTop1 && gTop1[cfg.r1 - 1]) ? gTop1[cfg.r1 - 1].name : cfg.label1);
+            let t2 = (!isT2MockInDb) ? realMatch.t2 : ((isG2Finished && gTop2 && gTop2[cfg.r2 - 1]) ? gTop2[cfg.r2 - 1].name : cfg.label2);
+
+            matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, cfg.short1, cfg.short2, '1/4 финала');
         });
     } else if (currentPlayoffStage2026 === 'Финал') {
-        const realFinal = stageMatches.find(m => m.id === '601'); matchesHtml += renderPlayoffCardLive(realFinal, 'ФИНАЛИСТ #1', 'ФИНАЛИСТ #2', '-', '-');
-        const real3rd = pMatches.find(m => m.id === '501'); matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rd, 'ПРОИГРАВШИЙ 1/2 #1', 'ПРОИГРАВШИЙ 1/2 #2', '-', '-');
+        let finalId = isWomen ? '1401' : '601'; // ИСПРАВЛЕНО НА 1401
+        let thirdPlaceId = isWomen ? '1301' : '501'; // ИСПРАВЛЕНО НА 1301
+        
+        // Выводим главный Финал
+        const realFinal = stageMatches.find(m => m.id === finalId); 
+        matchesHtml += renderPlayoffCardLive(realFinal, 'ФИНАЛИСТ #1', 'ФИНАЛИСТ #2', '-', '-', 'Финал');
+        
+        if (!isWomen) {
+            const real3rd = pMatches.find(m => m.id === thirdPlaceId); 
+            if (real3rd) {
+                matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rd, 'ПРОИГРАВШИЙ 1/2 #1', 'ПРОИГРАВШИЙ 1/2 #2', '-', '-', 'Матч за 3-е место');
+            }
+        } else {
+            // ИСПРАВЛЕНО: Для женщин ищем правильный ID 1301
+            const real3rdWomen = pMatches.find(m => m.id === '1301');
+            if (real3rdWomen) {
+                matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rdWomen, 'ПРОИГРАВШАЯ 1/2 #1', 'ПРОИГРАВШАЯ 1/2 #2', '-', '-', 'Матч за 3-е место');
+            }
+        }
     } else {
         let slots = currentPlayoffStage2026 === '1/8' ? 8 : (currentPlayoffStage2026 === '1/4' ? 4 : 2);
         let startId = currentPlayoffStage2026 === '1/8' ? 201 : (currentPlayoffStage2026 === '1/4' ? 301 : 401);
+        if (isWomen && currentPlayoffStage2026 === '1/2') { slots = 2; startId = 1201; }
+        
         let prevLabel = currentPlayoffStage2026 === '1/8' ? '1/16' : (currentPlayoffStage2026 === '1/4' ? '1/8' : '1/4');
         for(let i = 0; i < slots; i++) {
             let currentId = (startId + i).toString(); let realMatch = stageMatches.find(m => m.id === currentId);
             let t1 = (realMatch && realMatch.t1 && realMatch.t1 !== '---') ? realMatch.t1 : `ПОБЕДИТЕЛЬ ${prevLabel} #${i * 2 + 1}`;
             let t2 = (realMatch && realMatch.t2 && realMatch.t2 !== '---') ? realMatch.t2 : `ПОБЕДИТЕЛЬ ${prevLabel} #${i * 2 + 2}`;
-            matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, '-', '-');
+            matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, '-', '-', currentPlayoffStage2026 + ' финала');
         }
     }
     container.innerHTML = matchesHtml;
@@ -417,7 +734,7 @@ function renderArchiveCore() {
         rInfo.innerHTML = `<h4 class="text-[10px] font-black text-neon uppercase tracking-wider mb-2 select-none">Расшифровка зон таблицы</h4><div class="flex flex-wrap gap-4 items-center mb-3 text-[10px] font-bold uppercase tracking-tight"><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#00E676] rounded-sm shadow-[0_0_8px_rgba(0,230,118,0.4)]"></span> Плей-офф</div><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#EAB308] rounded-sm shadow-[0_0_8px_rgba(234,179,8,0.4)]"></span> Плей-ин</div><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#EF4444] rounded-sm shadow-[0_0_8px_rgba(239,68,68,0.4)]"></span> Вылет</div></div><div class="text-[9px] text-zinc-500 font-semibold leading-relaxed border-t border-zinc-800/60 pt-2">ПРАВИЛА ПРИ РАВЕНСТВЕ ОЧКОВ: 1. ЛИЧНЫЕ ВСТРЕЧИ; 2. РАЗНИЦА МЯЧЕЙ; 3. ЗАБИТЫЕ ГОЛЫ.</div>`;
         if (isSupercup) { gContainer.innerHTML = `<div class="text-zinc-500 text-xs text-center py-12 italic">Групповой этап не проводился</div>`; return; }
         const groupM = mArch.filter(m => m.stage === 'Групповой этап');
-	const groups = [...new Set(groupM.map(m => m.group))].filter(Boolean).sort();
+        const groups = [...new Set(groupM.map(m => m.group))].filter(Boolean).sort();
         if(groups.length === 0) { gContainer.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic">Групповой этап не найден.</div>`; return; }
         const playoffTeams = new Set(mArch.filter(m => m.stage !== 'Групповой этап').flatMap(m => [m.t1, m.t2]).filter(Boolean));
         groups.forEach(g => {
@@ -460,46 +777,22 @@ function setGlobalMode(mode) {
     currentGlobalMode = mode;
     const view2026 = document.getElementById('view-2026'); const viewArch = document.getElementById('view-archive'); const viewStats = document.getElementById('view-stats');
     const tabs2026 = document.getElementById('nav-2026-tabs').parentElement; const ctrlsArch = document.getElementById('archive-controls');
+    const genSelector = document.getElementById('gender-selector-2026');
     [view2026, viewArch, viewStats].forEach(v => v.classList.add('hidden'));
     ['mode-btn-2026', 'mode-btn-stats', 'mode-btn-archive'].forEach(id => { document.getElementById(id).className = "flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer"; });
     if(mode === '2026') {
-        view2026.classList.remove('hidden'); tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden');
+        view2026.classList.remove('hidden'); tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden'); if(genSelector) genSelector.classList.remove('hidden');
         document.getElementById('mode-btn-2026').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         render2026Core();
     } else if (mode === 'archive') {
-        viewArch.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden');
+        viewArch.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden'); if(genSelector) genSelector.classList.add('hidden');
         document.getElementById('mode-btn-archive').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         renderArchiveCore();
     } else if (mode === 'stats') {
-        viewStats.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.add('hidden');
+        viewStats.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.add('hidden'); if(genSelector) genSelector.classList.add('hidden');
         document.getElementById('mode-btn-stats').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         renderTeamStatistics();
     }
-}
-
-// Вспомогательные функции вкладок и рендера
-function switch2026Tab(tab, btn) {
-    active2026Tab = tab;
-    document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    
-    const sections = ['tables', 'schedule', 'standings', 'playoffs', 'scorers', 'assistants'];
-    sections.forEach(t => {
-        const el = document.getElementById('sub-2026-' + t);
-        if (el) el.classList.add('hidden');
-    });
-    
-    const activeEl = document.getElementById('sub-2026-' + tab);
-    if (activeEl) activeEl.classList.remove('hidden');
-    
-    render2026Core();
-}
-
-function switchArchiveTab(tab, btn) {
-    activeArchiveTab = tab;
-    document.querySelectorAll('#archive-tabs-nav .tab-btn-top').forEach(el => el.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    renderArchiveCore();
 }
 
 function render2026Core() {
@@ -513,8 +806,8 @@ function render2026Core() {
 
 function getScoreDisplay(m) {
     if (m.status !== 'past' || m.s1 === null || m.s2 === null) return { s1: '-', s2: '-' };
-let pen1Str = (m.p1 !== null) ? ` <span class="text-white text-[9px] font-normal ml-1">${m.p1}</span>` : '';
-let pen2Str = (m.p2 !== null) ? ` <span class="text-white text-[9px] font-normal ml-1">${m.p2}</span>` : '';
+    let pen1Str = (m.p1 !== null) ? ` <span class="text-white text-[9px] font-normal ml-1">${m.p1}</span>` : '';
+    let pen2Str = (m.p2 !== null) ? ` <span class="text-white text-[9px] font-normal ml-1">${m.p2}</span>` : '';
     return { s1: m.s1 + pen1Str, s2: m.s2 + pen2Str };
 }
 
@@ -546,19 +839,23 @@ function toggleDetails(id, el) {
     if(el) el.classList.toggle('open');
 }
 
-function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2) {
+function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2, stageLabel) {
+    // 1. Сначала объявляем имена команд
     let t1Name = (m && m.t1 && m.t1 !== '---') ? m.t1 : t1Fallback;
     let t2Name = (m && m.t2 && m.t2 !== '---') ? m.t2 : t2Fallback;
-    let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
-    let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
+    
+    // 2. Теперь безопасно проверяем, являются ли они заглушками (ошибка исправлена)
+    let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШ') || t1Name.includes('ПАРА') || t1Name.includes('ГРУПП') || t1Name.includes('МЕСТО') || t1Name.toUpperCase().includes('ПРОИГРАВШАЯ');
+    let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШ') || t2Name.includes('ПАРА') || t2Name.includes('ГРУПП') || t2Name.includes('МЕСТО') || t2Name.toUpperCase().includes('ПРОИГРАВШАЯ');
+    
     let isPast = m && m.status === 'past';
-let medal1 = "";
-    let medal2 = "";
+    let medal1 = ""; let medal2 = "";
+    
     if (isPast && m && m.s1 !== null && m.s2 !== null) {
-        if (m.id === '601') {
+        if (m.id === '601' || m.id === '1008' || m.id === '1401') {
             if (m.s1 > m.s2 || (m.s1 === m.s2 && m.p1 > m.p2)) { medal1 = " 🥇"; medal2 = " 🥈"; }
             else { medal1 = " 🥈"; medal2 = " 🥇"; }
-        } else if (m.id === '501') {
+        } else if (m.id === '501' || m.id === '1007' || m.id === '1301') {
             if (m.s1 > m.s2 || (m.s1 === m.s2 && m.p1 > m.p2)) { medal1 = " 🥉"; }
             else { medal2 = " 🥉"; }
         }
@@ -566,30 +863,38 @@ let medal1 = "";
     
     let s1 = (isPast && m.s1 !== null) ? m.s1 : '-';
     let s2 = (isPast && m.s2 !== null) ? m.s2 : '-';
-    
-    // Вывод пенальти белым цветом, шрифтом меньше и без скобок (как в архиве)
-    let p1 = (isPast && m.p1 !== null) ? `<span class="text-white text-[10px] font-normal ml-1.5">${m.p1}</span>` : '';
-    let p2 = (isPast && m.p2 !== null) ? `<span class="text-white text-[10px] font-normal ml-1.5">${m.p2}</span>` : '';
+    let p1 = (isPast && m.p1 !== null) ? `<sup class="text-white text-[9px] font-normal ml-0.5">${m.p1}</sup>` : '';
+    let p2 = (isPast && m.p2 !== null) ? `<sup class="text-white text-[9px] font-normal ml-0.5">${m.p2}</sup>` : '';
 
-    let gridBadge1 = gridPos1 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos1}</span>` : '';
-    let gridBadge2 = gridPos2 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-4 shrink-0 text-center mr-1">${gridPos2}</span>` : '';
-// Определяем премиальное свечение для главных матчей сезона 2026
+    let gridBadge1 = gridPos1 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-5 shrink-0 text-left mr-1">${gridPos1}</span>` : '';
+    let gridBadge2 = gridPos2 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-5 shrink-0 text-left mr-1">${gridPos2}</span>` : '';
+
     let inlineStyle = "";
-    if (m && m.id === '601') {
-        // Финал — золотое свечение
+    if (m && (m.id === '601' || m.id === '1008' || m.id === '1401')) {
         inlineStyle = `style="border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(255, 215, 0, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
-    } else if (m && m.id === '501') {
-        // Матч за 3-е место — бронзовое свечение
+    } else if (m && (m.id === '501' || m.id === '1007' || m.id === '1301')) {
         inlineStyle = `style="border-color: rgba(205, 127, 50, 0.35); box-shadow: 0 0 20px rgba(205, 127, 50, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(205, 127, 50, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
     }
-    return `<div ${inlineStyle} class="bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden transition-all hover:border-zinc-800/80">
+
+    let matchId = m ? m.id : `mock-playoff-${Math.random()}`;
+
+    return `
+    <div ${inlineStyle} class="match-row clickable-match bg-zinc-card border border-zinc-900 rounded-2xl p-3 flex justify-between items-center w-full relative overflow-hidden transition-all hover:border-zinc-800/80 cursor-pointer" onclick="openPlayoffModal('${matchId}', '${t1Fallback.replace(/'/g, "\\'")}', '${t2Fallback.replace(/'/g, "\\'")}', '${stageLabel}')">
         <div class="flex-1 space-y-2 min-w-0 pr-2 z-10">
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">${gridBadge1}<img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t1Name)}${medal1}</span></div>
-            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">${gridBadge2}<img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-2" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t2Name)}${medal2}</span></div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">
+                ${gridBadge1}
+                <img src="${getGitHubLogoUrl(t1Name)}" class="team-logo mr-2 w-4 h-4 object-contain" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                <span class="truncate ${isMock1 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t1Name)}${medal1}</span>
+            </div>
+            <div class="flex items-center truncate text-[11px] sm:text-xs font-bold text-white uppercase">
+                ${gridBadge2}
+                <img src="${getGitHubLogoUrl(t2Name)}" class="team-logo mr-2 w-4 h-4 object-contain" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'">
+                <span class="truncate ${isMock2 ? 'text-zinc-500 font-bold' : ''}">${smartTeamName(t2Name)}${medal2}</span>
+            </div>
         </div>
-        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm text-neon">
-            <div class="flex items-center">${s1}${p1}</div>
-            <div class="flex items-center">${s2}${p2}</div>
+        <div class="flex flex-col gap-1.5 items-end justify-center shrink-0 z-10 font-black text-xs sm:text-sm text-neon pr-1">
+            <div class="flex items-center justify-end">${s1}${p1}</div>
+            <div class="flex items-center justify-end">${s2}${p2}</div>
         </div>
     </div>`;
 }
@@ -612,7 +917,6 @@ function renderPlayoffCard(m, t1, t2) {
     
     let stageLower = (m.stage || "").toLowerCase();
 
-    // Свечение и расчет медалей для Архива
     if (stageLower.includes('финал') && !stageLower.includes('3')) {
         inlineStyle = `style="border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(255, 215, 0, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
         if (isPast) {
@@ -659,5 +963,33 @@ function loadFilteredBestPlayers() {
         </div>
     `).join('');
 }
+// Автоматическое переключение разделов при открытии по ссылке с хэшем (#stats или #archive)
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const hash = window.location.hash;
+        if (hash === '#stats') {
+            if (typeof setGlobalMode === 'function') setGlobalMode('stats');
+        } else if (hash === '#archive') {
+            if (typeof setGlobalMode === 'function') setGlobalMode('archive');
+        }
+    }, 300); // Небольшая задержка, чтобы база данных успела загрузиться
+});
+
+// Обновление хэша в адресной строке при клике на меню, чтобы ссылкой можно было поделиться
+const originalSetGlobalMode = setGlobalMode;
+setGlobalMode = function(mode) {
+    if (mode === 'stats') {
+        window.location.hash = 'stats';
+    } else if (mode === 'archive') {
+        window.location.hash = 'archive';
+    } else if (mode === '2026') {
+        // Убираем хэш, если вернулись на главную
+        history.replaceState(null, null, ' ');
+    }
+    if (typeof originalSetGlobalMode === 'function') {
+        originalSetGlobalMode(mode);
+    }
+};
 
 init();
+

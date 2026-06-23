@@ -4,9 +4,19 @@ const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6mozW
 
 let db = { matches2026: [], goals2026: [], players2026: [], loats: {} };
 let activeAdminTab = 'group';
+let activeAdminGender = 'men'; 
 
 async function initAdmin() {
     try {
+        if (!document.getElementById('admin-gender-selector')) {
+            let selectorHtml = `
+                <div id="admin-gender-selector" class="flex bg-zinc-900 border border-zinc-800 p-1 rounded-2xl mb-4 gap-1 max-w-sm mx-auto">
+                    <button id="admin-gen-men" onclick="switchAdminGender('men')" class="flex-1 py-1.5 text-[10px] font-black uppercase text-center rounded-xl bg-white text-black">Мужчины</button>
+                    <button id="admin-gen-women" onclick="switchAdminGender('women')" class="flex-1 py-1.5 text-[10px] font-black uppercase text-center rounded-xl text-zinc-400">Женщины</button>
+                </div>`;
+            document.getElementById('olotau-app').insertAdjacentHTML('afterbegin', selectorHtml);
+        }
+
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
         mapServerData(res);
         document.getElementById('admin-loader').style.display = 'none';
@@ -15,6 +25,17 @@ async function initAdmin() {
     } catch(e) {
         document.getElementById('admin-loader').innerText = "Ошибка соединения с Google Sheets API";
     }
+}
+
+function switchAdminGender(gender) {
+    activeAdminGender = gender;
+    document.getElementById('admin-gen-men').className = gender === 'men' ? "flex-1 py-1.5 text-[10px] font-black uppercase text-center rounded-xl bg-white text-black" : "flex-1 py-1.5 text-[10px] font-black uppercase text-center rounded-xl text-zinc-400";
+    document.getElementById('admin-gen-women').className = gender === 'women' ? "flex-1 py-1.5 text-[10px] font-black uppercase text-center rounded-xl bg-white text-black" : "flex-1 py-1.5 text-[10px] font-black uppercase text-center rounded-xl text-zinc-400";
+    
+    let gridBtn = document.getElementById('admin-build-grid-btn');
+    if(gridBtn) gridBtn.innerText = gender === 'women' ? "Построить сетку 1/4 Женщин" : "Построить сетку плей-офф";
+    
+    renderAdminPanel();
 }
 
 function switchAdminTab(type) {
@@ -26,18 +47,22 @@ function switchAdminTab(type) {
 
 function renderAdminPanel() {
     const container = document.getElementById('admin-matches-container'); container.innerHTML = '';
-    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    
+    let isWomen = (activeAdminGender === 'women');
+    let genderMatches = db.matches2026.filter(m => isWomen ? (parseInt(m.id) >= 1000) : (parseInt(m.id) < 1000));
+    
+    const groupMatches = genderMatches.filter(m => m.stage.includes('Групповой этап'));
     const anyGroupFuture = groupMatches.some(m => m.status === 'future');
     checkAndRenderAdminLoats(anyGroupFuture);
 
-    let targetMatches = (activeAdminTab === 'group') ? groupMatches : db.matches2026.filter(m => m.stage !== 'Групповой этап');
+    let targetMatches = (activeAdminTab === 'group') ? groupMatches : genderMatches.filter(m => !m.stage.includes('Групповой этап'));
     if (targetMatches.length === 0) { container.innerHTML = `<div class="text-center italic text-zinc-600 py-10 text-xs">Матчи отсутствуют</div>`; return; }
 
     targetMatches.forEach(m => {
         let isPast = m.status === 'past';
-        let stageLabel = m.stage === 'Групповой этап' ? m.group : m.stage;
+        let stageLabel = m.stage.includes('Групповой этап') ? m.group : m.stage;
         let html = `
-            <div id="admin-card-${m.id}" class="bg-zinc-card border border-zinc-800 rounded-3xl p-3 flex flex-col gap-3">
+            <div id="admin-card-${m.id}" class="bg-zinc-card border border-zinc-800 rounded-3xl p-3 flex flex-col gap-3 mb-3">
                 <div class="flex justify-between items-center text-[9px] font-black uppercase text-zinc-500 border-b border-zinc-900 pb-1.5">
                     <span>ID: ${m.id} — ${stageLabel}</span>
                     <span id="ok-badge-${m.id}" class="${isPast ? '' : 'hidden'} text-neon">✓ СОХРАНЕНО</span>
@@ -82,7 +107,6 @@ function renderAdminPanel() {
             checkPlayoffPenaltyField(m.id);
             if (m.s1 >= 10 || m.s2 >= 10) document.getElementById(`extra-scores-${m.id}`).classList.remove('hidden');
             rebuildGoalsBlocks(m.id, m.t1, m.t2, true);
-            document.getElementById(`goals-block-${m.id}`).classList.add('hidden');
         }
     });
 }
@@ -111,6 +135,7 @@ function rebuildGoalsBlocks(matchId, t1, t2, useSavedData) {
     if (s2 === '10+') s2 = parseInt(document.getElementById(`inp-score2-${matchId}`).value) || 0;
     let cnt1 = (s1 === '-') ? 0 : parseInt(s1); let cnt2 = (s2 === '-') ? 0 : parseInt(s2);
     let leftBox = document.getElementById(`goals-left-${matchId}`); let rightBox = document.getElementById(`goals-right-${matchId}`);
+    if(!leftBox || !rightBox) return;
     leftBox.innerHTML = ''; rightBox.innerHTML = '';
     let savedEvents = db.goals2026.filter(e => e.match_id == matchId);
     for (let i = 0; i < cnt1; i++) leftBox.innerHTML += generateGoalRowHtml(matchId, t1, 't1', i, (useSavedData ? savedEvents[i] : null));
@@ -128,13 +153,20 @@ function generateGoalRowHtml(matchId, teamName, side, idx, savedEvent) {
 
 function checkAndRenderAdminLoats(anyGroupFuture) {
     const loatNotif = document.getElementById('admin-loat-notification'); const loatList = document.getElementById('admin-loat-list');
+    if(!loatNotif || !loatList) return;
     loatNotif.classList.add('hidden'); loatList.innerHTML = '';
-    const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
+    
+    let isWomen = (activeAdminGender === 'women');
+    const groupMatches = db.matches2026.filter(m => {
+        let matchIsWomen = (parseInt(m.id) >= 1000);
+        return (isWomen === matchIsWomen) && m.stage.includes('Групповой этап');
+    });
+    
     const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
     groups.forEach(gName => {
         const mInGroup = groupMatches.filter(m => m.group === gName);
         if (mInGroup.length > 0 && mInGroup.every(m => m.status === 'past')) {
-            let sorted = calculateGroupStats(mInGroup, ""); let equalTeams = [];
+            let sorted = calculateGroupStats(mInGroup, gName); let equalTeams = [];
             for(let i=0; i<sorted.length-1; i++) {
                 if (sorted[i].pts === sorted[i+1].pts && (sorted[i].gf - sorted[i].ga) === (sorted[i+1].gf - sorted[i+1].ga) && sorted[i].gf === sorted[i+1].gf) {
                     if(!equalTeams.includes(sorted[i].name)) equalTeams.push(sorted[i].name);
@@ -189,23 +221,49 @@ async function saveAdminMatch(matchId, t1, t2) {
     let goals = [];
     for (let i = 0; i < parseInt(s1); i++) goals.push({ team: t1, player: document.getElementById(`goal-p-t1-${matchId}-${i}`).value, assistant: document.getElementById(`goal-a-t1-${matchId}-${i}`).value, minute: parseInt(document.getElementById(`goal-m-t1-${matchId}-${i}`).value) });
     for (let j = 0; j < parseInt(s2); j++) goals.push({ team: t2, player: document.getElementById(`goal-p-t2-${matchId}-${j}`).value, assistant: document.getElementById(`goal-a-t2-${matchId}-${j}`).value, minute: parseInt(document.getElementById(`goal-m-t2-${matchId}-${j}`).value) });
-    document.getElementById(`send-btn-${matchId}`).innerText = "ОБНОВЛЕНИЕ...";
+    
+    let btn = document.getElementById(`send-btn-${matchId}`);
+    if(btn) btn.innerText = "ОБНОВЛЕНИЕ...";
+    
     try {
-        let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'saveMatch', matchId: matchId, t1: t1, t2: t2, score1: s1, score2: s2, pen1: pen1, pen2: pen2, goals: goals, status: 'past' }) }).then(r => r.json());
-        if (res.status === 'success') { alert("Матч сохранен!"); location.reload(); }
-    } catch(e) { alert("Ошибка сохранения"); }
+        let currentMatchRef = db.matches2026.find(x => x.id === matchId);
+        let currentStage = currentMatchRef ? currentMatchRef.stage : "Групповой этап";
+        let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'saveMatch', matchId: matchId, t1: t1, t2: t2, score1: s1, score2: s2, pen1: pen1, pen2: pen2, goals: goals, status: 'past', stage: currentStage }) }).then(r => r.json());
+        
+        if (res.status === 'success') { 
+            alert("Матч сохранен!"); 
+            document.getElementById('admin-loader').style.display = 'block';
+            document.getElementById('admin-loader').innerText = "Обновление данных...";
+            document.getElementById('admin-content').classList.add('hidden');
+            
+            let freshRes = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
+            mapServerData(freshRes);
+            
+            document.getElementById('admin-loader').style.display = 'none';
+            document.getElementById('admin-content').classList.remove('hidden');
+            renderAdminPanel(); 
+        }
+    } catch(e) { 
+        alert("Ошибка сохранения"); 
+    }
 }
 
 async function triggerBuildGrid() {
+    if (activeAdminGender === 'women') {
+        alert("Для женского турнира сетка строится автоматически прямо на сайте на основе сыгранных матчей в группах. Нажимать кнопку не требуется!");
+        return;
+    }
+
     if (!confirm("Сгенерировать сетку 1/16 плей-офф на базе Общего зачета?")) return;
     let standings = getStandingsArray().map(x => x.name);
     const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
-    let gridMatches = pairs.map((p, idx) => ({ id: (101 + idx), team1: standings[p[0] - 1] || "---", team2: standings[p[1] - 1] || "---" }));
+    let gridMatches = pairs.map((p, idx) => ({ id: (101 + idx).toString(), stage: "1/16", team1: standings[p[0] - 1] || "---", team2: standings[p[1] - 1] || "---" }));
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({action: 'buildPlayoff', grid: gridMatches}) }).then(r => r.json());
         if (res.status === 'success') { alert("Сетка построена!"); location.reload(); }
     } catch(e) { alert("Ошибка."); }
 }
+
 function getStandingsArray() {
     const groupMatches = db.matches2026.filter(m => m.stage === 'Групповой этап');
     const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
@@ -213,7 +271,7 @@ function getStandingsArray() {
     groups.forEach(g => {
         calculateGroupStats(groupMatches.filter(m => m.group === g), g).forEach((tStats, rankIdx) => {
             let currentRank = rankIdx + 1; 
-            if (!ranksMap[currentRank]) ranksMap[currentRank] = []; 
+            if (!ranksMap[currentRank]) ranksMap[currentRank] = [];
             ranksMap[currentRank].push(tStats);
         });
     });
@@ -236,13 +294,13 @@ function getStandingsArray() {
     });
     return finalStandings;
 }
+
 async function triggerClearAllData() {
-    if (!confirm("Очистить всю базу результатов?")) return;
+    if (!confirm("Очистить всю базу результатов результатов 2026?")) return;
     try {
         let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({action: 'clearAll'}) }).then(r => r.json());
         if (res.status === 'success') location.reload();
     } catch(e) {}
 }
 
-// Запуск инициализации админки
 initAdmin();
