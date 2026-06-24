@@ -1793,29 +1793,7 @@
       "status": "future"
     }
   ],
-  "goals2026": [
-    {
-      "match_id": "101",
-      "team": "ЧЕКМАГУШ",
-      "player": "Автогол",
-      "assistant": "",
-      "minute": "6"
-    },
-    {
-      "match_id": "101",
-      "team": "БАЖИКАЕВА-2",
-      "player": "Гайсин Зиннур",
-      "assistant": "",
-      "minute": "2"
-    },
-    {
-      "match_id": "101",
-      "team": "БАЖИКАЕВА-2",
-      "player": "Гайсин Зиннур",
-      "assistant": "",
-      "minute": "12"
-    }
-  ],
+  "goals2026": [],
   "groups2026": [
     {
       "group": "Группа A",
