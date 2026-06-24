@@ -1,6 +1,6 @@
 // Основной скрипт сайта
 
-const APPS_SCRIPT_WEB_APP_URL = "https://cdn.jsdelivr.net/gh/ilnursultan/olotau@main/data.json";
+const APPS_SCRIPT_WEB_APP_URL = "https://storage.yandexcloud.net/olotau-database/data.json";
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
 let current2026Gender = 'men'; 
