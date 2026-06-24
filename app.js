@@ -161,7 +161,9 @@ function startLoaderAnimation() {
 async function init() {
     animId = startLoaderAnimation();
     try {
-        let res = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
+        // Добавляем к ссылке временную метку ?_=_чтобы обмануть кэш Гитхаба
+        let cacheBuster = APPS_SCRIPT_WEB_APP_URL + "?_=" + new Date().getTime();
+        let res = await fetch(cacheBuster).then(r => r.json());
         mapServerData(res);
 
         try {
