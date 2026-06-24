@@ -1,0 +1,200 @@
+html, body { 
+    margin: 0 !important; 
+    padding: 0 !important; 
+    width: 100% !important; 
+    height: 100% !important; 
+    background: #0a0a0c !important; 
+}
+body > div:not(#olotau-app) { display: none !important; }
+
+#olotau-app { 
+    position: fixed !important; 
+    inset: 0 !important; 
+    width: 100vw !important; 
+    height: 100vh !important; 
+    z-index: 2147483647 !important; 
+    overflow-y: auto !important; 
+    background: #0a0a0c !important; 
+    color: white !important; 
+    font-family: 'Montserrat', sans-serif !important; 
+    -webkit-overflow-scrolling: touch;
+}
+
+#olotau-app * { 
+    font-family: 'Montserrat', sans-serif !important; 
+    box-sizing: border-box !important; 
+}
+
+.premium-glass-card { 
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%) !important; 
+    backdrop-filter: blur(20px) !important; 
+    -webkit-backdrop-filter: blur(20px) !important; 
+}
+.premium-glass-card * { background-color: transparent !important; }
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.drag-active { cursor: grabbing !important; scroll-behavior: auto !important; }
+
+.team-logo { 
+    height: 18px; 
+    width: 18px; 
+    object-fit: contain; 
+    display: inline-block; 
+    vertical-align: middle; 
+    flex-shrink: 0; 
+}
+@media(min-width: 640px) { .team-logo { height: 20px; width: 20px; } }
+
+.group-card { 
+    background: rgba(24, 24, 27, 0.4); 
+    border: 1px solid rgba(63, 63, 70, 0.6); 
+    border-radius: 16px; 
+    padding: 12px; 
+    margin-bottom: 16px; 
+}
+@media(min-width: 375px) { .group-card { padding: 16px; } }
+
+table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
+@media(min-width: 375px) { table { font-size: 11px; } }
+
+table th { 
+    color: #71717a; 
+    font-size: 9px; 
+    text-transform: uppercase; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid rgba(63, 63, 70, 0.5); 
+    font-weight: 700; 
+    text-align: center; 
+}
+table th.col-stat { width: 22px; }
+@media(min-width: 375px) { table th.col-stat { width: 26px; } }
+table th.col-score { width: 38px; }
+@media(min-width: 375px) { table th.col-score { width: 44px; } }
+
+table th:first-child { text-align: left; color: #00E676; font-size: 11px; font-weight: 900; padding-left: 12px; }
+table td { 
+    padding: 8px 1px; 
+    border-bottom: 1px solid rgba(63, 63, 70, 0.2); 
+    text-align: center; 
+    font-weight: 600; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+}
+table tr:last-child td { border-bottom: none; }
+
+.green-bar, .red-bar, .lime-bar { position: relative; padding-left: 12px !important; }
+.green-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #00E676; box-shadow: 0 0 10px rgba(0,230,118,0.5); }
+.red-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EF4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+.lime-bar::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 60%; width: 4px; border-radius: 0 4px 4px 0; background-color: #EAB308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
+
+table td:first-child { 
+    text-align: left; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+}
+
+.match-row { 
+    background: #141417; 
+    border: 1px solid #27272a; 
+    border-radius: 16px; 
+    padding: 12px 14px; 
+    margin-top: 8px; 
+    transition: all 0.2s; 
+}
+.match-row.clickable-match { cursor: pointer; }
+.match-row.clickable-match:hover { border-color: #3f3f46; }
+
+.tab-btn-top { 
+    padding: 10px 20px; 
+    border-radius: 14px; 
+    font-size: 11px; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em; 
+    border: 1px solid rgba(255,255,255,0.05); 
+    color: #a1a1aa; 
+    white-space: nowrap; 
+    transition: all 0.2s; 
+    cursor: pointer; 
+    flex-shrink: 0; 
+}
+.tab-btn-top.active { 
+    background: #00E676; 
+    color: #000; 
+    font-weight: 900; 
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.25); 
+    border-color: #00E676; 
+}
+
+.playoff-stage-btn { 
+    padding: 10px 8px; 
+    border-radius: 10px; 
+    font-size: 11px; 
+    font-weight: 800; 
+    background: #141417; 
+    border: 1px solid #27272a; 
+    color: #a1a1aa; 
+    transition: all 0.2s; 
+    white-space: nowrap; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    text-align: center; 
+}
+.playoff-stage-btn.active { background: #fff; color: #000; font-weight: 900; border-color: #fff; }
+
+.custom-select { 
+    appearance: none; 
+    background-color: #141417; 
+    color: white; 
+    border: 1px solid #27272a; 
+    border-radius: 14px; 
+    padding: 12px 36px 12px 16px; 
+    font-size: 12px; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    cursor: pointer; 
+    outline: none; 
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300E676'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); 
+    background-repeat: no-repeat; 
+    background-position: right 14px center; 
+    background-size: 16px; 
+}
+
+.scorer-header { 
+    background: #111114; 
+    color: white; 
+    border: 1px solid #27272a; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    font-size: 13px; 
+    letter-spacing: 0.05em; 
+    border-radius: 20px 20px 0 0; 
+    padding: 16px; 
+    text-align: left; 
+    border-bottom: none; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.details-container { 
+    max-height: 0; 
+    overflow: hidden; 
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out; 
+    opacity: 0; 
+}
+.details-container.open { max-height: 1000px; opacity: 1; }
+
+.arrow-indicator { transition: transform 0.2s ease; }
+.open .arrow-indicator { transform: rotate(180deg); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
