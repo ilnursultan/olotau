@@ -15,8 +15,17 @@ function handleAdminSecretClick() {
 
 function getGitHubLogoUrl(teamName) {
     let clean = normalizeTeamName(teamName).trim();
-    if (!clean || clean === '' || clean === '---' || clean.toUpperCase() === 'КОМАНДА' || clean.toUpperCase().includes('ПОБЕДИТЕЛЬ') || clean.toUpperCase().includes('ФИНАЛИСТ') || clean.toUpperCase().includes('ПРОИГРАВШ') || clean.toUpperCase().includes('ПАРА') || clean.toUpperCase().includes('МЕСТО') || clean.toUpperCase().includes('ГРУПП')) {
-        return 'https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png';
+    if (!clean || clean === '' || clean === '---' || 
+        clean.toUpperCase() === 'КОМАНДА' || 
+        clean.toUpperCase().includes('ПОБЕДИТЕЛЬ') || 
+        clean.toUpperCase().includes('ФИНАЛИСТ') || 
+        clean.toUpperCase().includes('ПРОИГРАВШ') ||
+        clean.toUpperCase().includes('ПАРА') || 
+        clean.toUpperCase().includes('ГРУПП') || 
+        clean.toUpperCase().includes('МЕСТО') || 
+        clean.toUpperCase().includes('КОМАНДА #') || 
+        clean.toUpperCase().includes('КОМАНДА №')) {
+        return "https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/logo1.png";
     }
     return `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${clean}.png`;
 }
@@ -31,7 +40,6 @@ function set2026Category(category) {
         currentPlayoffStage2026 = '1/4';
     } else if (category === 'supercup') {
         if(overallTabBtn) overallTabBtn.classList.add('hidden');
-        // Принудительно переключаем вкладку на Плей-офф, так как у Суперкубка нет таблиц
         active2026Tab = 'playoffs';
         currentPlayoffStage2026 = '1/2';
     } else {
@@ -39,7 +47,6 @@ function set2026Category(category) {
         if (currentPlayoffStage2026 === '1/4' && active2026Tab === 'playoffs') currentPlayoffStage2026 = '1/16';
     }
     
-    // Перерисовываем табы с правильной подсветкой активной кнопки
     let activeBtn = document.querySelector(`#nav-2026-tabs button[onclick*="${active2026Tab}"]`);
     if (activeBtn) {
         document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
@@ -47,10 +54,9 @@ function set2026Category(category) {
     }
 
     setupFiltersAndSelectors();
-    switch2026Tab(active2026Tab, activeBtn); // Исправлено: жесткий принудительный рендер выбранного таба
+    switch2026Tab(active2026Tab, activeBtn);
 }
 
-// Старый метод оставляем для подстраховки, чтобы сайт не падал, если где-то остался его вызов
 function set2026Gender(gender) { set2026Category(gender); }
 
 function openPlayoffModal(matchId, t1Fallback, t2Fallback, stageLabel) {
@@ -70,7 +76,7 @@ function openPlayoffModal(matchId, t1Fallback, t2Fallback, stageLabel) {
     let s1Text = isPast ? m.s1 : '-';
     let s2Text = isPast ? m.s2 : '-';
     
-if (isPast && m.p1 !== null && m.p2 !== null) {
+    if (isPast && m.p1 !== null && m.p2 !== null) {
         document.getElementById('playoff-modal-score').innerHTML = `
             ${m.s1}<sup class="text-white font-normal text-sm ml-0.5">${m.p1}</sup> 
             : 
@@ -80,14 +86,13 @@ if (isPast && m.p1 !== null && m.p2 !== null) {
         document.getElementById('playoff-modal-score').innerText = `${s1Text} : ${s2Text}`;
     }
     
-    // Выводим информацию о дате, времени и поле строго текстом без эмодзи
     let penaltyNode = document.getElementById('playoff-modal-penalty');
     if (penaltyNode) {
-if (m && (m.date || m.time)) {
-    penaltyNode.innerHTML = `${m.date || '---'} | ${m.time || '00:00'}`;
-    penaltyNode.classList.remove('hidden');
-    penaltyNode.className = "text-[9px] font-medium text-zinc-500 uppercase tracking-widest mt-1.5";
-} else {
+        if (m && (m.date || m.time)) {
+            penaltyNode.innerHTML = `${m.date || '---'} | ${m.time || '00:00'}`;
+            penaltyNode.classList.remove('hidden');
+            penaltyNode.className = "text-[9px] font-medium text-zinc-500 uppercase tracking-widest mt-1.5";
+        } else {
             penaltyNode.classList.add('hidden');
         }
     }
@@ -161,7 +166,6 @@ function startLoaderAnimation() {
 async function init() {
     animId = startLoaderAnimation();
     try {
-        // Добавляем к ссылке временную метку ?_=_чтобы обмануть кэш Гитхаба
         let cacheBuster = APPS_SCRIPT_WEB_APP_URL + "?_=" + new Date().getTime();
         let res = await fetch(cacheBuster).then(r => r.json());
         mapServerData(res);
@@ -196,8 +200,10 @@ function setupFiltersAndSelectors() {
     
     ['filter-teams', 'filter-stages', 'filter-status'].forEach(id => {
         let el = document.getElementById(id);
-        el.removeEventListener('change', render2026Schedule);
-        el.addEventListener('change', render2026Schedule);
+        if (el) {
+            el.removeEventListener('change', render2026Schedule);
+            el.addEventListener('change', render2026Schedule);
+        }
     });
     updateArchiveYears();
 }
@@ -215,7 +221,6 @@ function toggleSupercupBanner(tournamentName) {
     if(banner) tournamentName?.toUpperCase().includes('СУПЕРКУБОК') ? banner.classList.remove('hidden') : banner.classList.add('hidden');
 }
 
-// Функции переключения вкладок (Исправление Uncaught ReferenceError)
 function switch2026Tab(tab, btn) {
     active2026Tab = tab;
     document.querySelectorAll('#nav-2026-tabs .tab-btn-top').forEach(el => el.classList.remove('active'));
@@ -272,11 +277,10 @@ function updateStatsTeamsList() {
     }
     const sortedTeams = [...allTeams].sort(); const teamSelect = document.getElementById('stats-team');
     if (sortedTeams.length > 0) {
-teamSelect.innerHTML = sortedTeams.map(t => {
-        // Проверяем, чтобы имя было именно "КУТУЕВО" без лишних цифр и дефисов на конце
-        let isKutuevo = t.toUpperCase().trim() === 'КУТУЕВО';
-        return `<option value="${t}" ${isKutuevo ? 'selected' : ''}>${t.toUpperCase()}</option>`;
-    }).join('');
+        teamSelect.innerHTML = sortedTeams.map(t => {
+            let isKutuevo = t.toUpperCase().trim() === 'КУТУЕВО';
+            return `<option value="${t}" ${isKutuevo ? 'selected' : ''}>${t.toUpperCase()}</option>`;
+        }).join('');
         document.getElementById('stats-content').classList.remove('hidden'); renderTeamStatistics();
     } else {
         teamSelect.innerHTML = '<option value="">Нет команд</option>'; document.getElementById('stats-content').classList.add('hidden');
@@ -407,12 +411,11 @@ function renderTeamStatistics() {
 function render2026Tables() {
     const container = document.getElementById('sub-2026-tables'); container.innerHTML = '';
     
-    // Определяем текущую категорию
     let filteredMatches = db.matches2026.filter(m => {
         let idInt = parseInt(m.id);
         if (current2026Gender === 'women') return idInt >= 1000 && idInt < 10000;
         if (current2026Gender === 'supercup') return idInt >= 10000;
-        return idInt < 1000; // men
+        return idInt < 1000;
     });
 
     const groupMatches = filteredMatches.filter(m => m.stage.includes('Групповой этап'));
@@ -430,7 +433,6 @@ function render2026Tables() {
         const mInGroup = groupMatches.filter(m => m.group === gName); 
         const sortedTeams = calculateGroupStats(mInGroup, gName);
         
-        // ИСПРАВЛЕНО: Убрано дублирование слова "Группа", если оно уже есть в gName
         let headerLabel = gName.toUpperCase().includes('ГРУППА') ? gName : `Группа ${gName}`;
         
         let html = `<div class="group-card"><table><thead><tr><th>${headerLabel}</th><th class="col-stat">В</th><th class="col-stat">Н</th><th class="col-stat">П</th><th class="col-score">М</th><th class="col-stat">О</th></tr></thead><tbody>`;
@@ -442,9 +444,9 @@ function render2026Tables() {
         html += `</tbody></table><div class="mt-3 border-t border-zinc-800/60 pt-1.5 space-y-1.5">`;
         mInGroup.forEach(m => {
             const isPast = m.status === 'past'; let scores = getScoreDisplay(m);
-            let arrowIcon = isPast ? `<span class="arrow-indicator text-neon text-[9px] ml-2 select-none">▼</span>` : '';
-            let scoreBadge = isPast ? `<div class="text-neon font-black text-[11px] bg-zinc-900/80 px-2 py-0.5 rounded flex items-center shrink-0 select-none">${scores.s1} : ${scores.s2} ${arrowIcon}</div>` : `<div class="text-zinc-500 text-[11px] bg-zinc-900/30 px-2 py-0.5 rounded shrink-0 select-none">- : -</div>`;
-            html += `<div class="match-row clickable-match" onclick="toggleDetails('det-2026-${m.id}', this)"><div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase gap-2 w-full"><div class="flex-1 min-w-0 truncate flex items-center pr-1"><img src="${getGitHubLogoUrl(m.t1)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(m.t1)}</span></div>${scoreBadge}<div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1"><span class="truncate">${smartTeamName(m.t2)}</span><img src="${getGitHubLogoUrl(m.t2)}" class="team-logo ml-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"></div></div><div id="det-2026-${m.id}" class="details-container text-[11px] text-zinc-400"><div class="pt-2 border-t border-zinc-900/60 space-y-1 mt-2">${renderEventsInline(m, isPast)}</div></div></div>`;
+            let scoreBadge = isPast ? `<div class="text-neon font-black text-[11px] bg-zinc-900/80 px-2 py-0.5 rounded flex items-center shrink-0 select-none">${scores.s1} : ${scores.s2}</div>` : `<div class="text-zinc-500 text-[11px] bg-zinc-900/30 px-2 py-0.5 rounded shrink-0 select-none">- : -</div>`;
+            
+            html += `<div class="match-row clickable-match" onclick="openPlayoffModal('${m.id}', '${m.t1.replace(/'/g, "\\'")}', '${m.t2.replace(/'/g, "\\'")}', 'Групповой этап')"><div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase gap-2 w-full"><div class="flex-1 min-w-0 truncate flex items-center pr-1"><img src="${getGitHubLogoUrl(m.t1)}" class="team-logo mr-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate">${smartTeamName(m.t1)}</span></div>${scoreBadge}<div class="flex-1 min-w-0 text-right truncate flex items-center justify-end pl-1"><span class="truncate">${smartTeamName(m.t2)}</span><img src="${getGitHubLogoUrl(m.t2)}" class="team-logo ml-1.5" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"></div></div></div>`;
         });
         container.innerHTML += html + `</div></div>`;
     });
@@ -455,14 +457,14 @@ function render2026StatList(type) {
     let statsMap = {};
     let isWomen = (current2026Gender === 'women');
 
-db.goals2026.forEach(g => {
-    let mRef = db.matches2026.find(x => x.id === g.match_id);
-    if (!mRef) return;
-    
-    let idInt = parseInt(mRef.id);
-    if (current2026Gender === 'women' && (idInt < 1000 || idInt >= 10000)) return false;
-    if (current2026Gender === 'supercup' && idInt < 10000) return false;
-    if (current2026Gender === 'men' && idInt >= 1000) return false;
+    db.goals2026.forEach(g => {
+        let mRef = db.matches2026.find(x => x.id === g.match_id);
+        if (!mRef) return;
+        
+        let idInt = parseInt(mRef.id);
+        if (current2026Gender === 'women' && (idInt < 1000 || idInt >= 10000)) return;
+        if (current2026Gender === 'supercup' && idInt < 10000) return;
+        if (current2026Gender === 'men' && idInt >= 1000) return;
         let matchIsWomen = (parseInt(mRef.id) >= 1000);
         if (isWomen !== matchIsWomen) return;
 
@@ -491,13 +493,13 @@ function render2026Schedule() {
     
     let isWomen = (current2026Gender === 'women');
 
-let filtered = db.matches2026.filter(m => {
-    let idInt = parseInt(m.id);
-    if (current2026Gender === 'women' && (idInt < 1000 || idInt >= 10000)) return false;
-    if (current2026Gender === 'supercup' && idInt < 10000) return false;
-    if (current2026Gender === 'men' && idInt >= 1000) return false;
+    let filtered = db.matches2026.filter(m => {
+        let idInt = parseInt(m.id);
+        if (current2026Gender === 'women' && (idInt < 1000 || idInt >= 10000)) return false;
+        if (current2026Gender === 'supercup' && idInt < 10000) return false;
+        if (current2026Gender === 'men' && idInt >= 1000) return false;
 
-    if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
+        if(tFilter !== 'all' && m.t1 !== tFilter && m.t2 !== tFilter) return false;
         if(sFilter === 'Групповой этап' && !m.stage.includes('Групповой этап')) return false;
         if(sFilter === 'Плей-офф' && m.stage.includes('Групповой этап')) return false;
         if(statusFilter === 'future' && m.status !== 'future') return false;
@@ -508,15 +510,16 @@ let filtered = db.matches2026.filter(m => {
     container.innerHTML = filtered.map((m) => {
         let stageLabel = m.stage.replace('Женщины: ', '');
         if (m.stage.includes('Групповой этап')) {
-    stageLabel = m.group.toUpperCase().includes('ГРУППА') ? m.group : `Группа ${m.group}`;
-}
+            stageLabel = m.group.toUpperCase().includes('ГРУППА') ? m.group : `Группа ${m.group}`;
+        }
         let isPast = m.status === 'past';
         let t1Name = m.t1; let t2Name = m.t2;
         if (!m.stage.includes('Групповой этап') && (t1Name === 'КОМАНДА' || t1Name === '---' || !t1Name)) { t1Name = getPlayoffFallbackLabel(m.id, 't1'); t2Name = getPlayoffFallbackLabel(m.id, 't2'); }
         let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШИЙ');
         let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШИЙ');
         let rightSideContent = isPast ? `<div class="text-right shrink-0 select-none"><div class="text-[9px] font-bold tracking-widest text-zinc-500">СЫГРАН</div><div class="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>` : `<div class="text-right shrink-0 select-none"><div class="text-sm font-black tracking-wide text-white">${m.time}</div><div class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">${m.date || '---'}</div></div>`;
-        return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center gap-4 transition-all hover:border-zinc-800/80 ${isPast ? 'opacity-60' : ''}"><div class="w-24 shrink-0 border-r border-zinc-800/60 pr-2 text-left"><div class="text-[10px] font-black text-neon truncate uppercase tracking-wider">${stageLabel}</div><div class="text-[9px] text-zinc-500 font-bold uppercase mt-0.5">ПОЛЕ #${m.field || '1'}</div></div><div class="flex-grow flex flex-col gap-2.5 min-w-0"><div class="flex items-center text-[11px] sm:text-xs font-bold text-white uppercase truncate gap-2"><img src="${getGitHubLogoUrl(t1Name)}" class="w-4 h-4 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-600 font-semibold' : ''}">${smartTeamName(t1Name)}</span></div><div class="flex items-center text-[11px] sm:text-xs font-bold text-white uppercase truncate gap-2"><img src="${getGitHubLogoUrl(t2Name)}" class="w-4 h-4 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-600 font-semibold' : ''}">${smartTeamName(t2Name)}</span></div></div>${rightSideContent}</div>`;
+        
+        return `<div class="bg-zinc-card border border-zinc-900 rounded-2xl p-4 flex justify-between items-center gap-4 transition-all hover:border-zinc-800/80 cursor-pointer clickable-match ${isPast ? 'opacity-60' : ''}" onclick="openPlayoffModal('${m.id}', '${t1Name.replace(/'/g, "\\'")}', '${t2Name.replace(/'/g, "\\'")}', '${m.stage.replace(/'/g, "\\'")}')"><div class="w-24 shrink-0 border-r border-zinc-800/60 pr-2 text-left"><div class="text-[10px] font-black text-neon truncate uppercase tracking-wider">${stageLabel}</div><div class="text-[9px] text-zinc-500 font-bold uppercase mt-0.5">ПОЛЕ #${m.field || '1'}</div></div><div class="flex-grow flex flex-col gap-2.5 min-w-0"><div class="flex items-center text-[11px] sm:text-xs font-bold text-white uppercase truncate gap-2"><img src="${getGitHubLogoUrl(t1Name)}" class="w-4 h-4 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock1 ? 'text-zinc-600 font-semibold' : ''}">${smartTeamName(t1Name)}</span></div><div class="flex items-center text-[11px] sm:text-xs font-bold text-white uppercase truncate gap-2"><img src="${getGitHubLogoUrl(t2Name)}" class="w-4 h-4 object-contain shrink-0" onerror="this.src='https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/standart.png'"><span class="truncate ${isMock2 ? 'text-zinc-600 font-semibold' : ''}">${smartTeamName(t2Name)}</span></div></div>${rightSideContent}</div>`;
     }).join('');
 }
 
@@ -526,7 +529,6 @@ function getPlayoffFallbackLabel(matchId, side) {
         if (id === 10001 || id === 10002) return 'ПОЛУФИНАЛИСТ СУПЕРКУБКА';
         return 'ФИНАЛИСТ СУПЕРКУБКА';
     }
-    // НОВЫЕ ID ИЗ СКРИНШОТА БАЗЫ ДАННЫХ ДЛЯ ЖЕНЩИН
     if (id >= 1101 && id <= 1500) {
         if (id >= 1101 && id <= 1104) {
             let pairsInfo = { 
@@ -542,7 +544,6 @@ function getPlayoffFallbackLabel(matchId, side) {
         if (id === 1301) return 'ПРОИГРАВШАЯ 1/2 ФИНАЛА';
         if (id === 1401) return 'ФИНАЛИСТ';
     }
-    // Оставшаяся мужская часть без изменений...
     if (id >= 101 && id <= 116) {
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
         let p = pairs[id - 101]; return side === 't1' ? `КОМАНДА #${p[0]}` : `КОМАНДА #${p[1]}`;
@@ -556,7 +557,6 @@ function getPlayoffFallbackLabel(matchId, side) {
 }
 
 function getStandingsArray() {
-    // ИСПРАВЛЕНО: Фильтрация строго по выбранной категории (обычно Мужчины, т.к. Общий зачет только у них)
     const filteredMatches = db.matches2026.filter(m => {
         let idInt = parseInt(m.id);
         if (current2026Gender === 'women') return idInt >= 1000 && idInt < 10000;
@@ -626,9 +626,9 @@ function render2026Playoffs() {
     nav.innerHTML = stages.map(s => `<button class="playoff-stage-btn flex-1 ${currentPlayoffStage2026 === s ? 'active' : ''}" onclick="setPlayoffStage2026('${s}')">${s}</button>`).join('');
 
     let matchesHtml = ''; 
-    let stageMatches = pMatches.filter(m => m.stage.includes(currentPlayoffStage2026));
 
     if (isSupercup) {
+        let stageMatches = pMatches.filter(m => m.stage.includes(currentPlayoffStage2026));
         if (currentPlayoffStage2026 === '1/2') {
             const m1 = stageMatches.find(m => m.id === '10001');
             const m2 = stageMatches.find(m => m.id === '10002');
@@ -639,6 +639,7 @@ function render2026Playoffs() {
             matchesHtml += renderPlayoffCardLive(mf, 'Финалист 1', 'Финалист 2', '-', '-', 'Суперкубок: Финал');
         }
     } else if (!isWomen && currentPlayoffStage2026 === '1/16') {
+        let stageMatches = pMatches.filter(m => m.stage.includes(currentPlayoffStage2026));
         const pairs = [[1, 32], [13, 20], [5, 28], [9, 24], [3, 30], [15, 18], [7, 26], [11, 22], [2, 31], [14, 19], [6, 27], [10, 23], [4, 29], [16, 17], [8, 25], [12, 21]];
         pairs.forEach((p, idx) => {
             let currentId = (101 + idx).toString(); let realMatch = stageMatches.find(m => m.id === currentId);
@@ -646,7 +647,8 @@ function render2026Playoffs() {
             let t2 = (realMatch && realMatch.t2 && realMatch.t2 !== 'КОМАНДА' && realMatch.t2 !== '---') ? realMatch.t2 : `КОМАНДА #${p[1]}`;
             matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, p[0], p[1], currentPlayoffStage2026);
         });
-} else if (currentPlayoffStage2026 === '1/4' && isWomen) {
+    } else if (currentPlayoffStage2026 === '1/4' && isWomen) {
+        let stageMatches = pMatches.filter(m => m.stage.includes(currentPlayoffStage2026));
         let pairsConfigWomen = [
             { id: "1101", g1: "А", r1: 1, g2: "Г", r2: 2, label1: "1 МЕСТО ГРУППЫ А", label2: "2 МЕСТО ГРУППЫ Г", short1: "1А", short2: "2Г" },
             { id: "1102", g1: "Б", r1: 1, g2: "В", r2: 2, label1: "1 МЕСТО ГРУППЫ Б", label2: "2 МЕСТО ГРУППЫ В", short1: "1Б", short2: "2В" },
@@ -654,7 +656,6 @@ function render2026Playoffs() {
             { id: "1104", g1: "Г", r1: 1, g2: "А", r2: 2, label1: "1 МЕСТО ГРУППЫ Г", label2: "2 МЕСТО ГРУППЫ А", short1: "1Г", short2: "2А" }
         ];
 
-        // Фильтруем строго матчи группового этапа (ID от 1000 до 1100)
         let allWomenGroupMatches = db.matches2026.filter(m => {
             let idInt = parseInt(m.id);
             return idInt >= 1000 && idInt < 1100;
@@ -663,20 +664,17 @@ function render2026Playoffs() {
         pairsConfigWomen.forEach(cfg => {
             let realMatch = stageMatches.find(m => m.id === cfg.id);
             
-            // ИСПРАВЛЕНО: Строжайшая очистка имени группы от лишних слов "Группа" для точного сравнения
             let cleanGroupName = (gValue) => {
                 if (!gValue) return '';
                 return gValue.toString().toUpperCase().replace('ГРУППА', '').trim();
             };
 
-            // Собираем матчи ТОЛЬКО для конкретной буквы группы
             let matchesG1 = allWomenGroupMatches.filter(m => cleanGroupName(m.group) === cfg.g1.toUpperCase());
             let matchesG2 = allWomenGroupMatches.filter(m => cleanGroupName(m.group) === cfg.g2.toUpperCase());
 
             let gTop1 = calculateGroupStats(matchesG1, cfg.g1);
             let gTop2 = calculateGroupStats(matchesG2, cfg.g2);
 
-            // Проверяем сыгранность: матчи должны быть в базе и все со статусом 'past'
             let isG1Finished = matchesG1.length > 0 && matchesG1.every(m => m.status === 'past');
             let isG2Finished = matchesG2.length > 0 && matchesG2.every(m => m.status === 'past');
 
@@ -689,26 +687,20 @@ function render2026Playoffs() {
             matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, cfg.short1, cfg.short2, '1/4 финала');
         });
     } else if (currentPlayoffStage2026 === 'Финал') {
-        let finalId = isWomen ? '1401' : '601'; // ИСПРАВЛЕНО НА 1401
-        let thirdPlaceId = isWomen ? '1301' : '501'; // ИСПРАВЛЕНО НА 1301
+        let finalId = isWomen ? '1401' : '601'; 
+        let thirdPlaceId = isWomen ? '1301' : '501'; 
         
-        // Выводим главный Финал
-        const realFinal = stageMatches.find(m => m.id === finalId); 
-        matchesHtml += renderPlayoffCardLive(realFinal, 'ФИНАЛИСТ #1', 'ФИНАЛИСТ #2', '-', '-', 'Финал');
+        const realFinal = pMatches.find(m => m.id === finalId); 
+        if (realFinal) {
+            matchesHtml += renderPlayoffCardLive(realFinal, 'ФИНАЛИСТ #1', 'ФИНАЛИСТ #2', '-', '-', 'Финал');
+        }
         
-        if (!isWomen) {
-            const real3rd = pMatches.find(m => m.id === thirdPlaceId); 
-            if (real3rd) {
-                matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rd, 'ПРОИГРАВШИЙ 1/2 #1', 'ПРОИГРАВШИЙ 1/2 #2', '-', '-', 'Матч за 3-е место');
-            }
-        } else {
-            // ИСПРАВЛЕНО: Для женщин ищем правильный ID 1301
-            const real3rdWomen = pMatches.find(m => m.id === '1301');
-            if (real3rdWomen) {
-                matchesHtml += `<div class="mt-1.5 pt-2"><div class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1 pl-1">Матч за 3-е место</div></div>` + renderPlayoffCardLive(real3rdWomen, 'ПРОИГРАВШАЯ 1/2 #1', 'ПРОИГРАВШАЯ 1/2 #2', '-', '-', 'Матч за 3-е место');
-            }
+        const real3rd = pMatches.find(m => m.id === thirdPlaceId); 
+        if (real3rd) {
+            matchesHtml += renderPlayoffCardLive(real3rd, isWomen ? 'ПРОИГРАВШАЯ 1/2 #1' : 'ПРОИГРАВШИЙ 1/2 #1', isWomen ? 'ПРОИГРАВШАЯ 1/2 #2' : 'ПРОИГРАВШИЙ 1/2 #2', '-', '-', 'Матч за 3 место');
         }
     } else {
+        let stageMatches = pMatches.filter(m => m.stage.includes(currentPlayoffStage2026));
         let slots = currentPlayoffStage2026 === '1/8' ? 8 : (currentPlayoffStage2026 === '1/4' ? 4 : 2);
         let startId = currentPlayoffStage2026 === '1/8' ? 201 : (currentPlayoffStage2026 === '1/4' ? 301 : 401);
         if (isWomen && currentPlayoffStage2026 === '1/2') { slots = 2; startId = 1201; }
@@ -721,7 +713,8 @@ function render2026Playoffs() {
             matchesHtml += renderPlayoffCardLive(realMatch, t1, t2, '-', '-', currentPlayoffStage2026 + ' финала');
         }
     }
-    container.innerHTML = matchesHtml;
+    // Убран max-w-sm, карточки теперь во всю ширину экрана!
+    container.innerHTML = `<div class="flex flex-col gap-3 w-full">${matchesHtml}</div>`;
 }
 
 function renderArchiveCore() {
@@ -758,7 +751,8 @@ function renderArchiveCore() {
         let matchesHtml = ''; let stageMatches = playM.filter(m => m.stage === currentPlayoffStageArchive);
         if(currentPlayoffStageArchive.toLowerCase().includes('финал')) { const tm = playM.find(m => m.stage.toLowerCase().includes('3-е место')); if(tm) stageMatches.push(tm); }
         stageMatches.forEach(m => { matchesHtml += renderPlayoffCard(m, m.t1, m.t2); });
-        document.getElementById('archive-playoff-matches').innerHTML = matchesHtml;
+        // Убран max-w-sm, карточки Архива теперь тоже во всю ширину экрана!
+        document.getElementById('archive-playoff-matches').innerHTML = `<div class="flex flex-col gap-3 w-full">${matchesHtml}</div>`;
     }
     if(activeArchiveTab === 'results') {
         rContainer.classList.remove('hidden'); rContainer.innerHTML = ''; const stages = [...new Set(mArch.map(m => m.stage))];
@@ -778,21 +772,49 @@ function setGlobalMode(mode) {
     currentGlobalMode = mode;
     const view2026 = document.getElementById('view-2026'); const viewArch = document.getElementById('view-archive'); const viewStats = document.getElementById('view-stats');
     const tabs2026 = document.getElementById('nav-2026-tabs').parentElement; const ctrlsArch = document.getElementById('archive-controls');
-    const genSelector = document.getElementById('gender-selector-2026');
-    [view2026, viewArch, viewStats].forEach(v => v.classList.add('hidden'));
-    ['mode-btn-2026', 'mode-btn-stats', 'mode-btn-archive'].forEach(id => { document.getElementById(id).className = "flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer"; });
+    const genSelector = document.getElementById('gender-category-selector');
+    [view2026, viewArch, viewStats].forEach(v => { if (v) v.classList.add('hidden'); });
+    ['mode-btn-2026', 'mode-btn-stats', 'mode-btn-archive'].forEach(id => { 
+        let el = document.getElementById(id);
+        if (el) el.className = "flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer"; 
+    });
+    
     if(mode === '2026') {
-        view2026.classList.remove('hidden'); tabs2026.classList.remove('hidden'); ctrlsArch.classList.add('hidden'); if(genSelector) genSelector.classList.remove('hidden');
+        if (view2026) view2026.classList.remove('hidden'); 
+        if (tabs2026) tabs2026.classList.remove('hidden'); 
+        if (ctrlsArch) ctrlsArch.classList.add('hidden'); 
+        if (genSelector) genSelector.classList.remove('hidden');
         document.getElementById('mode-btn-2026').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         render2026Core();
     } else if (mode === 'archive') {
-        viewArch.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.remove('hidden'); if(genSelector) genSelector.classList.add('hidden');
+        if (viewArch) viewArch.classList.remove('hidden'); 
+        if (tabs2026) tabs2026.classList.add('hidden'); 
+        if (ctrlsArch) ctrlsArch.classList.remove('hidden'); 
+        if (genSelector) genSelector.classList.add('hidden');
         document.getElementById('mode-btn-archive').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         renderArchiveCore();
     } else if (mode === 'stats') {
-        viewStats.classList.remove('hidden'); tabs2026.classList.add('hidden'); ctrlsArch.classList.add('hidden'); if(genSelector) genSelector.classList.add('hidden');
+        if (viewStats) viewStats.classList.remove('hidden'); 
+        if (tabs2026) tabs2026.classList.add('hidden'); 
+        if (ctrlsArch) ctrlsArch.classList.add('hidden'); 
+        if (genSelector) genSelector.classList.add('hidden');
         document.getElementById('mode-btn-stats').className = "flex flex-col items-center justify-center w-1/3 py-2 text-neon transition-colors outline-none cursor-pointer";
         renderTeamStatistics();
+    }
+
+    // Твое главное исправление: Плашки «Листайте» теперь зафиксированы и видны всегда во всех табах!
+    const scrollIndicator = document.getElementById('scroll-indicator-top');
+    const archiveIndicator = document.getElementById('scroll-indicator-archive');
+    
+    if (mode === 'stats') {
+        if (scrollIndicator) scrollIndicator.style.setProperty('display', 'none', 'important');
+        if (archiveIndicator) archiveIndicator.style.setProperty('display', 'none', 'important');
+    } else if (mode === 'archive') {
+        if (scrollIndicator) scrollIndicator.style.setProperty('display', 'none', 'important');
+        if (archiveIndicator) archiveIndicator.style.setProperty('display', 'flex', 'important');
+    } else if (mode === '2026') {
+        if (archiveIndicator) archiveIndicator.style.setProperty('display', 'none', 'important');
+        if (scrollIndicator) scrollIndicator.style.setProperty('display', 'flex', 'important'); // Всегда видна в Сезоне 2026!
     }
 }
 
@@ -841,11 +863,9 @@ function toggleDetails(id, el) {
 }
 
 function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2, stageLabel) {
-    // 1. Сначала объявляем имена команд
     let t1Name = (m && m.t1 && m.t1 !== '---') ? m.t1 : t1Fallback;
     let t2Name = (m && m.t2 && m.t2 !== '---') ? m.t2 : t2Fallback;
     
-    // 2. Теперь безопасно проверяем, являются ли они заглушками (ошибка исправлена)
     let isMock1 = t1Name.includes('КОМАНДА') || t1Name.includes('ПОБЕДИТЕЛЬ') || t1Name.includes('ФИНАЛИСТ') || t1Name.includes('ПРОИГРАВШ') || t1Name.includes('ПАРА') || t1Name.includes('ГРУПП') || t1Name.includes('МЕСТО') || t1Name.toUpperCase().includes('ПРОИГРАВШАЯ');
     let isMock2 = t2Name.includes('КОМАНДА') || t2Name.includes('ПОБЕДИТЕЛЬ') || t2Name.includes('ФИНАЛИСТ') || t2Name.includes('ПРОИГРАВШ') || t2Name.includes('ПАРА') || t2Name.includes('ГРУПП') || t2Name.includes('МЕСТО') || t2Name.toUpperCase().includes('ПРОИГРАВШАЯ');
     
@@ -871,10 +891,10 @@ function renderPlayoffCardLive(m, t1Fallback, t2Fallback, gridPos1, gridPos2, st
     let gridBadge2 = gridPos2 !== '-' ? `<span class="text-zinc-500 font-extrabold text-[10px] w-5 shrink-0 text-left mr-1">${gridPos2}</span>` : '';
 
     let inlineStyle = "";
-    if (m && (m.id === '601' || m.id === '1008' || m.id === '1401')) {
-        inlineStyle = `style="border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(255, 215, 0, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
-    } else if (m && (m.id === '501' || m.id === '1007' || m.id === '1301')) {
-        inlineStyle = `style="border-color: rgba(205, 127, 50, 0.35); box-shadow: 0 0 20px rgba(205, 127, 50, 0.15); background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(205, 127, 50, 0.08) 0%, rgba(0, 0, 0, 0) 100%);"`;
+    if (stageLabel === 'Финал' || (m && (m.id === '601' || m.id === '1008' || m.id === '1401'))) {
+        inlineStyle = `style="border-color: rgba(255, 215, 0, 0.4) !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.15) !important; background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(255, 215, 0, 0.08) 0%, rgba(0, 0, 0, 0) 100%) !important;"`;
+    } else if (stageLabel === 'Матч за 3 место' || (m && (m.id === '501' || m.id === '1007' || m.id === '1301'))) {
+        inlineStyle = `style="border-color: rgba(205, 127, 50, 0.4) !important; box-shadow: 0 0 15px rgba(205, 127, 50, 0.1) !important; background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(205, 127, 50, 0.05) 0%, rgba(0, 0, 0, 0) 100%) !important;"`;
     }
 
     let matchId = m ? m.id : `mock-playoff-${Math.random()}`;
@@ -964,7 +984,7 @@ function loadFilteredBestPlayers() {
         </div>
     `).join('');
 }
-// Автоматическое переключение разделов при открытии по ссылке с хэшем (#stats или #archive)
+
 window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const hash = window.location.hash;
@@ -973,10 +993,9 @@ window.addEventListener('DOMContentLoaded', () => {
         } else if (hash === '#archive') {
             if (typeof setGlobalMode === 'function') setGlobalMode('archive');
         }
-    }, 300); // Небольшая задержка, чтобы база данных успела загрузиться
+    }, 300);
 });
 
-// Обновление хэша в адресной строке при клике на меню, чтобы ссылкой можно было поделиться
 const originalSetGlobalMode = setGlobalMode;
 setGlobalMode = function(mode) {
     if (mode === 'stats') {
@@ -984,7 +1003,6 @@ setGlobalMode = function(mode) {
     } else if (mode === 'archive') {
         window.location.hash = 'archive';
     } else if (mode === '2026') {
-        // Убираем хэш, если вернулись на главную
         history.replaceState(null, null, ' ');
     }
     if (typeof originalSetGlobalMode === 'function') {
@@ -993,4 +1011,3 @@ setGlobalMode = function(mode) {
 };
 
 init();
-
