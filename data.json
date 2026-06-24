@@ -965,16 +965,16 @@
       "tournament": "МУЖЧИНЫ",
       "stage": "1/16",
       "group": "",
-      "team1": "ЧЕКМАГУШ",
-      "team2": "БАЖИКАЕВА-2",
-      "score1": "1",
-      "score2": "2",
+      "team1": "",
+      "team2": "",
+      "score1": "",
+      "score2": "",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "10 июля",
       "field": "1",
-      "status": "past"
+      "status": "future"
     },
     {
       "id": "102",
