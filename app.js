@@ -1,6 +1,6 @@
 // Основной скрипт сайта
 
-const APPS_SCRIPT_WEB_APP_URL = "https://raw.githubusercontent.com/ilnursultan/olotau/main/data.json";
+const APPS_SCRIPT_WEB_APP_URL = "https://cdn.jsdelivr.net/gh/ilnursultan/olotau@main/data.json";
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
 let current2026Gender = 'men'; 
@@ -171,7 +171,7 @@ async function init() {
         mapServerData(res);
 
         try {
-            let ghGroups = await fetch('https://raw.githubusercontent.com/ilnursultan/team-logos/main/groups.json').then(r => r.json());
+            let ghGroups = await fetch('https://cdn.jsdelivr.net/gh/ilnursultan/team-logos@main/groups.json').then(r => r.json());
             db.groups2026 = ghGroups;
         } catch(e) { console.log('GitHub fallback', e); }
 
