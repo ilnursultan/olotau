@@ -1,6 +1,6 @@
 // Основной скрипт сайта
 
-const APPS_SCRIPT_WEB_APP_URL = "/get_data.php";
+const APPS_SCRIPT_WEB_APP_URL = "https://raw.githubusercontent.com/ilnursultan/olotau/main/data.json";
 let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}, bestPlayers: [], groups2026: [], loats: {} };
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
 let current2026Gender = 'men'; 
