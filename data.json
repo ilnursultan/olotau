@@ -967,14 +967,14 @@
       "group": "",
       "team1": "ЧЕКМАГУШ",
       "team2": "БАЖИКАЕВА-2",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "102",
@@ -1221,7 +1221,7 @@
       "tournament": "МУЖЧИНЫ",
       "stage": "1/8",
       "group": "",
-      "team1": "",
+      "team1": "БАЖИКАЕВА-2",
       "team2": "",
       "score1": "",
       "score2": "",
@@ -1793,7 +1793,29 @@
       "status": "future"
     }
   ],
-  "goals2026": [],
+  "goals2026": [
+    {
+      "match_id": "101",
+      "team": "ЧЕКМАГУШ",
+      "player": "Автогол",
+      "assistant": "",
+      "minute": "6"
+    },
+    {
+      "match_id": "101",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Гайсин Зиннур",
+      "assistant": "",
+      "minute": "2"
+    },
+    {
+      "match_id": "101",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Гайсин Зиннур",
+      "assistant": "",
+      "minute": "12"
+    }
+  ],
   "groups2026": [
     {
       "group": "Группа A",
