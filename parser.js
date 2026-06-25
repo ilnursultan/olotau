@@ -1,5 +1,3 @@
-// Вычислительный слой обработки данных
-
 function normalizeTeamName(name) {
     if (!name) return '';
     let s = name.toString().trim();
@@ -20,13 +18,10 @@ function smartTeamName(name) {
     return s;
 }
 
-function parseGeoCSV(text) {
-    // В новой JSON версии этот метод вызывается внутри mapServerData
-}
-
 function getTeamGeoHtml(teamName, isMen = true) {
+    if (!teamName || !db.geo) return '';
     const key = normalizeTeamName(teamName).toUpperCase();
-    if (db.geo && db.geo[key]) {
+    if (db.geo[key]) {
         const item = db.geo[key]; let dist = item.distance;
         let dText = item.district || '';
         if (isMen && dText && !dText.toLowerCase().includes('район') && !dText.toLowerCase().includes('р-н')) { dText += ' район'; }
@@ -40,58 +35,74 @@ function getTeamGeoHtml(teamName, isMen = true) {
     return '';
 }
 
-function parseBestPlayersCSV(text) {}
-function parseLoatsCSV(text) {}
-
 function mapServerData(data) {
-    db.matches2026 = (data.matches2026 || []).map(m => ({
-        id: m.id ? m.id.toString() : "", 
-        stage: m.stage ? m.stage.toString().trim() : "", 
-        group: m.group ? m.group.toString().trim() : "", 
-        t1: normalizeTeamName(m.team1), 
-        t2: normalizeTeamName(m.team2),
-        s1: m.score1 !== "" && m.score1 !== "-" && m.score1 !== undefined ? parseInt(m.score1) : null,
-        s2: m.score2 !== "" && m.score2 !== "-" && m.score2 !== undefined ? parseInt(m.score2) : null,
-        p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
-        p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null,
-        time: m.time || "00:00", date: m.date || "", field: m.field || "1", 
-        status: m.status ? m.status.toLowerCase().trim() : 'future'
-    }));
+    if (!data) return;
+    try {
+        db.matches2026 = (data.matches2026 || []).map(m => ({
+            id: m.id ? m.id.toString() : "", 
+            stage: m.stage ? m.stage.toString().trim() : "", 
+            group: m.group ? m.group.toString().trim() : "", 
+            t1: normalizeTeamName(m.team1 || m.t1 || ""), 
+            t2: normalizeTeamName(m.team2 || m.t2 || ""),
+            s1: m.score1 !== "" && m.score1 !== "-" && m.score1 !== undefined ? parseInt(m.score1) : null,
+            s2: m.score2 !== "" && m.score2 !== "-" && m.score2 !== undefined ? parseInt(m.score2) : null,
+            p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
+            p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null,
+            time: m.time || "00:00", date: m.date || "", field: m.field || "1", 
+            status: m.status ? m.status.toLowerCase().trim() : 'future'
+        }));
 
-    db.goals2026 = (data.goals2026 || []).map(g => ({
-        match_id: g.match_id ? g.match_id.toString() : "", 
-        team: normalizeTeamName(g.team), 
-        player: g.player || "", 
-        assistant: g.assistant || "", 
-        minute: parseInt(g.minute || 1)
-    }));
+        db.goals2026 = (data.goals2026 || []).map(g => ({
+            match_id: g.match_id ? g.match_id.toString() : "", 
+            team: normalizeTeamName(g.team || ""), 
+            player: g.player || "", 
+            assistant: g.assistant || "", 
+            minute: parseInt(g.minute || 1)
+        }));
 
-    db.players2026 = (data.players2026 || []).map(p => ({ team: normalizeTeamName(p.team), name: p.player_name || "" }));
-    db.groups2026 = (data.groups2026 || []).map(g => ({ group: g.group || "", team: normalizeTeamName(g.team) }));
-    db.loats = data.loats || {};
-    
-    db.geo = {};
-    (data.teams || []).forEach(t => {
-        if(t.name) {
-            db.geo[normalizeTeamName(t.name).toUpperCase()] = { district: t.district || "", subject: t.subject || "", distance: t.distance || "" };
-        }
-    });
+        db.players2026 = (data.players2026 || []).map(p => ({ team: normalizeTeamName(p.team || ""), name: p.player_name || p.name || "" }));
+        db.groups2026 = (data.groups2026 || []).map(g => ({ group: g.group || "", team: normalizeTeamName(g.team || "") }));
+        db.loats = data.loats || {};
+        
+        db.geo = {};
+        (data.teams || []).forEach(t => {
+            if(t.name) {
+                db.geo[normalizeTeamName(t.name).toUpperCase()] = { district: t.district || "", subject: t.subject || "", distance: t.distance || "" };
+            }
+        });
 
-if (typeof activeAdminTab === 'undefined') db.archive = (data.archive || []).map(m => ({ year: m.year ? m.year.toString() : "2025", tournament: m.tournament || "Мужчины", stage: m.stage ? m.stage.toString().trim() : "", group: m.group ? m.group.toString().trim() : "", t1: normalizeTeamName(m.team1), t2: normalizeTeamName(m.team2), s1: m.score1 !== "" && m.score1 !== undefined ? parseInt(m.score1) : 0, s2: m.score2 !== "" && m.score2 !== undefined ? parseInt(m.score2) : 0, p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null, status: 'past' }));
+        db.archive = (data.archive || []).map(m => ({ 
+            year: m.year ? m.year.toString() : "2025", 
+            tournament: m.tournament || "Мужчины", 
+            stage: m.stage ? m.stage.toString().trim() : "", 
+            group: m.group ? m.group.toString().trim() : "", 
+            t1: normalizeTeamName(m.team1 || m.t1 || ""), 
+            t2: normalizeTeamName(m.team2 || m.t2 || ""), 
+            s1: m.score1 !== "" && m.score1 !== undefined ? parseInt(m.score1) : 0, 
+            s2: m.score2 !== "" && m.score2 !== undefined ? parseInt(m.score2) : 0, 
+            p1: m.pen1 !== "" && m.pen1 !== undefined ? parseInt(m.pen1) : null, 
+            p2: m.pen2 !== "" && m.pen2 !== undefined ? parseInt(m.pen2) : null, 
+            status: 'past' 
+        }));
 
-    db.bestPlayers = (data.bestPlayers || []).map(b => ({
-        year: b.year ? b.year.toString() : "", 
-        sex: b.sex ? b.sex.toLowerCase().trim() : '', 
-        nomination: b.nomination || "", 
-        name: b.name || "", 
-        team: normalizeTeamName(b.team)
-    }));
+        db.bestPlayers = (data.bestPlayers || []).map(b => ({
+            year: b.year ? b.year.toString() : "", 
+            sex: b.sex ? b.sex.toLowerCase().trim() : '', 
+            nomination: b.nomination || "", 
+            name: b.name || "", 
+            team: normalizeTeamName(b.team || "")
+        }));
+    } catch(e) {
+        console.log("Ошибка маппинга данных, но сайт продолжает работу:", e);
+    }
 }
 
 function calculateGroupStats(matches, groupName = "") {
     let stats = {};
+    if (!matches) return [];
     matches.forEach(m => {
         let t1Norm = normalizeTeamName(m.t1); let t2Norm = normalizeTeamName(m.t2);
+        if(!t1Norm || !t2Norm) return;
         if (!stats[t1Norm]) stats[t1Norm] = { name: t1Norm, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
         if (!stats[t2Norm]) stats[t2Norm] = { name: t2Norm, games: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 };
         
