@@ -166,7 +166,8 @@ function startLoaderAnimation() {
 async function init() {
     animId = startLoaderAnimation();
     try {
-        let cacheBuster = APPS_SCRIPT_WEB_APP_URL + "?_=" + new Date().getTime();
+        // Добавляем хитрый сброс кэша для GitHub файла
+        let cacheBuster = "https://raw.githubusercontent.com/ilnursultan/olotau/main/data.json?_t=" + new Date().getTime();
         let res = await fetch(cacheBuster).then(r => r.json());
         mapServerData(res);
 
