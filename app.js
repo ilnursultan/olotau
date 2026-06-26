@@ -412,17 +412,6 @@ function renderTeamStatistics() {
 function render2026Tables() {
     const container = document.getElementById('sub-2026-tables'); container.innerHTML = '';
     
-    // Блок-уведомление о временных данных и предстоящей жеребьевке
-    const infoBannerHtml = `
-        <div class="col-span-1 lg:col-span-2 p-4 mb-2 rounded-2xl bg-zinc-900/50 border border-neon/20 shadow-[0_0_15px_rgba(0,230,118,0.05)] text-center animate-fade-in animate-pulse-border">
-            <p class="text-[11px] sm:text-xs text-zinc-200 font-bold uppercase tracking-wide leading-relaxed">
-                ⚠️ <span class="text-neon">Внимание:</span> Сейчас отображаются <span class="text-neon">временные тестовые данные</span>. 
-                Актуальные составы групп появятся <span class="text-neon">27 июня после 16:00</span> строго по результатам официальной жеребьевки!
-            </p>
-        </div>
-    `;
-    container.innerHTML = infoBannerHtml;
-    
     let filteredMatches = db.matches2026.filter(m => {
         let idInt = parseInt(m.id);
         if (current2026Gender === 'women') return idInt >= 1000 && idInt < 10000;
@@ -434,7 +423,7 @@ function render2026Tables() {
     const groups = [...new Set(groupMatches.map(m => m.group))].filter(Boolean).sort();
     
     if(groups.length === 0) { 
-        container.innerHTML += `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа не найдены.</div>`; 
+        container.innerHTML = `<div class="text-zinc-600 text-xs text-center py-10 italic col-span-2">Матчи группового этапа не найдены.</div>`; 
         return; 
     }
     
