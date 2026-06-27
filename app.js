@@ -270,7 +270,10 @@ function updateStatsTeamsList() {
     if (gender === 'Мужчины' || gender === 'Женщины') {
         let isWomen = (gender === 'Женщины');
         db.matches2026.forEach(m => {
-            let matchIsWomen = (parseInt(m.id) >= 1000);
+            let idInt = parseInt(m.id);
+            // Женские матчи — строго от 1000 до 9999
+            let matchIsWomen = (idInt >= 1000 && idInt < 10000);
+            
             if (isWomen === matchIsWomen) {
                 if(m.t1 && m.t1 !== '-' && m.t1 !== '' && !m.t1.includes('КОМАНДА') && !m.t1.includes('ПАРА')) allTeams.add(normalizeTeamName(m.t1));
                 if(m.t2 && m.t2 !== '-' && m.t2 !== '' && !m.t2.includes('КОМАНДА') && !m.t2.includes('ПАРА')) allTeams.add(normalizeTeamName(m.t2));
