@@ -25,9 +25,10 @@ function getGitHubLogoUrl(teamName) {
         clean.toUpperCase().includes('МЕСТО') || 
         clean.toUpperCase().includes('КОМАНДА #') || 
         clean.toUpperCase().includes('КОМАНДА №')) {
-        return "https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/logo1.png";
+        return "https://cdn.jsdelivr.net/gh/ilnursultan/team-logos@main/logos/logo1.png";
     }
-    return `https://raw.githubusercontent.com/ilnursultan/team-logos/main/logos/${clean}.png`;
+    // Проксируем через jsDelivr CDN — он летает в России и не блокируется операторами
+    return `https://cdn.jsdelivr.net/gh/ilnursultan/team-logos@main/logos/${clean}.png`;
 }
 
 function set2026Category(category) {
