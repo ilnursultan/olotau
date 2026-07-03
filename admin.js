@@ -17,13 +17,37 @@ async function initAdmin() {
             document.getElementById('olotau-app').insertAdjacentHTML('afterbegin', selectorHtml);
         }
 
-        let res = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
+        let res;
+        if (navigator.onLine) {
+            // Если интернет есть — берем из сети и обновляем локальный кэш
+            res = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
+            localStorage.setItem('olotau_db_cache', JSON.stringify(res));
+            console.log("Данные загружены из сети и закэшированы.");
+        } else {
+            // Если интернета нет — берем из памяти телефона
+            let localData = localStorage.getItem('olotau_db_cache');
+            if (localData) {
+                res = JSON.parse(localData);
+                document.getElementById('admin-loader').insertAdjacentHTML('afterend', `
+                    <div class="text-center p-2 mb-4 bg-yellow-500/20 text-yellow-500 rounded-xl text-[10px] font-bold uppercase tracking-wider">
+                        ⚠️ РАБОТА В ОФЛАЙН РЕЖИМЕ (НЕТ ИНТЕРНЕТА)
+                    </div>
+                `);
+            } else {
+                throw new Error("Нет локального кэша");
+            }
+        }
+
         mapServerData(res);
+        
+        // Применяем отложенные офлайн изменения, если они были сохранены ранее
+        applyOfflineChanges();
+
         document.getElementById('admin-loader').style.display = 'none';
         document.getElementById('admin-content').classList.remove('hidden');
         renderAdminPanel();
     } catch(e) {
-        document.getElementById('admin-loader').innerText = "Ошибка соединения с Google Sheets API";
+        document.getElementById('admin-loader').innerText = "Ошибка: Нет сети и локальных данных.";
     }
 }
 
@@ -208,45 +232,128 @@ async function saveAdminSelectLoat(targetName) {
 }
 
 async function saveAdminMatch(matchId, t1, t2) {
-    let s1 = document.getElementById(`score1-${matchId}`).value; let s2 = document.getElementById(`score2-${matchId}`).value;
+    let s1 = document.getElementById(`score1-${matchId}`).value; 
+    let s2 = document.getElementById(`score2-${matchId}`).value;
     if (s1 === '-' || s2 === '-') { alert("Выберите счет!"); return; }
     if (s1 === '10+') s1 = parseInt(document.getElementById(`inp-score1-${matchId}`).value) || 0;
     if (s2 === '10+') s2 = parseInt(document.getElementById(`inp-score2-${matchId}`).value) || 0;
-    let pen1 = null, pen2 = null; let pBlock = document.getElementById(`playoff-penalties-${matchId}`);
+    
+    let pen1 = null, pen2 = null; 
+    let pBlock = document.getElementById(`playoff-penalties-${matchId}`);
     if (pBlock && !pBlock.classList.contains('hidden')) {
-        let p1Val = document.getElementById(`pen1-${matchId}`).value; let p2Val = document.getElementById(`pen2-${matchId}`).value;
+        let p1Val = document.getElementById(`pen1-${matchId}`).value; 
+        let p2Val = document.getElementById(`pen2-${matchId}`).value;
         if (p1Val === '' || p2Val === '') { alert("Введите серию пенальти!"); return; }
         pen1 = parseInt(p1Val); pen2 = parseInt(p2Val);
     }
+    
     let goals = [];
     for (let i = 0; i < parseInt(s1); i++) goals.push({ team: t1, player: document.getElementById(`goal-p-t1-${matchId}-${i}`).value, assistant: document.getElementById(`goal-a-t1-${matchId}-${i}`).value, minute: parseInt(document.getElementById(`goal-m-t1-${matchId}-${i}`).value) });
     for (let j = 0; j < parseInt(s2); j++) goals.push({ team: t2, player: document.getElementById(`goal-p-t2-${matchId}-${j}`).value, assistant: document.getElementById(`goal-a-t2-${matchId}-${j}`).value, minute: parseInt(document.getElementById(`goal-m-t2-${matchId}-${j}`).value) });
     
     let btn = document.getElementById(`send-btn-${matchId}`);
-    if(btn) btn.innerText = "ОБНОВЛЕНИЕ...";
-    
-    try {
-        let currentMatchRef = db.matches2026.find(x => x.id === matchId);
-        let currentStage = currentMatchRef ? currentMatchRef.stage : "Групповой этап";
-        let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'saveMatch', matchId: matchId, t1: t1, t2: t2, score1: s1, score2: s2, pen1: pen1, pen2: pen2, goals: goals, status: 'past', stage: currentStage }) }).then(r => r.json());
-        
-        if (res.status === 'success') { 
-            alert("Матч сохранен!"); 
-            document.getElementById('admin-loader').style.display = 'block';
-            document.getElementById('admin-loader').innerText = "Обновление данных...";
-            document.getElementById('admin-content').classList.add('hidden');
+    if(btn) btn.innerText = "СОХРАНЕНИЕ...";
+
+    let matchPayload = { action: 'saveMatch', matchId: matchId, t1: t1, t2: t2, score1: s1, score2: s2, pen1: pen1, pen2: pen2, goals: goals, status: 'past' };
+
+    // Проверяем наличие интернета в момент нажатия кнопки
+    if (navigator.onLine) {
+        try {
+            let currentMatchRef = db.matches2026.find(x => x.id === matchId);
+            matchPayload.stage = currentMatchRef ? currentMatchRef.stage : "Групповой этап";
             
-            let freshRes = await fetch(APPS_SCRIPT_WEB_APP_URL).then(r => r.json());
-            mapServerData(freshRes);
-            
-            document.getElementById('admin-loader').style.display = 'none';
-            document.getElementById('admin-content').classList.remove('hidden');
-            renderAdminPanel(); 
+            let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify(matchPayload) }).then(r => r.json());
+            if (res.status === 'success') { 
+                alert("Матч успешно сохранен в Google Sheets!"); 
+                location.reload();
+            }
+        } catch(e) {
+            saveToOfflineQueue(matchId, matchPayload);
         }
-    } catch(e) { 
-        alert("Ошибка сохранения"); 
+    } else {
+        // Если интернета нет — уходим в офлайн-сценарий
+        saveToOfflineQueue(matchId, matchPayload);
     }
 }
+
+// Сохранение во временную очередь телефона
+function saveToOfflineQueue(matchId, payload) {
+    // 1. Сохраняем в очередь отправки
+    let queue = JSON.parse(localStorage.getItem('offline_matches_queue') || '{}');
+    queue[matchId] = payload;
+    localStorage.setItem('offline_matches_queue', JSON.stringify(queue));
+
+    // 2. Визуально обновляем текущую локальную БД в оперативной памяти телефона, чтобы админка сразу перерисовалась правильно
+    let matchInDb = db.matches2026.find(x => x.id === matchId);
+    if (matchInDb) {
+        matchInDb.s1 = parseInt(payload.score1);
+        matchInDb.s2 = parseInt(payload.score2);
+        matchInDb.p1 = payload.pen1;
+        matchInDb.p2 = payload.pen2;
+        matchInDb.status = 'past';
+        
+        // Перезаписываем и локальные голы
+        db.goals2026 = db.goals2026.filter(g => g.match_id !== matchId);
+        payload.goals.forEach(g => db.goals2026.push({ match_id: matchId, team: g.team, player: g.player, assistant: g.assistant, minute: g.minute }));
+    }
+
+    alert("Нет интернета! Результат сохранен в память телефона ОФЛАЙН. Он отправится в Google Таблицу автоматически, когда появится сеть.");
+    renderAdminPanel();
+    
+    // Подсвечиваем плашку, что сохранено локально
+    let okBadge = document.getElementById(`ok-badge-${matchId}`);
+    if (okBadge) {
+        okBadge.innerText = "✓ СОХРАНЕНО ОФЛАЙН";
+        okBadge.className = "text-yellow-500 font-bold";
+        okBadge.classList.remove('hidden');
+    }
+}
+
+// Применяем локальные изменения к загруженному кэшу
+function applyOfflineChanges() {
+    let queue = JSON.parse(localStorage.getItem('offline_matches_queue') || '{}');
+    Object.keys(queue).forEach(matchId => {
+        let payload = queue[matchId];
+        let m = db.matches2026.find(x => x.id === matchId);
+        if (m) {
+            m.s1 = parseInt(payload.score1); m.s2 = parseInt(payload.score2);
+            m.p1 = payload.pen1; m.p2 = payload.pen2; m.status = 'past';
+            db.goals2026 = db.goals2026.filter(g => g.match_id !== matchId);
+            payload.goals.forEach(g => db.goals2026.push({ match_id: matchId, team: g.team, player: g.player, assistant: g.assistant, minute: g.minute }));
+        }
+    });
+}
+
+// Автоматическая отправка накопленных данных при восстановлении сети
+window.addEventListener('online', async () => {
+    let queue = JSON.parse(localStorage.getItem('offline_matches_queue') || '{}');
+    let matchIds = Object.keys(queue);
+    if (matchIds.length === 0) return;
+
+    console.log("Сеть восстановлена! Начинаю синхронизацию результатов...");
+    
+    for (let matchId of matchIds) {
+        try {
+            let payload = queue[matchId];
+            let currentMatchRef = db.matches2026.find(x => x.id === matchId);
+            payload.stage = currentMatchRef ? currentMatchRef.stage : "Групповой этап";
+
+            let res = await fetch(APPS_SCRIPT_WEB_APP_URL, { method: 'POST', body: JSON.stringify(payload) }).then(r => r.json());
+            if (res.status === 'success') {
+                delete queue[matchId];
+                localStorage.setItem('offline_matches_queue', JSON.stringify(queue));
+                console.log(`Матч ${matchId} успешно синхронизирован.`);
+            }
+        } catch(e) {
+            console.error(`Не удалось отправить матч ${matchId}, попробую позже.`, e);
+        }
+    }
+    
+    if (Object.keys(queue).length === 0) {
+        alert("🎉 Все офлайн-результаты успешно синхронизированы с Google Таблицей!");
+        location.reload();
+    }
+});
 
 async function triggerBuildGrid() {
     if (activeAdminGender === 'women') {
