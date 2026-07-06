@@ -1325,7 +1325,7 @@
       "pen2": "",
       "time": "10:00",
       "date": "11 июля",
-      "field": "1",
+      "field": "2",
       "status": "future"
     },
     {
@@ -1339,7 +1339,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "10:00",
+      "time": "10:30",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1355,7 +1355,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "10:30",
+      "time": "11:00",
       "date": "11 июля",
       "field": "1",
       "status": "future"
@@ -1371,7 +1371,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "10:30",
+      "time": "11:00",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1389,7 +1389,7 @@
       "pen2": "",
       "time": "11:00",
       "date": "11 июля",
-      "field": "1",
+      "field": "3",
       "status": "future"
     },
     {
@@ -1403,7 +1403,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "11:00",
+      "time": "11:30",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1419,9 +1419,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "11:30",
+      "time": "12:00",
       "date": "11 июля",
-      "field": "1",
+      "field": "2",
       "status": "future"
     },
     {
@@ -1435,7 +1435,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "11:30",
+      "time": "12:30",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1451,9 +1451,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "12:00",
+      "time": "12:30",
       "date": "11 июля",
-      "field": "1",
+      "field": "3",
       "status": "future"
     },
     {
@@ -1467,7 +1467,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "12:00",
+      "time": "13:00",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1483,9 +1483,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "12:30",
+      "time": "13:30",
       "date": "11 июля",
-      "field": "1",
+      "field": "2",
       "status": "future"
     },
     {
@@ -1499,7 +1499,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "12:30",
+      "time": "14:00",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1515,9 +1515,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "14:00",
+      "time": "15:30",
       "date": "11 июля",
-      "field": "1",
+      "field": "2",
       "status": "future"
     },
     {
@@ -1531,9 +1531,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "14:00",
+      "time": "15:30",
       "date": "11 июля",
-      "field": "2",
+      "field": "3",
       "status": "future"
     },
     {
@@ -1547,7 +1547,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "15:00",
+      "time": "16:30",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1563,7 +1563,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "16:00",
+      "time": "18:00",
       "date": "11 июля",
       "field": "2",
       "status": "future"
@@ -1581,7 +1581,7 @@
       "pen2": "",
       "time": "10:00",
       "date": "11 июля",
-      "field": "3",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1595,7 +1595,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "10:30",
+      "time": "10:00",
       "date": "11 июля",
       "field": "3",
       "status": "future"
@@ -1611,9 +1611,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "11:00",
+      "time": "10:30",
       "date": "11 июля",
-      "field": "3",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1627,7 +1627,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "11:30",
+      "time": "10:30",
       "date": "11 июля",
       "field": "3",
       "status": "future"
@@ -1643,9 +1643,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "12:00",
+      "time": "11:30",
       "date": "11 июля",
-      "field": "3",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1659,7 +1659,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "12:30",
+      "time": "11:30",
       "date": "11 июля",
       "field": "3",
       "status": "future"
@@ -1675,7 +1675,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "13:00",
+      "time": "12:00",
       "date": "11 июля",
       "field": "1",
       "status": "future"
@@ -1691,9 +1691,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "13:00",
+      "time": "12:00",
       "date": "11 июля",
-      "field": "2",
+      "field": "3",
       "status": "future"
     },
     {
@@ -1709,7 +1709,7 @@
       "pen2": "",
       "time": "13:00",
       "date": "11 июля",
-      "field": "3",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1723,9 +1723,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "13:30",
+      "time": "13:00",
       "date": "11 июля",
-      "field": "1",
+      "field": "3",
       "status": "future"
     },
     {
@@ -1741,7 +1741,7 @@
       "pen2": "",
       "time": "13:30",
       "date": "11 июля",
-      "field": "2",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1771,9 +1771,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "14:00",
+      "time": "14:30",
       "date": "11 июля",
-      "field": "3",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1789,7 +1789,7 @@
       "pen2": "",
       "time": "14:30",
       "date": "11 июля",
-      "field": "1",
+      "field": "3",
       "status": "future"
     },
     {
@@ -1803,9 +1803,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "14:30",
+      "time": "15:00",
       "date": "11 июля",
-      "field": "2",
+      "field": "1",
       "status": "future"
     },
     {
@@ -1819,7 +1819,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "14:30",
+      "time": "15:00",
       "date": "11 июля",
       "field": "3",
       "status": "future"
@@ -1835,7 +1835,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "15:00",
+      "time": "16:00",
       "date": "11 июля",
       "field": "1",
       "status": "future"
@@ -1851,7 +1851,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "15:00",
+      "time": "16:00",
       "date": "11 июля",
       "field": "3",
       "status": "future"
@@ -1867,7 +1867,7 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "15:30",
+      "time": "16:30",
       "date": "11 июля",
       "field": "1",
       "status": "future"
@@ -1883,9 +1883,9 @@
       "score2": "",
       "pen1": "",
       "pen2": "",
-      "time": "15:30",
+      "time": "17:30",
       "date": "11 июля",
-      "field": "3",
+      "field": "1",
       "status": "future"
     }
   ],
