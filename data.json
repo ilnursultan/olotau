@@ -55,14 +55,14 @@
       "group": "Группа D",
       "team1": "КУТУЕВО-2",
       "team2": "ЮЛУК",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "9 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "5",
@@ -71,14 +71,14 @@
       "group": "Группа E",
       "team1": "АСКАРОВО",
       "team2": "ИШАЛИНО",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "9 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "6",
@@ -87,14 +87,14 @@
       "group": "Группа F",
       "team1": "ИШМЕКЕЕВО",
       "team2": "БАЖИКАЕВА",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "3",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "9 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "7",
@@ -1959,6 +1959,62 @@
       "player": "Дюсьметов Денис",
       "assistant": "",
       "minute": "15"
+    },
+    {
+      "match_id": "4",
+      "team": "ЮЛУК",
+      "player": "Султанов Рушан",
+      "assistant": "",
+      "minute": "6"
+    },
+    {
+      "match_id": "5",
+      "team": "АСКАРОВО",
+      "player": "Узянбаев Рафис",
+      "assistant": "Саитгалин Арсен",
+      "minute": "13"
+    },
+    {
+      "match_id": "5",
+      "team": "ИШАЛИНО",
+      "player": "Абубакиров Артур",
+      "assistant": "",
+      "minute": "8"
+    },
+    {
+      "match_id": "5",
+      "team": "ИШАЛИНО",
+      "player": "Байгужин Рамиль",
+      "assistant": "Багаутдинов Данила",
+      "minute": "10"
+    },
+    {
+      "match_id": "6",
+      "team": "ИШМЕКЕЕВО",
+      "player": "Галикеев Ренат",
+      "assistant": "",
+      "minute": "9"
+    },
+    {
+      "match_id": "6",
+      "team": "БАЖИКАЕВА",
+      "player": "Сиражев Зинур",
+      "assistant": "Ямалетдинов Ильназ",
+      "minute": "8"
+    },
+    {
+      "match_id": "6",
+      "team": "БАЖИКАЕВА",
+      "player": "Сиражев Динислам",
+      "assistant": "Сиражев Динислам",
+      "minute": "19"
+    },
+    {
+      "match_id": "6",
+      "team": "БАЖИКАЕВА",
+      "player": "Ямалетдинов Ильназ",
+      "assistant": "",
+      "minute": "20"
     }
   ],
   "groups2026": [
