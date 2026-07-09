@@ -1891,34 +1891,6 @@
   ],
   "goals2026": [
     {
-      "match_id": "3",
-      "team": "КУНДРАВЫ",
-      "player": "Молчанов Дмитрий",
-      "assistant": "",
-      "minute": "20"
-    },
-    {
-      "match_id": "3",
-      "team": "ЦЕЛИННОЕ",
-      "player": "Афлятунов Артём",
-      "assistant": "",
-      "minute": "12"
-    },
-    {
-      "match_id": "3",
-      "team": "ЦЕЛИННОЕ",
-      "player": "Казыханов Вадим",
-      "assistant": "Исхаков Никита",
-      "minute": "15"
-    },
-    {
-      "match_id": "3",
-      "team": "ЦЕЛИННОЕ",
-      "player": "Юсупов Айдар",
-      "assistant": "",
-      "minute": "18"
-    },
-    {
       "match_id": "2",
       "team": "НИЖНИЕ КИГИ",
       "player": "Зайнуллин Руслан",
@@ -2099,6 +2071,34 @@
       "player": "Абызбаев Рустам",
       "assistant": "",
       "minute": "13"
+    },
+    {
+      "match_id": "3",
+      "team": "КУНДРАВЫ",
+      "player": "Молчанов Дмитрий",
+      "assistant": "",
+      "minute": "20"
+    },
+    {
+      "match_id": "3",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Юсупов Айдар",
+      "assistant": "",
+      "minute": "12"
+    },
+    {
+      "match_id": "3",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Казыханов Вадим",
+      "assistant": "Исхаков Никита",
+      "minute": "15"
+    },
+    {
+      "match_id": "3",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Афлятунов Артём",
+      "assistant": "",
+      "minute": "18"
     }
   ],
   "groups2026": [
