@@ -103,14 +103,14 @@
       "group": "Группа G",
       "team1": "УРАЗОВО",
       "team2": "БАЙГАЗИНА",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "9 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "8",
@@ -119,14 +119,14 @@
       "group": "Группа H",
       "team1": "УРАЛЬСК",
       "team2": "СТАРОАРЗАМАТОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "9 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "9",
@@ -135,14 +135,14 @@
       "group": "Группа I",
       "team1": "СТАРОСУБХАНГУЛОВО",
       "team2": "ИШБУЛДИНО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "9 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "10",
@@ -167,14 +167,14 @@
       "group": "Группа K",
       "team1": "КУТУЕВО",
       "team2": "КУЗЯШЕВА",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "17:30",
       "date": "9 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "12",
@@ -183,14 +183,14 @@
       "group": "Группа A",
       "team1": "ТАШТИМЕРОВО",
       "team2": "ЦЕЛИННЫЙ",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "17:30",
       "date": "9 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "13",
@@ -2013,6 +2013,41 @@
       "match_id": "6",
       "team": "БАЖИКАЕВА",
       "player": "Ямалетдинов Ильназ",
+      "assistant": "",
+      "minute": "20"
+    },
+    {
+      "match_id": "12",
+      "team": "ТАШТИМЕРОВО",
+      "player": "Нугаманов Ниль",
+      "assistant": "",
+      "minute": "12"
+    },
+    {
+      "match_id": "12",
+      "team": "ТАШТИМЕРОВО",
+      "player": "Нугаманов Ниль",
+      "assistant": "Алсынбаев Нияз",
+      "minute": "15"
+    },
+    {
+      "match_id": "8",
+      "team": "СТАРОАРЗАМАТОВО",
+      "player": "Николаев Руслан",
+      "assistant": "Ибаев Лев",
+      "minute": "6"
+    },
+    {
+      "match_id": "9",
+      "team": "ИШБУЛДИНО",
+      "player": "Фаттахов Ильмир",
+      "assistant": "Халисов Ильнар",
+      "minute": "5"
+    },
+    {
+      "match_id": "11",
+      "team": "КУЗЯШЕВА",
+      "player": "Сиражитдинов Ильнур",
       "assistant": "",
       "minute": "20"
     }
