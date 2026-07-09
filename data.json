@@ -151,14 +151,14 @@
       "group": "Группа J",
       "team1": "КИЛЬМЯК",
       "team2": "АРГАЯШ",
-      "score1": "",
-      "score2": "",
+      "score1": "4",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "17:30",
       "date": "9 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "11",
@@ -231,14 +231,14 @@
       "group": "Группа D",
       "team1": "АТАВДЫ",
       "team2": "ЖЕЛТОЕ",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "18:00",
       "date": "9 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "16",
@@ -2050,6 +2050,55 @@
       "player": "Сиражитдинов Ильнур",
       "assistant": "",
       "minute": "20"
+    },
+    {
+      "match_id": "15",
+      "team": "АТАВДЫ",
+      "player": "Вафин Ильфат",
+      "assistant": "",
+      "minute": "13"
+    },
+    {
+      "match_id": "15",
+      "team": "АТАВДЫ",
+      "player": "Вафин Ильфат",
+      "assistant": "Вафин Лидар",
+      "minute": "18"
+    },
+    {
+      "match_id": "15",
+      "team": "ЖЕЛТОЕ",
+      "player": "Надыров Тимур",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "10",
+      "team": "КИЛЬМЯК",
+      "player": "Ибрагимов Айдар",
+      "assistant": "Динисламов Разиф",
+      "minute": "3"
+    },
+    {
+      "match_id": "10",
+      "team": "КИЛЬМЯК",
+      "player": "Ибрагимов Айдар",
+      "assistant": "Хамзин Венер",
+      "minute": "5"
+    },
+    {
+      "match_id": "10",
+      "team": "КИЛЬМЯК",
+      "player": "Якупов Арслан",
+      "assistant": "",
+      "minute": "8"
+    },
+    {
+      "match_id": "10",
+      "team": "КИЛЬМЯК",
+      "player": "Абызбаев Рустам",
+      "assistant": "",
+      "minute": "13"
     }
   ],
   "groups2026": [
