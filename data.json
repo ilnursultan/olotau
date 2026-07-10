@@ -1047,14 +1047,14 @@
       "group": "Группа K",
       "team1": "КУЗЯШЕВА",
       "team2": "ЧЕКМАГУШ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "101",
@@ -2869,6 +2869,13 @@
       "player": "Султанбеков Дмитрий",
       "assistant": "",
       "minute": "4"
+    },
+    {
+      "match_id": "66",
+      "team": "КУЗЯШЕВА",
+      "player": "Мирасов Вильдан",
+      "assistant": "Мухамедьяров Айнур",
+      "minute": "8"
     }
   ],
   "groups2026": [
