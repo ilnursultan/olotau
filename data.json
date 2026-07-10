@@ -807,14 +807,14 @@
       "group": "Группа D",
       "team1": "КУТУЕВО-2",
       "team2": "ЖЕЛТОЕ",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "3",
       "pen1": "",
       "pen2": "",
       "time": "14:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "52",
@@ -823,14 +823,14 @@
       "group": "Группа D",
       "team1": "ЮЛУК",
       "team2": "АТАВДЫ",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "14:30",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "53",
@@ -2561,6 +2561,55 @@
       "player": "Ахтямов Владислав",
       "assistant": "",
       "minute": "19"
+    },
+    {
+      "match_id": "51",
+      "team": "ЖЕЛТОЕ",
+      "player": "Дельмухаметов Роман",
+      "assistant": "Дельмухаметов Данил",
+      "minute": "3"
+    },
+    {
+      "match_id": "51",
+      "team": "ЖЕЛТОЕ",
+      "player": "Дельмухаметов Роман",
+      "assistant": "",
+      "minute": "12"
+    },
+    {
+      "match_id": "51",
+      "team": "ЖЕЛТОЕ",
+      "player": "Надыров Тимур",
+      "assistant": "Иксангалеев Данил",
+      "minute": "17"
+    },
+    {
+      "match_id": "52",
+      "team": "ЮЛУК",
+      "player": "Султанов Рушан",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "52",
+      "team": "ЮЛУК",
+      "player": "Султанов Рушан",
+      "assistant": "",
+      "minute": "13"
+    },
+    {
+      "match_id": "52",
+      "team": "АТАВДЫ",
+      "player": "Вафин Лидар",
+      "assistant": "Вафин Ильфат",
+      "minute": "6"
+    },
+    {
+      "match_id": "52",
+      "team": "АТАВДЫ",
+      "player": "Набиуллин Зариф",
+      "assistant": "",
+      "minute": "9"
     }
   ],
   "groups2026": [
