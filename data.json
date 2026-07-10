@@ -919,14 +919,14 @@
       "group": "Группа G",
       "team1": "БАЙГАЗИНА",
       "team2": "ПАВЛОДАРСКОЕ",
-      "score1": "",
-      "score2": "",
+      "score1": "3",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "15:30",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "59",
@@ -2729,6 +2729,27 @@
       "player": "Хабибуллин Наиль",
       "assistant": "",
       "minute": "16"
+    },
+    {
+      "match_id": "58",
+      "team": "БАЙГАЗИНА",
+      "player": "Шарапов Тимур",
+      "assistant": "",
+      "minute": "7"
+    },
+    {
+      "match_id": "58",
+      "team": "БАЙГАЗИНА",
+      "player": "Шарапов Тимур",
+      "assistant": "",
+      "minute": "17"
+    },
+    {
+      "match_id": "58",
+      "team": "БАЙГАЗИНА",
+      "player": "Гарафутдинов Юрис",
+      "assistant": "",
+      "minute": "20"
     }
   ],
   "groups2026": [
