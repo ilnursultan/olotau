@@ -983,14 +983,14 @@
       "group": "Группа I",
       "team1": "ИШБУЛДИНО",
       "team2": "БОЛЬШАЯ ЧЕРНИГОВКА",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "63",
@@ -999,14 +999,14 @@
       "group": "Группа J",
       "team1": "КИЛЬМЯК",
       "team2": "КУНАКБАЕВО",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "64",
@@ -1031,14 +1031,14 @@
       "group": "Группа K",
       "team1": "КУТУЕВО",
       "team2": "ТАШТУЙ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "17:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "66",
@@ -2820,6 +2820,48 @@
       "player": "Нугманов Данил",
       "assistant": "",
       "minute": "5"
+    },
+    {
+      "match_id": "63",
+      "team": "КИЛЬМЯК",
+      "player": "Мухаметов Булат",
+      "assistant": "Гумеров Алмас",
+      "minute": "17"
+    },
+    {
+      "match_id": "63",
+      "team": "КУНАКБАЕВО",
+      "player": "Хуснуллин Ильдан",
+      "assistant": "",
+      "minute": "5"
+    },
+    {
+      "match_id": "63",
+      "team": "КУНАКБАЕВО",
+      "player": "Хуснуллин Ильдан",
+      "assistant": "Ахмадуллин Раис",
+      "minute": "15"
+    },
+    {
+      "match_id": "62",
+      "team": "ИШБУЛДИНО",
+      "player": "Фаттахов Ильмир",
+      "assistant": "",
+      "minute": "2"
+    },
+    {
+      "match_id": "65",
+      "team": "КУТУЕВО",
+      "player": "Сулейманов Зариф",
+      "assistant": "",
+      "minute": "10"
+    },
+    {
+      "match_id": "65",
+      "team": "ТАШТУЙ",
+      "player": "Ахтямов Владислав",
+      "assistant": "",
+      "minute": "13"
     }
   ],
   "groups2026": [
