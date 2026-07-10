@@ -839,14 +839,14 @@
       "group": "Группа E",
       "team1": "АСКАРОВО",
       "team2": "МИХАЙЛОВКА",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "15:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "54",
@@ -855,14 +855,14 @@
       "group": "Группа E",
       "team1": "ИШАЛИНО",
       "team2": "АМАНГИЛЬДИНО",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "15:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "55",
@@ -871,14 +871,14 @@
       "group": "Группа F",
       "team1": "ИШМЕКЕЕВО",
       "team2": "ЕЛЫШЕВО",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "15:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "56",
@@ -903,14 +903,14 @@
       "group": "Группа G",
       "team1": "УРАЗОВО",
       "team2": "БАЖИКАЕВА-2",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "5",
       "pen1": "",
       "pen2": "",
       "time": "15:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "58",
@@ -2645,6 +2645,90 @@
       "player": "Халилов Вадим",
       "assistant": "Халилов Данил",
       "minute": "20"
+    },
+    {
+      "match_id": "53",
+      "team": "АСКАРОВО",
+      "player": "Галиуллин Данила",
+      "assistant": "",
+      "minute": "20"
+    },
+    {
+      "match_id": "54",
+      "team": "ИШАЛИНО",
+      "player": "Абубакиров Артур",
+      "assistant": "Бурханов Эмиль",
+      "minute": "19"
+    },
+    {
+      "match_id": "54",
+      "team": "АМАНГИЛЬДИНО",
+      "player": "Ялмурзин Иршат",
+      "assistant": "",
+      "minute": "2"
+    },
+    {
+      "match_id": "55",
+      "team": "ИШМЕКЕЕВО",
+      "player": "Махмутов Даян",
+      "assistant": "Галикеев Ренат",
+      "minute": "18"
+    },
+    {
+      "match_id": "55",
+      "team": "ЕЛЫШЕВО",
+      "player": "Алексеев Максим",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "57",
+      "team": "УРАЗОВО",
+      "player": "Мигранов Ильяс",
+      "assistant": "Юмагужин Владислав",
+      "minute": "6"
+    },
+    {
+      "match_id": "57",
+      "team": "УРАЗОВО",
+      "player": "Мигранов Ильяс",
+      "assistant": "Фазылов Артур",
+      "minute": "17"
+    },
+    {
+      "match_id": "57",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Юсупов Вильдан",
+      "assistant": "Хабибуллин Наиль",
+      "minute": "12"
+    },
+    {
+      "match_id": "57",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Гайсин Зиннур",
+      "assistant": "Хабибуллин Наиль",
+      "minute": "14"
+    },
+    {
+      "match_id": "57",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Гайсин Зиннур",
+      "assistant": "Сулейманов Арслан",
+      "minute": "15"
+    },
+    {
+      "match_id": "57",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Сулейманов Тимур",
+      "assistant": "",
+      "minute": "16"
+    },
+    {
+      "match_id": "57",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Хабибуллин Наиль",
+      "assistant": "",
+      "minute": "16"
     }
   ],
   "groups2026": [
