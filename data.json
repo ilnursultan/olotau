@@ -743,14 +743,14 @@
       "group": "Группа B",
       "team1": "СЕВЕРНЫЙ",
       "team2": "МАВЛЮТОВА",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "14:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "48",
@@ -2617,6 +2617,34 @@
       "player": "Автогол",
       "assistant": "",
       "minute": "5"
+    },
+    {
+      "match_id": "47",
+      "team": "СЕВЕРНЫЙ",
+      "player": "Ишмухаметов Зиннур",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "47",
+      "team": "СЕВЕРНЫЙ",
+      "player": "Ишмухаметов Зиннур",
+      "assistant": "",
+      "minute": "6"
+    },
+    {
+      "match_id": "47",
+      "team": "МАВЛЮТОВА",
+      "player": "Гайнитдинов Даниэль",
+      "assistant": "Хасанов Тимур",
+      "minute": "2"
+    },
+    {
+      "match_id": "47",
+      "team": "МАВЛЮТОВА",
+      "player": "Халилов Вадим",
+      "assistant": "Халилов Данил",
+      "minute": "20"
     }
   ],
   "groups2026": [
