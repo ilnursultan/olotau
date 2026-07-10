@@ -359,14 +359,14 @@
       "group": "Группа A",
       "team1": "КУБАГУШЕВО",
       "team2": "ТАШТИМЕРОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "09:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "24",
@@ -375,14 +375,14 @@
       "group": "Группа A",
       "team1": "БУРАЕВО",
       "team2": "ЦЕЛИННЫЙ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "09:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "25",
@@ -391,14 +391,14 @@
       "group": "Группа B",
       "team1": "СЕВЕРНЫЙ",
       "team2": "ФИЛИМОНОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "4",
       "pen1": "",
       "pen2": "",
       "time": "09:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "26",
@@ -407,14 +407,14 @@
       "group": "Группа B",
       "team1": "НИЖНИЕ КИГИ",
       "team2": "МАВЛЮТОВА",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "09:30",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "27",
@@ -423,14 +423,14 @@
       "group": "Группа C",
       "team1": "КУНДРАВЫ",
       "team2": "БУЗДЯК",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "09:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "28",
@@ -439,14 +439,14 @@
       "group": "Группа C",
       "team1": "ЦЕЛИННОЕ",
       "team2": "ЯЗЫКОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "4",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "09:30",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "29",
@@ -455,14 +455,14 @@
       "group": "Группа D",
       "team1": "КУТУЕВО-2",
       "team2": "АТАВДЫ",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "10:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "30",
@@ -471,14 +471,14 @@
       "group": "Группа D",
       "team1": "ЮЛУК",
       "team2": "ЖЕЛТОЕ",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "10:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "31",
@@ -487,14 +487,14 @@
       "group": "Группа E",
       "team1": "АСКАРОВО",
       "team2": "АМАНГИЛЬДИНО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "10:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "32",
@@ -503,14 +503,14 @@
       "group": "Группа E",
       "team1": "ИШАЛИНО",
       "team2": "МИХАЙЛОВКА",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "10:30",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "33",
@@ -519,14 +519,14 @@
       "group": "Группа F",
       "team1": "ИШМЕКЕЕВО",
       "team2": "АКЪЯР",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "10:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "34",
@@ -535,14 +535,14 @@
       "group": "Группа F",
       "team1": "БАЖИКАЕВА",
       "team2": "ЕЛЫШЕВО",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "10:30",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "35",
@@ -551,14 +551,14 @@
       "group": "Группа G",
       "team1": "УРАЗОВО",
       "team2": "ПАВЛОДАРСКОЕ",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "11:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "36",
@@ -567,14 +567,14 @@
       "group": "Группа G",
       "team1": "БАЙГАЗИНА",
       "team2": "БАЖИКАЕВА-2",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "11:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "37",
@@ -583,14 +583,14 @@
       "group": "Группа H",
       "team1": "УРАЛЬСК",
       "team2": "МЕЖОЗЕРНЫЙ",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "11:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "38",
@@ -599,14 +599,14 @@
       "group": "Группа H",
       "team1": "СТАРОАРЗАМАТОВО",
       "team2": "КРАСНАЯ БАШКИРИЯ",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "11:30",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "39",
@@ -615,14 +615,14 @@
       "group": "Группа I",
       "team1": "СТАРОСУБХАНГУЛОВО",
       "team2": "БОЛЬШАЯ ЧЕРНИГОВКА",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "11:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "40",
@@ -631,14 +631,14 @@
       "group": "Группа I",
       "team1": "ИШБУЛДИНО",
       "team2": "БОЛЬШИЕ МОТЫКАЛЫ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "11:30",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "41",
@@ -647,14 +647,14 @@
       "group": "Группа J",
       "team1": "КИЛЬМЯК",
       "team2": "НОВОМУСЯТОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "13:00",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "42",
@@ -663,14 +663,14 @@
       "group": "Группа J",
       "team1": "АРГАЯШ",
       "team2": "КУНАКБАЕВО",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "13:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "43",
@@ -679,14 +679,14 @@
       "group": "Группа K",
       "team1": "КУТУЕВО",
       "team2": "ЧЕКМАГУШ",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "3",
       "pen1": "",
       "pen2": "",
       "time": "13:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "44",
@@ -711,14 +711,14 @@
       "group": "Группа A",
       "team1": "КУБАГУШЕВО",
       "team2": "ЦЕЛИННЫЙ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "13:30",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "46",
@@ -727,14 +727,14 @@
       "group": "Группа A",
       "team1": "БУРАЕВО",
       "team2": "ТАШТИМЕРОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "13:30",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "47",
@@ -759,14 +759,14 @@
       "group": "Группа B",
       "team1": "НИЖНИЕ КИГИ",
       "team2": "ФИЛИМОНОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "14:00",
       "date": "10 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "49",
@@ -775,14 +775,14 @@
       "group": "Группа C",
       "team1": "КУНДРАВЫ",
       "team2": "ЯЗЫКОВО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "3",
       "pen1": "",
       "pen2": "",
       "time": "14:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "50",
@@ -2218,6 +2218,342 @@
       "player": "Хасанов Ранис",
       "assistant": "Фаттахов Руслан",
       "minute": "12"
+    },
+    {
+      "match_id": "23",
+      "team": "ТАШТИМЕРОВО",
+      "player": "Ишкильдин Динир",
+      "assistant": "",
+      "minute": "19"
+    },
+    {
+      "match_id": "24",
+      "team": "БУРАЕВО",
+      "player": "Амиров Айнур",
+      "assistant": "",
+      "minute": "10"
+    },
+    {
+      "match_id": "25",
+      "team": "СЕВЕРНЫЙ",
+      "player": "Буранбаев Альберт",
+      "assistant": "Сирусин Наиль",
+      "minute": "16"
+    },
+    {
+      "match_id": "25",
+      "team": "ФИЛИМОНОВО",
+      "player": "Яруллин Ян",
+      "assistant": "Валеев Ринат",
+      "minute": "8"
+    },
+    {
+      "match_id": "25",
+      "team": "ФИЛИМОНОВО",
+      "player": "Кондратьев Александр",
+      "assistant": "Валеев Ринат",
+      "minute": "10"
+    },
+    {
+      "match_id": "25",
+      "team": "ФИЛИМОНОВО",
+      "player": "Шевяков Никита",
+      "assistant": "",
+      "minute": "12"
+    },
+    {
+      "match_id": "25",
+      "team": "ФИЛИМОНОВО",
+      "player": "Яруллин Ян",
+      "assistant": "",
+      "minute": "17"
+    },
+    {
+      "match_id": "28",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Юсупов Исмагил",
+      "assistant": "",
+      "minute": "2"
+    },
+    {
+      "match_id": "28",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Юсупов Исмагил",
+      "assistant": "Юсупов Айдар",
+      "minute": "7"
+    },
+    {
+      "match_id": "28",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Исянгильдин Айгиз",
+      "assistant": "Исхаков Никита",
+      "minute": "12"
+    },
+    {
+      "match_id": "28",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Автогол",
+      "assistant": "",
+      "minute": "20"
+    },
+    {
+      "match_id": "28",
+      "team": "ЯЗЫКОВО",
+      "player": "Кильдибеков Ренат",
+      "assistant": "Гильманов Гамиль",
+      "minute": "5"
+    },
+    {
+      "match_id": "28",
+      "team": "ЯЗЫКОВО",
+      "player": "Гильманов Гамиль",
+      "assistant": "",
+      "minute": "15"
+    },
+    {
+      "match_id": "27",
+      "team": "БУЗДЯК",
+      "player": "Нигматуллин Артур",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "27",
+      "team": "БУЗДЯК",
+      "player": "Автогол",
+      "assistant": "",
+      "minute": "17"
+    },
+    {
+      "match_id": "30",
+      "team": "ЮЛУК",
+      "player": "Султанов Рушан",
+      "assistant": "",
+      "minute": "14"
+    },
+    {
+      "match_id": "30",
+      "team": "ЮЛУК",
+      "player": "Султанов Рушан",
+      "assistant": "",
+      "minute": "17"
+    },
+    {
+      "match_id": "30",
+      "team": "ЖЕЛТОЕ",
+      "player": "Дельмухаметов Роман",
+      "assistant": "",
+      "minute": "6"
+    },
+    {
+      "match_id": "29",
+      "team": "АТАВДЫ",
+      "player": "Вафин Ильфат",
+      "assistant": "Мурзабаев Динир",
+      "minute": "13"
+    },
+    {
+      "match_id": "29",
+      "team": "АТАВДЫ",
+      "player": "Вафин Лидар",
+      "assistant": "Замалитдинов Нияз",
+      "minute": "16"
+    },
+    {
+      "match_id": "32",
+      "team": "ИШАЛИНО",
+      "player": "Абдулвалеев Эдвард",
+      "assistant": "",
+      "minute": "7"
+    },
+    {
+      "match_id": "32",
+      "team": "ИШАЛИНО",
+      "player": "Габбасов Руслан",
+      "assistant": "",
+      "minute": "19"
+    },
+    {
+      "match_id": "33",
+      "team": "ИШМЕКЕЕВО",
+      "player": "Махмутов Тагир",
+      "assistant": "Мухаметшин Тимур",
+      "minute": "14"
+    },
+    {
+      "match_id": "33",
+      "team": "АКЪЯР",
+      "player": "Муртаев Булат",
+      "assistant": "Даминев Линар",
+      "minute": "6"
+    },
+    {
+      "match_id": "33",
+      "team": "АКЪЯР",
+      "player": "Даминев Линар",
+      "assistant": "",
+      "minute": "11"
+    },
+    {
+      "match_id": "34",
+      "team": "БАЖИКАЕВА",
+      "player": "Сиражев Равиль",
+      "assistant": "Сиражев Зинур",
+      "minute": "16"
+    },
+    {
+      "match_id": "34",
+      "team": "БАЖИКАЕВА",
+      "player": "Сиражев Зинур",
+      "assistant": "Сиражев Равиль",
+      "minute": "17"
+    },
+    {
+      "match_id": "34",
+      "team": "ЕЛЫШЕВО",
+      "player": "Бикозов Тимур",
+      "assistant": "",
+      "minute": "19"
+    },
+    {
+      "match_id": "35",
+      "team": "ПАВЛОДАРСКОЕ",
+      "player": "Мухаметов Амирхан",
+      "assistant": "Нуралинов Кайсар",
+      "minute": "5"
+    },
+    {
+      "match_id": "38",
+      "team": "СТАРОАРЗАМАТОВО",
+      "player": "Николаев Руслан",
+      "assistant": "Абдулов Вадим",
+      "minute": "7"
+    },
+    {
+      "match_id": "38",
+      "team": "СТАРОАРЗАМАТОВО",
+      "player": "Осипов Сергей",
+      "assistant": "Николаев Руслан",
+      "minute": "15"
+    },
+    {
+      "match_id": "39",
+      "team": "БОЛЬШАЯ ЧЕРНИГОВКА",
+      "player": "Ахметов Иса",
+      "assistant": "Губайдулин Ришат",
+      "minute": "17"
+    },
+    {
+      "match_id": "39",
+      "team": "БОЛЬШАЯ ЧЕРНИГОВКА",
+      "player": "Ахметов Иса",
+      "assistant": "",
+      "minute": "18"
+    },
+    {
+      "match_id": "40",
+      "team": "ИШБУЛДИНО",
+      "player": "Халисов Ильдар",
+      "assistant": "",
+      "minute": "10"
+    },
+    {
+      "match_id": "40",
+      "team": "БОЛЬШИЕ МОТЫКАЛЫ",
+      "player": "Автогол",
+      "assistant": "",
+      "minute": "13"
+    },
+    {
+      "match_id": "46",
+      "team": "ТАШТИМЕРОВО",
+      "player": "Ишкильдин Данир",
+      "assistant": "",
+      "minute": "18"
+    },
+    {
+      "match_id": "45",
+      "team": "КУБАГУШЕВО",
+      "player": "Лукманов Азамат",
+      "assistant": "Суфьянов Тимур",
+      "minute": "5"
+    },
+    {
+      "match_id": "41",
+      "team": "КИЛЬМЯК",
+      "player": "Автогол",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "41",
+      "team": "КИЛЬМЯК",
+      "player": "Гумеров Алмас",
+      "assistant": "Якупов Арслан",
+      "minute": "9"
+    },
+    {
+      "match_id": "41",
+      "team": "НОВОМУСЯТОВО",
+      "player": "Гумеров Ильяс",
+      "assistant": "Уразаев Юлай",
+      "minute": "2"
+    },
+    {
+      "match_id": "42",
+      "team": "АРГАЯШ",
+      "player": "Усманов Альфред",
+      "assistant": "",
+      "minute": "8"
+    },
+    {
+      "match_id": "43",
+      "team": "ЧЕКМАГУШ",
+      "player": "Гайсин Альберт",
+      "assistant": "Хасанов Ранис",
+      "minute": "4"
+    },
+    {
+      "match_id": "43",
+      "team": "ЧЕКМАГУШ",
+      "player": "Фаттахов Руслан",
+      "assistant": "Хасанов Ранис",
+      "minute": "12"
+    },
+    {
+      "match_id": "43",
+      "team": "ЧЕКМАГУШ",
+      "player": "Хабибуллин Самат",
+      "assistant": "Хасанов Ранис",
+      "minute": "16"
+    },
+    {
+      "match_id": "49",
+      "team": "ЯЗЫКОВО",
+      "player": "Туляков Мираль",
+      "assistant": "",
+      "minute": "12"
+    },
+    {
+      "match_id": "49",
+      "team": "ЯЗЫКОВО",
+      "player": "Туляков Мираль",
+      "assistant": "",
+      "minute": "16"
+    },
+    {
+      "match_id": "49",
+      "team": "ЯЗЫКОВО",
+      "player": "Кильдибеков Ренат",
+      "assistant": "Кильдибеков Радмир",
+      "minute": "19"
+    },
+    {
+      "match_id": "48",
+      "team": "ФИЛИМОНОВО",
+      "player": "Яруллин Ян",
+      "assistant": "Валеев Ринат",
+      "minute": "6"
     }
   ],
   "groups2026": [
