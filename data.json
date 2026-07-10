@@ -791,14 +791,14 @@
       "group": "Группа C",
       "team1": "ЦЕЛИННОЕ",
       "team2": "БУЗДЯК",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "14:30",
       "date": "10 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "51",
@@ -2610,6 +2610,13 @@
       "player": "Набиуллин Зариф",
       "assistant": "",
       "minute": "9"
+    },
+    {
+      "match_id": "50",
+      "team": "ЦЕЛИННОЕ",
+      "player": "Автогол",
+      "assistant": "",
+      "minute": "5"
     }
   ],
   "groups2026": [
