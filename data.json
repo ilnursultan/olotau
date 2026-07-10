@@ -967,14 +967,14 @@
       "group": "Группа I",
       "team1": "СТАРОСУБХАНГУЛОВО",
       "team2": "БОЛЬШИЕ МОТЫКАЛЫ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "16:00",
       "date": "10 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "62",
@@ -2764,6 +2764,27 @@
       "player": "Бухарбаев Ильгиз",
       "assistant": "",
       "minute": "16"
+    },
+    {
+      "match_id": "61",
+      "team": "СТАРОСУБХАНГУЛОВО",
+      "player": "Шакиров Алмаз",
+      "assistant": "",
+      "minute": "18"
+    },
+    {
+      "match_id": "61",
+      "team": "БОЛЬШИЕ МОТЫКАЛЫ",
+      "player": "Шевчик Роман",
+      "assistant": "Ковалюк",
+      "minute": "3"
+    },
+    {
+      "match_id": "61",
+      "team": "БОЛЬШИЕ МОТЫКАЛЫ",
+      "player": "Кацевич",
+      "assistant": "",
+      "minute": "8"
     }
   ],
   "groups2026": [
