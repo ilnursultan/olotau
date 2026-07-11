@@ -1863,14 +1863,14 @@
       "group": "",
       "team1": "МАМЫ МЕТАР",
       "team2": "ЖФК АРГАЯШ",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "11 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1401",
@@ -1879,14 +1879,14 @@
       "group": "",
       "team1": "ТУРА ЮЛ",
       "team2": "СПАРТА",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "17:30",
       "date": "11 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     }
   ],
   "goals2026": [
@@ -3611,6 +3611,34 @@
       "player": "Каратерзи Анна",
       "assistant": "Машкина Дарья",
       "minute": "8"
+    },
+    {
+      "match_id": "1301",
+      "team": "МАМЫ МЕТАР",
+      "player": "Парфирьева Анастасия",
+      "assistant": "",
+      "minute": "16"
+    },
+    {
+      "match_id": "1301",
+      "team": "ЖФК АРГАЯШ",
+      "player": "Каримова Диляра",
+      "assistant": "Галиулина Дарина",
+      "minute": "8"
+    },
+    {
+      "match_id": "1301",
+      "team": "ЖФК АРГАЯШ",
+      "player": "Каримова Диляра",
+      "assistant": "Галиулина Дарина",
+      "minute": "15"
+    },
+    {
+      "match_id": "1401",
+      "team": "ТУРА ЮЛ",
+      "player": "Фролова Яна",
+      "assistant": "",
+      "minute": "19"
     }
   ],
   "groups2026": [
