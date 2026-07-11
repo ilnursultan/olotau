@@ -1671,14 +1671,14 @@
       "group": "Группа В",
       "team1": "МЕТАР",
       "team2": "МАМЫ АРГАЯШ",
-      "score1": "",
-      "score2": "",
+      "score1": "5",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "12:00",
       "date": "11 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1008",
@@ -3519,6 +3519,41 @@
       "team": "АСКАРОВО",
       "player": "Малыбаев Радик",
       "assistant": "Саитгалин Арсен",
+      "minute": "16"
+    },
+    {
+      "match_id": "1007",
+      "team": "МЕТАР",
+      "player": "Смирнова Виктория",
+      "assistant": "",
+      "minute": "1"
+    },
+    {
+      "match_id": "1007",
+      "team": "МЕТАР",
+      "player": "Смирнова Виктория",
+      "assistant": "",
+      "minute": "4"
+    },
+    {
+      "match_id": "1007",
+      "team": "МЕТАР",
+      "player": "Деева Алёна",
+      "assistant": "",
+      "minute": "6"
+    },
+    {
+      "match_id": "1007",
+      "team": "МЕТАР",
+      "player": "Стафеева Надежда",
+      "assistant": "",
+      "minute": "12"
+    },
+    {
+      "match_id": "1007",
+      "team": "МЕТАР",
+      "player": "Задорина Виктория",
+      "assistant": "",
       "minute": "16"
     }
   ],
