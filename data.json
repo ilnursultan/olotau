@@ -1767,14 +1767,14 @@
       "group": "",
       "team1": "ВЕРХНЕУРАЛЬСК",
       "team2": "МАМЫ МЕТАР",
-      "score1": "",
-      "score2": "",
-      "pen1": "",
-      "pen2": "",
+      "score1": "1",
+      "score2": "1",
+      "pen1": "1",
+      "pen2": "2",
       "time": "14:30",
       "date": "11 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1102",
@@ -1783,14 +1783,14 @@
       "group": "",
       "team1": "МАМОЧКИ ФК УФА",
       "team2": "ТУРА ЮЛ",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "pen1": "",
       "pen2": "",
       "time": "14:30",
       "date": "11 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1103",
@@ -1799,14 +1799,14 @@
       "group": "",
       "team1": "МЕТАР",
       "team2": "ЖФК АРГАЯШ",
-      "score1": "",
-      "score2": "",
-      "pen1": "",
-      "pen2": "",
+      "score1": "0",
+      "score2": "0",
+      "pen1": "0",
+      "pen2": "2",
       "time": "15:00",
       "date": "11 июля",
       "field": "1",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1104",
@@ -1815,14 +1815,14 @@
       "group": "",
       "team1": "СПАРТА",
       "team2": "МЕРИДИАН",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "0",
       "pen1": "",
       "pen2": "",
       "time": "15:00",
       "date": "11 июля",
       "field": "3",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1201",
@@ -3555,6 +3555,34 @@
       "player": "Задорина Виктория",
       "assistant": "",
       "minute": "16"
+    },
+    {
+      "match_id": "1101",
+      "team": "ВЕРХНЕУРАЛЬСК",
+      "player": "Вандышева Анастасия",
+      "assistant": "Гаврилова Алисия",
+      "minute": "6"
+    },
+    {
+      "match_id": "1101",
+      "team": "МАМЫ МЕТАР",
+      "player": "Назарова Виктория",
+      "assistant": "Парфирьева Анастасия",
+      "minute": "10"
+    },
+    {
+      "match_id": "1102",
+      "team": "ТУРА ЮЛ",
+      "player": "Маловичко Дарья",
+      "assistant": "",
+      "minute": "8"
+    },
+    {
+      "match_id": "1104",
+      "team": "СПАРТА",
+      "player": "Каратерзи Анна",
+      "assistant": "",
+      "minute": "4"
     }
   ],
   "groups2026": [
