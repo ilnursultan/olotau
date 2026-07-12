@@ -1543,14 +1543,14 @@
       "group": "",
       "team1": "УРАЛЬСК",
       "team2": "ИШАЛИНО",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "3",
       "pen1": "",
       "pen2": "",
       "time": "16:30",
       "date": "11 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "601",
@@ -1559,14 +1559,14 @@
       "group": "",
       "team1": "БАЖИКАЕВА-2",
       "team2": "БАЖИКАЕВА",
-      "score1": "",
-      "score2": "",
-      "pen1": "",
-      "pen2": "",
+      "score1": "0",
+      "score2": "0",
+      "pen1": "2",
+      "pen2": "3",
       "time": "18:00",
       "date": "11 июля",
       "field": "2",
-      "status": "future"
+      "status": "past"
     },
     {
       "id": "1001",
@@ -3571,13 +3571,6 @@
       "minute": "10"
     },
     {
-      "match_id": "1102",
-      "team": "ТУРА ЮЛ",
-      "player": "Маловичко Дарья",
-      "assistant": "",
-      "minute": "8"
-    },
-    {
       "match_id": "1104",
       "team": "СПАРТА",
       "player": "Каратерзи Анна",
@@ -3641,20 +3634,6 @@
       "minute": "19"
     },
     {
-      "match_id": "401",
-      "team": "БАЖИКАЕВА-2",
-      "player": "Автогол",
-      "assistant": "",
-      "minute": "1"
-    },
-    {
-      "match_id": "401",
-      "team": "БАЖИКАЕВА-2",
-      "player": "Автогол",
-      "assistant": "",
-      "minute": "1"
-    },
-    {
       "match_id": "402",
       "team": "ИШАЛИНО",
       "player": "Автогол",
@@ -3667,6 +3646,48 @@
       "player": "Автогол",
       "assistant": "",
       "minute": "1"
+    },
+    {
+      "match_id": "501",
+      "team": "ИШАЛИНО",
+      "player": "Абдулвалеев Эдвард",
+      "assistant": "Габбасов Руслан",
+      "minute": "4"
+    },
+    {
+      "match_id": "501",
+      "team": "ИШАЛИНО",
+      "player": "Габбасов Руслан",
+      "assistant": "",
+      "minute": "8"
+    },
+    {
+      "match_id": "501",
+      "team": "ИШАЛИНО",
+      "player": "Габбасов Руслан",
+      "assistant": "",
+      "minute": "16"
+    },
+    {
+      "match_id": "401",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Сулейманов Тимур",
+      "assistant": "Юсупов Вильдан",
+      "minute": "9"
+    },
+    {
+      "match_id": "401",
+      "team": "БАЖИКАЕВА-2",
+      "player": "Сулейманов Тимур",
+      "assistant": "Юсупов Вильдан",
+      "minute": "15"
+    },
+    {
+      "match_id": "1102",
+      "team": "ТУРА ЮЛ",
+      "player": "Нургалина Ленария",
+      "assistant": "",
+      "minute": "8"
     }
   ],
   "groups2026": [
