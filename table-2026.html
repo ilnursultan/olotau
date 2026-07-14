@@ -49,11 +49,11 @@
                         
                         <div id="nav-2026-tabs" class="flex gap-2 shrink-0">
                             <button class="tab-btn-top active" onclick="switch2026Tab('tables', this)">Группы</button>
+                            <button class="tab-btn-top" onclick="switch2026Tab('schedule', this)">Расписание</button>
                             <button class="tab-btn-top" id="tab-btn-overall" onclick="switch2026Tab('standings', this)">Общий зачет</button>
                             <button class="tab-btn-top" onclick="switch2026Tab('playoffs', this)">Плей-офф</button>
                             <button class="tab-btn-top" onclick="switch2026Tab('scorers', this)">Бомбардиры</button>
                             <button class="tab-btn-top" onclick="switch2026Tab('assistants', this)">Ассистенты</button>
-                            <button class="tab-btn-top" onclick="switch2026Tab('schedule', this)">Расписание</button>
                         </div>
                     </div>
                 </div>
@@ -70,6 +70,7 @@
                 <div class="text-zinc-500 text-xs font-medium uppercase tracking-widest mt-1">Сбор данных с полей...</div>
             </div>
 
+            <!-- Вкладка сезона 2026 -->
             <div id="view-2026" class="hidden flex flex-col gap-4">
                 <div id="sub-2026-tables" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 
@@ -120,6 +121,7 @@
                 </div>
             </div>
 
+            <!-- Вкладка Архива матчей -->
             <div id="view-archive" class="hidden flex flex-col gap-4">
                 <div class="relative w-full max-w-xl mx-auto border-b border-zinc-900 mb-2 pt-4">
                     <div id="scroll-indicator-archive" class="absolute right-0 -top-2 flex items-center gap-1 text-gray-500 md:hidden pointer-events-none z-10">
@@ -130,7 +132,6 @@
                         <button class="tab-btn-top active" id="arch-tab-groups" onclick="switchArchiveTab('groups', this)">Группы</button>
                         <button class="tab-btn-top" id="arch-tab-playoffs" onclick="switchArchiveTab('playoffs', this)">Плей-офф</button>
                         <button class="tab-btn-top" id="arch-tab-results" onclick="switchArchiveTab('results', this)">Результаты</button>
-                        <button class="tab-btn-top" id="arch-tab-best" onclick="switchArchiveTab('best', this)">Лучшие игроки</button>
                     </div>
                 </div>
                 <div id="supercup-banner" class="hidden p-5 rounded-3xl bg-yellow-500/5 border border-yellow-500/20 text-center relative overflow-hidden">
@@ -143,12 +144,9 @@
                     <div id="archive-playoff-matches" class="flex flex-col gap-4 w-full"></div>
                 </div>
                 <div id="archive-results" class="hidden flex flex-col gap-4"></div>
-                <div id="archive-best" class="hidden max-w-xl mx-auto w-full">
-                    <div class="scorer-header">Лучшие игроки</div>
-                    <div class="bg-zinc-card border border-zinc-800 rounded-b-2xl p-3"><div id="best-players-list" class="space-y-2"></div></div>
-                </div>
             </div>
 
+            <!-- Вкладка статистики конкретных команд -->
             <div id="view-stats" class="hidden flex flex-col gap-4 max-w-2xl mx-auto w-full relative">
                 <div class="grid grid-cols-2 gap-3 bg-zinc-900/40 p-2 border border-zinc-800/60 rounded-2xl">
                     <select id="stats-gender" class="custom-select text-xs font-black"></select>
@@ -177,12 +175,17 @@
                     </div>
                     
                     <div id="roster-btn-container" class="w-full flex justify-center mt-2"></div>
-                    
                     <div class="mt-2"><div id="stats-years-container" class="flex flex-col gap-4"></div></div>
                 </div>
             </div>
+
+            <!-- ВКЛАДКА: ЗАЛ СЛАВЫ (ИСТОРИЯ) -->
+            <div id="view-history" class="hidden flex flex-col gap-4 max-w-2xl mx-auto w-full relative">
+                <div id="history-content" class="flex flex-col w-full relative pt-2"></div>
+            </div>
         </div>
 
+        <!-- Модальные окна состава -->
         <div id="roster-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <div class="premium-glass-card border border-white/10 rounded-[32px] p-6 w-full max-w-sm relative shadow-2xl">
                 <button onclick="closeRosterModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white">
@@ -193,6 +196,7 @@
             </div>
         </div>
 
+        <!-- Модальные окна матчей -->
         <div id="playoff-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onclick="if(event.target===this) closePlayoffModal()">
             <div class="premium-glass-card border border-white/10 rounded-[32px] p-6 w-full max-w-lg relative shadow-2xl bg-zinc-950">
                 <button onclick="closePlayoffModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
@@ -220,16 +224,32 @@
             </div>
         </div>
 
+        <!-- Модальное окно списка команд в истории (с группировкой) -->
+        <div id="history-teams-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onclick="if(event.target===this) closeHistoryTeamsModal()">
+            <div class="premium-glass-card border border-white/10 rounded-[32px] p-6 w-full max-w-md relative shadow-2xl bg-zinc-950 flex flex-col max-h-[85vh]">
+                <button onclick="closeHistoryTeamsModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors z-30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div id="history-teams-modal-title" class="text-center text-[10px] font-black text-neon uppercase tracking-widest mb-4 border-b border-white/5 pb-2">Список команд</div>
+                <div id="history-teams-modal-list" class="flex flex-col overflow-y-auto hide-scrollbar pr-1 pb-4 flex-1 relative"></div>
+            </div>
+        </div>
+
+        <!-- Нижнее меню на 4 кнопки -->
         <nav id="bottom-bar-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm premium-glass-card border border-white/10 rounded-3xl px-2 py-2 flex justify-between items-center z-[90] shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
-            <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+            <button id="mode-btn-2026" onclick="setGlobalMode('2026')" class="flex flex-col items-center justify-center w-1/4 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 <span class="text-[8px] font-bold uppercase tracking-wider">Сезон 2026</span>
             </button>
-            <button id="mode-btn-stats" onclick="setGlobalMode('stats')" class="flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+            <button id="mode-btn-stats" onclick="setGlobalMode('stats')" class="flex flex-col items-center justify-center w-1/4 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                 <span class="text-[8px] font-bold uppercase tracking-wider">Команды</span>
             </button>
-            <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/3 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+            <button id="mode-btn-history" onclick="setGlobalMode('history')" class="flex flex-col items-center justify-center w-1/4 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                <span class="text-[8px] font-bold uppercase tracking-wider">Зал славы</span>
+            </button>
+            <button id="mode-btn-archive" onclick="setGlobalMode('archive')" class="flex flex-col items-center justify-center w-1/4 py-2 text-gray-500 hover:text-white transition-colors outline-none cursor-pointer">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="text-[8px] font-bold uppercase tracking-wider">Архив</span>
             </button>
@@ -238,14 +258,5 @@
 
     <script src="parser.js"></script>
     <script src="app.js"></script>
-    <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('Service Worker зарегистрирован!', reg.scope))
-        .catch(err => console.log('Ошибка SW:', err));
-    });
-  }
-</script>
 </body>
 </html>
