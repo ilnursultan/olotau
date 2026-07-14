@@ -7,12 +7,10 @@ let db = { matches2026: [], goals2026: [], players2026: [], archive: [], geo: {}
 let currentGlobalMode = '2026'; let active2026Tab = 'tables'; let activeArchiveTab = 'groups';
 let current2026Gender = 'men'; 
 let archiveYear = ''; let archiveTournament = ''; let currentPlayoffStage2026 = '1/16'; let currentPlayoffStageArchive = '';
-let animId = null; let adminSecretClicks = 0; let adminClicksTimeout = null;
+let animId = null;
 
 function handleAdminSecretClick() {
-    adminSecretClicks++; clearTimeout(adminClicksTimeout);
-    adminClicksTimeout = setTimeout(() => { adminSecretClicks = 0; }, 2000);
-    if (adminSecretClicks >= 5) { adminSecretClicks = 0; window.location.href = 'admin.html'; }
+    // Секретный вход отключен
 }
 
 function normalizeTeamName(name) {
