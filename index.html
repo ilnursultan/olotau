@@ -1429,7 +1429,7 @@ function applyPromoCode() {
                 pickupCity: currentPickupCity, // Передается выбранный город
                 pvzType: document.querySelector('input[name="pvzType"]:checked')?.value || 'Wildberries',
                 pvzAddress: document.getElementById('custPvzAddress')?.value.trim() || '',
-                promoCode: appliedDiscount > 0 ? PROMO_CODE : '',
+                promoCode: appliedDiscount > 0 ? document.getElementById('promoInput')?.value.trim().toUpperCase() : '',
                 totalPrice: document.getElementById('checkoutTotalPrice').innerText
             };
 
