@@ -1173,24 +1173,25 @@
         const PROMO_CODE = "ИСМАҺАМ АШАТТЫЛАР", "ИСМАХАМ АШАТТЫЛАР", "ТУСАДЖУСА", "ОТ ХАНА";
         const PROMO_DISCOUNT = 2500;
 
-        function applyPromoCode() {
-            const input = document.getElementById('promoInput');
-            const msg = document.getElementById('promoMessage');
-            if (!input || !msg) return;
+function applyPromoCode() {
+    const input = document.getElementById('promoInput');
+    const msg = document.getElementById('promoMessage');
+    if (!input || !msg) return;
 
-            const code = input.value.trim().toUpperCase();
+    const code = input.value.trim().toUpperCase();
 
-            if (code === PROMO_CODE.toUpperCase()) {
-                appliedDiscount = PROMO_DISCOUNT;
-                msg.className = "text-[10px] font-bold mt-1.5 text-neon block";
-                msg.innerText = `Промокод применен! Скидка ${PROMO_DISCOUNT} ₽`;
-            } else {
-                appliedDiscount = 0;
-                msg.className = "text-[10px] font-bold mt-1.5 text-red-500 block";
-                msg.innerText = "Неверный промокод";
-            }
-            updateTotalPrice();
-        }
+    // Проверяем, есть ли введенный код в нашем массиве
+    if (PROMO_CODES.some(p => p.toUpperCase() === code)) {
+        appliedDiscount = PROMO_DISCOUNT;
+        msg.className = "text-[10px] font-bold mt-1.5 text-neon block";
+        msg.innerText = `Промокод применен! Скидка ${PROMO_DISCOUNT} ₽`;
+    } else {
+        appliedDiscount = 0;
+        msg.className = "text-[10px] font-bold mt-1.5 text-red-500 block";
+        msg.innerText = "Неверный промокод";
+    }
+    updateTotalPrice();
+}
 
         function selectPickupCity(city) {
             currentPickupCity = city;
